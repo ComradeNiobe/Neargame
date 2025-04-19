@@ -173,9 +173,11 @@
 
 
 
-/turf/simulated/wall/ChangeTurf(var/newtype)
-	for(var/obj/effect/E in src) if(E.name == "Wallrot") qdel(E)
-	. = ..(newtype)
+/turf/simulated/wall/ChangeTurf(turf/N, tell_universe, force_lighting_update, keep_air)
+	for(var/obj/effect/E in src)
+		if(E.name == "Wallrot")
+			qdel(E)
+	. = ..(N)
 
 /turf/simulated/wall/Bumped(AM as mob)
 	if(ishuman(AM))
@@ -194,7 +196,7 @@
 			return
 		if(H.sprinting || H.confused)
 			if(is_dreamer(H))
-				if(H.dreamerArchetype == "ghostface") 
+				if(H.dreamerArchetype == "ghostface")
 					return
 			var/damage = 8
 			H.apply_damage(damage + rand(-5,5), BRUTE, "head")

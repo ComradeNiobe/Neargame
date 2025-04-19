@@ -190,7 +190,11 @@
 					if(A.density  && src.my_stats.get_stat(STAT_ST) >= 20)
 						qdel(A)
 				if(T.density && src.my_stats.get_stat(STAT_ST) >= 20)
-					qdel(T)
+					if(issimulatedwall(T))
+						var/turf/simulated/wall/koolaid_manned = T
+						koolaid_manned.dismantle_wall()
+					else
+						qdel(T)
 
 			// change the target if there is another human that is closer
 			for (var/mob/living/carbon/human/C in orange(2,src.loc))

@@ -212,6 +212,7 @@ obj/machinery/atmospherics/pipe
 
 
 		initialize()
+			. = ..()
 			normalize_dir()
 			var/node1_dir
 			var/node2_dir

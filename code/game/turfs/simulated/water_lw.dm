@@ -21,8 +21,8 @@
 	if(ismob(A))
 		var/mob/living/carbon/human/M = A
 		M.check_for_drowning()
-		
-	
+
+
 /area/seafloor
 	name = "Seafloor"
 	forced_ambience = list('sound/lfwbambimusic/underwater.ogg')
@@ -52,7 +52,7 @@
 			to_chat(M, "<span class='jogtowalk'><i><b>The Deep</b> - As you come to rest on the floor of the sea the inky blackness presses in on you. The water churns around you, its movement breaking the otherwise consuming silence. You almost swear you see something moving out of the corner of your eye. You are not welcome here. </i></span>")
 			M.AreasEntered.Add(src)
 		M.check_for_pressure()
-	
+
 
 /area/seafloor/Exited(A)
 	..()
@@ -179,17 +179,17 @@
 			M.rotate_plane()
 	for(F in M.contents)
 		F.turn_off()
-	
+
 	var/DXTOTAL = M.my_stats.get_stat(STAT_DX) * 2
 	if(prob(70-DXTOTAL) && !skillcheck(M.my_skills.get_skill(SKILL_SWIM), 40, 0, M))
 		M.flounder()
-	var/totalroll = (M.my_skills.get_skill(SKILL_SWIM)+M.my_stats.get_stat(STAT_DX)) / 2 
+	var/totalroll = (M.my_skills.get_skill(SKILL_SWIM)+M.my_stats.get_stat(STAT_DX)) / 2
 	spawn(rand(2,totalroll))
 		if(M.x == src.x && M.y == src.y && M.z == src.z)
 			M.Move(get_step(M,src.directionz))
-	
+
 	M.check_for_drowning()
-		
+
 
 /turf/simulated/floor/exoplanet/water/shallow/river/Exited(AM)
 	if(!istype(AM, /mob/living))
@@ -243,7 +243,7 @@
 	R.my_atom = src
 	R.add_reagent("water",5)
 
-/turf/simulated/floor/exoplanet/water/shallow/river/ChangeTurf(turf/N, tell_universe, force_lighting_update)
+/turf/simulated/floor/exoplanet/water/shallow/river/ChangeTurf(turf/N, tell_universe, force_lighting_update, keep_air)
 	var/obj/effect/water/top/river/T = locate() in loc
 	if(T)
 		qdel(T)
@@ -349,7 +349,7 @@
 	for(var/obj/effect/water/top/T in src)
 		qdel(T)
 
-/turf/simulated/floor/exoplanet/water/shallow/ChangeTurf(turf/N, tell_universe, force_lighting_update)
+/turf/simulated/floor/exoplanet/water/shallow/ChangeTurf(turf/N, tell_universe, force_lighting_update, keep_air)
 	var/obj/effect/water/top/T = locate() in loc
 	if(T)
 		qdel(T)

@@ -251,7 +251,7 @@ proc/get_damage_icon_part(damage_state, body_part, var/icon/dam_icon = 'icons/mo
 	else
 		return damage_icon_parts["[damage_state]/[body_part]/[dam_icon]"]
 
-/mob/living/carbon/human/proc/UpdateArteryIcon(var/update_icons=1)
+/mob/living/carbon/human/proc/UpdateArteryIcon(var/update_icons = TRUE)
 	if(istype(src, /mob/living/carbon/human/monster) || src.species.name == "Skeleton")
 		overlays_standing[ARTERY_LAYER]	= null
 		overlays_lying[ARTERY_LAYER]	= null
@@ -290,7 +290,7 @@ proc/get_damage_icon_part(damage_state, body_part, var/icon/dam_icon = 'icons/mo
 	if(update_icons)   update_icons()
 	return
 
-/mob/living/carbon/human/proc/UpdateBandageIcon(var/update_icons=1)
+/mob/living/carbon/human/proc/UpdateBandageIcon(var/update_icons = TRUE)
 	if(istype(src, /mob/living/carbon/human/monster))
 		return
 
@@ -338,7 +338,7 @@ proc/get_damage_icon_part(damage_state, body_part, var/icon/dam_icon = 'icons/mo
 
 //DAMAGE OVERLAYS
 //constructs damage icon for each organ from mask * damage field and saves it in our overlays_ lists
-/mob/living/carbon/human/UpdateDamageIcon(var/update_icons=1)
+/mob/living/carbon/human/UpdateDamageIcon(var/update_icons = TRUE)
 	// first check whether something actually changed about damage appearance
 	if(istype(src, /mob/living/carbon/human/monster))
 		return
@@ -429,7 +429,7 @@ proc/get_damage_icon_part(damage_state, body_part, var/icon/dam_icon = 'icons/mo
 		overlays_lying[FIRE_LAYER] = null
 	update_icons()
 /*
-/mob/living/carbon/human/proc/update_bloody_wounds(var/update_icons=1)
+/mob/living/carbon/human/proc/update_bloody_wounds(var/update_icons = TRUE)
 	set background = 1
 	var/ipsilon = 1
 	var/xis = 7
@@ -492,7 +492,7 @@ proc/get_damage_icon_part(damage_state, body_part, var/icon/dam_icon = 'icons/mo
 */
 
 //BASE MOB SPRITE
-/mob/living/carbon/human/proc/update_body(var/update_icons=1)
+/mob/living/carbon/human/proc/update_body(var/update_icons = TRUE)
 	var/necrosis_color_mod = rgb(164,32,32)
 	var/pale_color_mod = COLOR_WHITE
 
@@ -785,7 +785,7 @@ mob/living/carbon/human/proc/bodypart_blends(var/icon/base_icon, var/icon/lbase_
 You might ask why I created this massive awful proc instead of just using multiple overlays. The reason is because we can only show one thing at once.
 If you draw the arms, sleeves and suit arms at once, there are clipping issues.
 */
-/mob/living/carbon/human/proc/update_above(var/update_icons=1)
+/mob/living/carbon/human/proc/update_above(var/update_icons = TRUE)
 	var/icon/above = icon('icons/mob/human.dmi',"blank")
 	var/icon/abovel = icon('icons/mob/human.dmi',"blank")
 /*	var/damage_icon
@@ -940,7 +940,7 @@ If you draw the arms, sleeves and suit arms at once, there are clipping issues.
 
 	if(update_icons)   update_icons()
 //HAIR OVERLAY
-/mob/living/carbon/human/proc/update_hair(var/update_icons=1)
+/mob/living/carbon/human/proc/update_hair(var/update_icons = TRUE)
 	//Reset our hair
 	overlays_standing[HAIR_LAYER]	= null
 	overlays_lying[HAIR_LAYER]	= null
@@ -1032,7 +1032,7 @@ If you draw the arms, sleeves and suit arms at once, there are clipping issues.
 
 	if(update_icons)   update_icons()
 
-/mob/living/carbon/human/update_mutations(var/update_icons=1)
+/mob/living/carbon/human/update_mutations(var/update_icons = TRUE)
 	var/fat
 	if(FAT in mutations)
 		fat = "fat"
@@ -1075,7 +1075,7 @@ If you draw the arms, sleeves and suit arms at once, there are clipping issues.
 	if(update_icons)   update_icons()
 
 
-/mob/living/carbon/human/proc/update_mutantrace(var/update_icons=1)
+/mob/living/carbon/human/proc/update_mutantrace(var/update_icons = TRUE)
 	var/fat
 
 	if( FAT in mutations )
@@ -1095,7 +1095,7 @@ If you draw the arms, sleeves and suit arms at once, there are clipping issues.
 	if(update_icons)   update_icons()
 
 //Call when target overlay should be added/removed
-/mob/living/carbon/human/update_targeted(var/update_icons=1)
+/mob/living/carbon/human/update_targeted(var/update_icons = TRUE)
 	if (targeted_by && target_locked)
 		overlays_standing[TARGETED_LAYER]	= target_locked
 	else if (!targeted_by && target_locked)
@@ -1151,7 +1151,7 @@ If you draw the arms, sleeves and suit arms at once, there are clipping issues.
 
 
 /*
-/mob/living/carbon/human/proc/update_pants(var/update_icons=1)
+/mob/living/carbon/human/proc/update_pants(var/update_icons = TRUE)
 	if(w_uniform && istype(w_uniform, /obj/item/clothing/under))
 		var/icon/I = w_uniform:update_pants(src)
 		var/icon/IL = w_uniform:update_pants(src,TRUE)
@@ -1167,7 +1167,7 @@ If you draw the arms, sleeves and suit arms at once, there are clipping issues.
 	if(update_icons)	update_icons()
 
 */
-/mob/living/carbon/human/update_inv_w_uniform(var/update_icons=1)
+/mob/living/carbon/human/update_inv_w_uniform(var/update_icons = TRUE)
 	if(w_uniform && istype(w_uniform, /obj/item/clothing/under) )
 		w_uniform.screen_loc = get_slot_loc("iclothing")
 		var/t_color = w_uniform.item_color
@@ -1222,7 +1222,7 @@ If you draw the arms, sleeves and suit arms at once, there are clipping issues.
 					thing.layer = initial(thing.layer)
 	if(update_icons)   update_icons()
 
-/mob/living/carbon/human/update_inv_wear_id(var/update_icons=1)
+/mob/living/carbon/human/update_inv_wear_id(var/update_icons = TRUE)
 	if(wear_id)
 		wear_id.screen_loc = get_slot_loc("id")	//TODO
 		/*
@@ -1235,7 +1235,7 @@ If you draw the arms, sleeves and suit arms at once, there are clipping issues.
 	*/
 	if(update_icons)   update_icons()
 
-/mob/living/carbon/human/proc/update_surgery(var/update_icons=1)
+/mob/living/carbon/human/proc/update_surgery(var/update_icons = TRUE)
 	for(var/datum/organ/external/chest/affecting in src.organs)
 		if(affecting)
 			if(affecting.dissected)
@@ -1258,7 +1258,7 @@ If you draw the arms, sleeves and suit arms at once, there are clipping issues.
 			overlays_lying[TAIL_LAYER]		= null
 	if(update_icons)   update_icons()
 
-/mob/living/carbon/human/update_inv_gloves(var/update_icons=1)
+/mob/living/carbon/human/update_inv_gloves(var/update_icons = TRUE)
 	if(gloves)
 		var/t_state = gloves.item_state
 		if(!t_state)	t_state = gloves.icon_state
@@ -1289,7 +1289,7 @@ If you draw the arms, sleeves and suit arms at once, there are clipping issues.
 	if(update_icons)   update_icons()
 
 
-/mob/living/carbon/human/update_inv_glasses(var/update_icons=1)
+/mob/living/carbon/human/update_inv_glasses(var/update_icons = TRUE)
 	if(glasses)
 		var/datum/organ/external/head/E = get_organ("head")
 		if(E.headwrenched)
@@ -1304,7 +1304,7 @@ If you draw the arms, sleeves and suit arms at once, there are clipping issues.
 		overlays_lying[GLASSES_LAYER]	= null
 	if(update_icons)   update_icons()
 
-/mob/living/carbon/human/update_inv_ears(var/update_icons=1)
+/mob/living/carbon/human/update_inv_ears(var/update_icons = TRUE)
 	if(l_ear || r_ear)
 		if (gender == FEMALE && !(FAT in mutations))
 			if(l_ear)
@@ -1326,7 +1326,7 @@ If you draw the arms, sleeves and suit arms at once, there are clipping issues.
 		clear_event("sheekos")
 	if(update_icons)   update_icons()
 
-/mob/living/carbon/human/update_inv_shoes(var/update_icons=1)
+/mob/living/carbon/human/update_inv_shoes(var/update_icons = TRUE)
 	if(shoes)
 		var/image/standing	= ""
 
@@ -1349,7 +1349,7 @@ If you draw the arms, sleeves and suit arms at once, there are clipping issues.
 		overlays_standing[SHOES_LAYER]		= null
 	if(update_icons)   update_icons()
 
-/mob/living/carbon/human/update_inv_s_store(var/update_icons=1)
+/mob/living/carbon/human/update_inv_s_store(var/update_icons = TRUE)
 	if(s_store)
 		var/t_state = s_store.item_state
 		if(!t_state)	t_state = s_store.icon_state
@@ -1361,7 +1361,7 @@ If you draw the arms, sleeves and suit arms at once, there are clipping issues.
 		overlays_lying[SUIT_STORE_LAYER]	= null
 	if(update_icons)   update_icons()
 
-/mob/living/carbon/human/update_wrist_r(var/update_icons=1)
+/mob/living/carbon/human/update_wrist_r(var/update_icons = TRUE)
 	if(wrist_r)
 		if(gender == FEMALE && !(FAT in mutations))
 			overlays_standing[WRIST_R_LAYER]	= image("icon" = ((wrist_r.icon_override) ? wrist_r.icon_override : 'icons/mob/clothing/secondary/hands_f.dmi'), "icon_state" = "[wrist_r.item_state]_r")
@@ -1377,7 +1377,7 @@ If you draw the arms, sleeves and suit arms at once, there are clipping issues.
 		B.update_defense()
 	if(update_icons)   update_icons()
 
-/mob/living/carbon/human/update_wrist_l(var/update_icons=1)
+/mob/living/carbon/human/update_wrist_l(var/update_icons = TRUE)
 	if(wrist_l)
 		if(gender == FEMALE && !(FAT in mutations))
 			overlays_standing[WRIST_L_LAYER]	= image("icon" = ((wrist_l.icon_override) ? wrist_l.icon_override : 'icons/mob/clothing/secondary/hands_f.dmi'), "icon_state" = "[wrist_l.item_state]_l")
@@ -1393,7 +1393,7 @@ If you draw the arms, sleeves and suit arms at once, there are clipping issues.
 		B.update_defense()
 	if(update_icons)   update_icons()
 
-/mob/living/carbon/human/update_amulet(var/update_icons=1)
+/mob/living/carbon/human/update_amulet(var/update_icons = TRUE)
 	if(amulet)
 		overlays_standing[AMULET_LAYER]	= image("icon" = ((amulet.icon_override) ? amulet.icon_override : 'icons/mob/clothing/secondary/amulet.dmi'), "icon_state" = "[amulet.icon_state]")
 		overlays_lying[AMULET_LAYER]	= image("icon" = ((amulet.icon_override) ? amulet.icon_override : 'icons/mob/clothing/secondary/amulet.dmi'), "icon_state" = "[amulet.icon_state]2")
@@ -1403,7 +1403,7 @@ If you draw the arms, sleeves and suit arms at once, there are clipping issues.
 		clear_event("godsave")
 	if(update_icons)   update_icons()
 
-/mob/living/carbon/human/update_inv_head(var/update_icons=1)
+/mob/living/carbon/human/update_inv_head(var/update_icons = TRUE)
 	if(head)
 		head.screen_loc = get_slot_loc("head")		//TODO
 		var/icon/head_icon
@@ -1440,7 +1440,7 @@ If you draw the arms, sleeves and suit arms at once, there are clipping issues.
 		overlays_lying[HEAD_LAYER]		= null
 	if(update_icons)   update_icons()
 
-/mob/living/carbon/human/update_inv_belt(var/update_icons=1)
+/mob/living/carbon/human/update_inv_belt(var/update_icons = TRUE)
 	if(belt)
 		belt.screen_loc = get_slot_loc("belt")	//TODO
 		var/t_state = belt.item_state
@@ -1461,7 +1461,7 @@ If you draw the arms, sleeves and suit arms at once, there are clipping issues.
 		overlays_lying[BELT_LAYER]	= null
 	if(update_icons)   update_icons()
 
-/mob/living/carbon/human/update_inv_wear_suit(var/update_icons=1)
+/mob/living/carbon/human/update_inv_wear_suit(var/update_icons = TRUE)
 	if( wear_suit && istype(wear_suit, /obj/item/clothing/suit) )	//TODO check this
 		wear_suit.screen_loc = get_slot_loc("oclothing")	//TODO
 		var/image/standing = ""
@@ -1498,13 +1498,13 @@ If you draw the arms, sleeves and suit arms at once, there are clipping issues.
 
 	if(update_icons)   update_icons()
 
-/mob/living/carbon/human/update_inv_pockets(var/update_icons=1)
+/mob/living/carbon/human/update_inv_pockets(var/update_icons = TRUE)
 	if(l_store)			l_store.screen_loc = get_slot_loc("storage1")	//TODO
 	if(r_store)			r_store.screen_loc = get_slot_loc("storage2")	//TODO
 	if(update_icons)	update_icons()
 
 
-/mob/living/carbon/human/update_inv_wear_mask(var/update_icons=1)
+/mob/living/carbon/human/update_inv_wear_mask(var/update_icons = TRUE)
 	if(wear_mask && ( istype(wear_mask, /obj/item/clothing/mask) || istype(wear_mask, /obj/item/clothing/tie) ) )
 		wear_mask.screen_loc = get_slot_loc("mask")	//TODO
 		var/icon/mask_icon
@@ -1538,7 +1538,7 @@ If you draw the arms, sleeves and suit arms at once, there are clipping issues.
 		overlays_lying[FACEMASK_LAYER]		= null
 	if(update_icons)   update_icons()
 
-/mob/living/carbon/human/update_inv_back(var/update_icons=1)
+/mob/living/carbon/human/update_inv_back(var/update_icons = TRUE)
 	if(back && back.item_state)
 		var/t_state = back.item_state
 		back.screen_loc = get_slot_loc("back")	//TODO
@@ -1581,7 +1581,9 @@ If you draw the arms, sleeves and suit arms at once, there are clipping issues.
 			if(istype(back, /obj/item/storage/backpack))
 				var/obj/item/storage/backpack/B = back
 				if(B.diffcolor)
-					overlays_standing[BACK_LAYER].color = B.diffcolor
+					var/mutable_appearance/new_backpack_appearance = new(overlays_standing[BACK_LAYER])
+					new_backpack_appearance.color = B.diffcolor
+					B.appearance = new_backpack_appearance
 
 		if(update_icons)   update_icons()
 		return
@@ -1633,7 +1635,7 @@ If you draw the arms, sleeves and suit arms at once, there are clipping issues.
 		overlays_standing[BACK_LAYER_HALF]	= null
 	if(update_icons)   update_icons()
 
-/mob/living/carbon/human/update_back2(var/update_icons=1)
+/mob/living/carbon/human/update_back2(var/update_icons = TRUE)
 
 	if(back2 && back2.item_state)
 		var/t_state = back2.item_state
@@ -1674,14 +1676,13 @@ If you draw the arms, sleeves and suit arms at once, there are clipping issues.
 					return
 
 				if(B.diffcolor)
-					overlays_standing[BACK_LAYER].color = B.diffcolor
+					var/mutable_appearance/new_backpack_appearance = new(overlays_standing[BACK_LAYER])
+					new_backpack_appearance.color = B.diffcolor
+					B.appearance = new_backpack_appearance
 
 			overlays_standing[BACK2_LAYER]	= image("icon" = ((back2.icon_override) ? back2.icon_override : 'icons/mob/back.dmi'), "icon_state" = "[t_state]")
 			if(update_icons)
 				update_icons()
-			return
-		if(update_icons)
-			update_icons()
 
 	if(back2)
 		back2.screen_loc = get_slot_loc("back2")	//TODO
@@ -1734,7 +1735,7 @@ If you draw the arms, sleeves and suit arms at once, there are clipping issues.
 			hud_used.hidden_inventory_update() 	//Updates the screenloc of the items on the 'other' inventory bar
 
 
-/mob/living/carbon/human/update_inv_handcuffed(var/update_icons=1)
+/mob/living/carbon/human/update_inv_handcuffed(var/update_icons = TRUE)
 	if(handcuffed)
 		drop_r_hand()
 		drop_l_hand()
@@ -1746,7 +1747,7 @@ If you draw the arms, sleeves and suit arms at once, there are clipping issues.
 		overlays_lying[HANDCUFF_LAYER]	= null
 	if(update_icons)   update_icons()
 
-/mob/living/carbon/human/update_inv_legcuffed(var/update_icons=1)
+/mob/living/carbon/human/update_inv_legcuffed(var/update_icons = TRUE)
 	if(legcuffed)
 		overlays_standing[LEGCUFF_LAYER]	= image("icon" = 'icons/mob/mob.dmi', "icon_state" = "legcuff1")
 		overlays_lying[LEGCUFF_LAYER]	= image("icon" = 'icons/mob/mob.dmi', "icon_state" = "legcuff2")
@@ -1761,7 +1762,7 @@ If you draw the arms, sleeves and suit arms at once, there are clipping issues.
 	if(update_icons)   update_icons()
 
 
-/mob/living/carbon/human/update_inv_r_hand(var/update_icons=1) //Fix huge items using ripple layer. That doesn't work. They should have a custom index and use the FLY_LAYER
+/mob/living/carbon/human/update_inv_r_hand(var/update_icons = TRUE) //Fix huge items using ripple layer. That doesn't work. They should have a custom index and use the FLY_LAYER
 	underlays_standing[U_R_HAND_LAYER] = null //null at start since some items don't use this.
 	if(r_hand)
 		r_hand.screen_loc = get_slot_loc("rhand")	//TODO
@@ -1795,7 +1796,7 @@ If you draw the arms, sleeves and suit arms at once, there are clipping issues.
 	if(update_icons)   update_icons()
 
 
-/mob/living/carbon/human/update_inv_l_hand(var/update_icons=1) //Fix huge items using ripple layer. That doesn't work. They should have a custom index and use the FLY_LAYER
+/mob/living/carbon/human/update_inv_l_hand(var/update_icons = TRUE) //Fix huge items using ripple layer. That doesn't work. They should have a custom index and use the FLY_LAYER
 	underlays_standing[U_L_HAND_LAYER] = null //null at start since some items don't use this.
 	if(l_hand)
 		l_hand.screen_loc = get_slot_loc("lhand")	//TODO
@@ -1828,7 +1829,7 @@ If you draw the arms, sleeves and suit arms at once, there are clipping issues.
 	update_inv_back(0)
 	if(update_icons)   update_icons()
 
-/mob/living/carbon/human/proc/update_tail_showing(var/update_icons=1)
+/mob/living/carbon/human/proc/update_tail_showing(var/update_icons = TRUE)
 	overlays_standing[TAIL_LAYER] = null
 
 	if(species.tail)
@@ -1880,7 +1881,7 @@ If you draw the arms, sleeves and suit arms at once, there are clipping issues.
 	var/image/face_lying_image = new /image(icon = face_lying)
 	return face_lying_image
 
-/mob/living/carbon/human/proc/add_coldbreath(var/update_icons=1)
+/mob/living/carbon/human/proc/add_coldbreath(var/update_icons = TRUE)
 	if(coldbreath)	return //We alreayd have coldbreath don't add it again.
 	//if(wear_mask)	return //Don't need this if we're wearing a mask.
 	if(stat == DEAD || wear_mask)//	return //Don't need this if we're dead
@@ -1891,7 +1892,7 @@ If you draw the arms, sleeves and suit arms at once, there are clipping issues.
 
 	if(update_icons)	update_icons()
 
-/mob/living/carbon/human/proc/add_smelly(var/update_icons=1)
+/mob/living/carbon/human/proc/add_smelly(var/update_icons = TRUE)
 //	overlays_standing[SMELLING_LAYER] = null
 	if(!smelly_vis)
 		smelly_vis = new()
@@ -1907,7 +1908,7 @@ If you draw the arms, sleeves and suit arms at once, there are clipping issues.
 
 //	if(update_icons)	update_icons()
 
-/mob/living/carbon/human/proc/remove_smelly(var/update_icons=1)
+/mob/living/carbon/human/proc/remove_smelly(var/update_icons = TRUE)
 	vis_contents -= smelly_vis
 /*
 	overlays_standing[SMELLING_LAYER] = null
@@ -1917,7 +1918,7 @@ If you draw the arms, sleeves and suit arms at once, there are clipping issues.
 	if(update_icons)	update_icons()
 	update_hair()
 */
-/mob/living/carbon/human/proc/add_hood(var/update_icons=1)
+/mob/living/carbon/human/proc/add_hood(var/update_icons = TRUE)
 	overlays_standing[HOOD_LAYER] = null
 	var/image/standing = overlay_image('icons/mob/suit.dmi', "mortician-hood")
 	overlays_standing[HOOD_LAYER] = standing
@@ -1926,7 +1927,7 @@ If you draw the arms, sleeves and suit arms at once, there are clipping issues.
 	update_hair(1)
 	return
 
-/mob/living/carbon/human/proc/remove_hood(var/update_icons=1)
+/mob/living/carbon/human/proc/remove_hood(var/update_icons = TRUE)
 	overlays_standing[HOOD_LAYER] = null
 	var/image/standing = null
 	overlays_standing[HOOD_LAYER] = standing
@@ -1935,7 +1936,7 @@ If you draw the arms, sleeves and suit arms at once, there are clipping issues.
 	update_hair(1)
 	return
 
-/mob/living/carbon/human/proc/add_aim(var/update_icons=1)
+/mob/living/carbon/human/proc/add_aim(var/update_icons = TRUE)
 	overlays_standing[AIMED_LAYER] = null
 	var/image/standing = overlay_image('icons/life/screen1.dmi', "target")
 	overlays_standing[AIMED_LAYER] = standing
@@ -1943,7 +1944,7 @@ If you draw the arms, sleeves and suit arms at once, there are clipping issues.
 	if(update_icons)	update_icons()
 	return
 
-/mob/living/carbon/human/proc/remove_aim(var/update_icons=1)
+/mob/living/carbon/human/proc/remove_aim(var/update_icons = TRUE)
 	overlays_standing[AIMED_LAYER] = null
 	var/image/standing = null
 	overlays_standing[AIMED_LAYER] = standing
@@ -1952,7 +1953,7 @@ If you draw the arms, sleeves and suit arms at once, there are clipping issues.
 	return
 
 
-/mob/living/carbon/human/proc/bodyhair(var/update_icons=1)
+/mob/living/carbon/human/proc/bodyhair(var/update_icons = TRUE)
 	var/fat = (FAT in src.mutations)
 	if(ismonster(src)) return
 	overlays_standing[BODYHAIR_LAYER] = null

@@ -25,9 +25,3 @@ var/decl/observ/opacity_set/opacity_set_event = new()
 		return TRUE
 	else
 		return FALSE
-
-/turf/ChangeTurf()
-	var/old_opacity = opacity
-	. = ..()
-	if(opacity != old_opacity)
-		opacity_set_event.raise_event(src, old_opacity, opacity)

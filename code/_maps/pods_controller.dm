@@ -102,9 +102,9 @@ datum/shuttle_controller/proc/setdirection(var/dirn)
 	endtime = world.timeofday + (SHUTTLEARRIVETIME*10 - ticksleft)
 	return
 
-datum/shuttle_controller/proc/process()
+/datum/shuttle_controller/proc/process()
 
-datum/shuttle_controller/emergency_shuttle/process()
+/datum/shuttle_controller/emergency_shuttle/process()
 	if(!online)
 		return
 	var/timeleft = timeleft()
@@ -191,58 +191,21 @@ datum/shuttle_controller/emergency_shuttle/process()
 					var/area/start_location = locate(/area/shuttle/escape/transit)
 					var/area/end_location = locate(/area/shuttle/escape/centcom)
 
-					start_location.move_contents_to(end_location, null, NORTH)
+					start_location.move_contents_to(end_location, TRUE)
 
 					for(var/obj/machinery/door/unpowered/shuttle/D in end_location)
-						spawn(0)
+						ASYNC
 							D.locked = 0
 							D.open()
 
 					for(var/mob/M in end_location)
 						if(M.client)
-							spawn(0)
+							ASYNC
 								if(M.buckled)
 									shake_camera(M, 4, 1) // buckled, not a lot of shaking
 								else
 									shake_camera(M, 10, 2) // unbuckled, HOLY SHIT SHAKE THE ROOM
-						if(istype(M, /mob/living/carbon))
-							if(!M.buckled)
-								M.Weaken(5)
-
-							//pods
-					start_location = locate(/area/shuttle/escape_pod1/transit)
-					end_location = locate(/area/shuttle/escape_pod1/centcom)
-					start_location.move_contents_to(end_location, null, NORTH)
-
-					for(var/obj/machinery/door/D in machines)
-						if( get_area(D) == end_location )
-							spawn(0)
-								D.open()
-
-					create_lighting_overlays(7)
-
-					for(var/obj/machinery/light/A in end_location)
-						var/obj/machinery/light/B = new A.type(A.loc)
-						B.dir = A.dir
-						B.New()
-						B.update()
-						B.set_light(A.brightness_range, A.brightness_power, A.brightness_color)
-						qdel(A)
-
-					for(var/obj/structure/torchwall/A in end_location)
-						var/obj/structure/torchwall/B = new A.type(A.loc)
-						B.dir = A.dir
-						B.New()
-						qdel(A)
-
-					for(var/mob/M in end_location)
-						if(M.client)
-							spawn(0)
-								if(M.buckled)
-									shake_camera(M, 4, 1) // buckled, not a lot of shaking
-								else
-									shake_camera(M, 10, 2) // unbuckled, HOLY SHIT SHAKE THE ROOM
-						if(istype(M, /mob/living/carbon/human))
+						if(ishuman(M))
 							var/mob/living/carbon/human/H = M
 							if(H.buckled && istype(H.buckled, /obj/structure/stool/bed/chair/comfy/babylon))
 								var/obj/structure/stool/bed/chair/comfy/babylon/B = H.buckled
@@ -256,92 +219,16 @@ datum/shuttle_controller/emergency_shuttle/process()
 								H.Stun(5)
 								H.Weaken(5)
 								step(H,pick(cardinal))//move them
-								H.apply_damage(rand(80) , BRUTE)
-
-					start_location = locate(/area/shuttle/escape_pod2/transit)
-					end_location = locate(/area/shuttle/escape_pod2/centcom)
-					start_location.move_contents_to(end_location, null, NORTH)
-
-					for(var/obj/machinery/door/D in machines)
-						if( get_area(D) == end_location )
-							spawn(0)
-								D.open()
-
-					create_lighting_overlays(7)
-
-					for(var/obj/machinery/light/A in end_location)
-						var/obj/machinery/light/B = new A.type(A.loc)
-						B.dir = A.dir
-						B.New()
-						B.update()
-						B.set_light(B.brightness_range, B.brightness_power, B.brightness_color)
-						qdel(A)
-
-					for(var/obj/structure/torchwall/A in end_location)
-						var/obj/structure/torchwall/B = new A.type(A.loc)
-						B.dir = A.dir
-						B.New()
-						qdel(A)
-
-					for(var/mob/M in end_location)
-						if(M.client)
-							spawn(0)
-								if(M.buckled)
-									shake_camera(M, 4, 1) // buckled, not a lot of shaking
-								else
-									shake_camera(M, 10, 2) // unbuckled, HOLY SHIT SHAKE THE ROOM
-						if(istype(M, /mob/living/carbon))
-							if(!M.buckled)
-								M.Weaken(5)
-
-					start_location = locate(/area/shuttle/escape_pod3/transit)
-					end_location = locate(/area/shuttle/escape_pod3/centcom)
-					start_location.move_contents_to(end_location, null, NORTH)
-
-					for(var/obj/machinery/door/D in machines)
-						if( get_area(D) == end_location )
-							spawn(0)
-								D.open()
-
-					for(var/mob/M in end_location)
-						if(M.client)
-							spawn(0)
-								if(M.buckled)
-									shake_camera(M, 4, 1) // buckled, not a lot of shaking
-								else
-									shake_camera(M, 10, 2) // unbuckled, HOLY SHIT SHAKE THE ROOM
-						if(istype(M, /mob/living/carbon))
-							if(!M.buckled)
-								M.Weaken(5)
-
-					start_location = locate(/area/shuttle/escape_pod5/transit)
-					end_location = locate(/area/shuttle/escape_pod5/centcom)
-					start_location.move_contents_to(end_location, null, EAST)
-
-					for(var/obj/machinery/door/D in machines)
-						if( get_area(D) == end_location )
-							spawn(0)
-								D.open()
-
-					for(var/mob/M in end_location)
-						if(M.client)
-							spawn(0)
-								if(M.buckled)
-									shake_camera(M, 4, 1) // buckled, not a lot of shaking
-								else
-									shake_camera(M, 10, 2) // unbuckled, HOLY SHIT SHAKE THE ROOM
-						if(istype(M, /mob/living/carbon))
-							if(!M.buckled)
-								M.Weaken(5)
+								H.apply_damage(rand(70) , BRUTE)
 
 					online = 0
 
 					//a.autosay("The Charon have docked within the Leviathan.", "Ulysses Console")
 
-					return 1
+					return TRUE
 
 					/* --- Shuttle has docked centcom after being recalled --- */
-			if(timeleft>timelimit)
+			if(timeleft > timelimit)
 				online = 0
 				direction = 1
 				endtime = null
@@ -374,58 +261,23 @@ datum/shuttle_controller/emergency_shuttle/process()
 				var/area/end_location = locate(/area/shuttle/escape/transit)
 
 				settimeleft(SHUTTLETRANSITTIME)
-				start_location.move_contents_to(end_location, null, NORTH)
+				start_location.move_contents_to(end_location, TRUE)
 
 				// Close shuttle doors, lock
 				for(var/obj/machinery/door/unpowered/shuttle/D in end_location)
-					spawn(0)
+					ASYNC
 						D.close()
 						D.locked = 1
 
 							// Some aesthetic turbulance shaking
 				for(var/mob/M in end_location)
 					if(M.client)
-						spawn(0)
+						ASYNC
 							if(M.buckled)
 								shake_camera(M, 4, 1) // buckled, not a lot of shaking
 							else
 								shake_camera(M, 10, 2) // unbuckled, HOLY SHIT SHAKE THE ROOM
-					if(istype(M, /mob/living/carbon))
-						if(!M.buckled)
-							M.Weaken(5)
-
-				//pods
-				start_location = locate(/area/shuttle/escape_pod1/station)
-				end_location = locate(/area/shuttle/escape_pod1/transit)
-				start_location.move_contents_to(end_location, /turf/simulated/floor/engine/vacuum/hull, NORTH)
-				for(var/obj/machinery/door/D in end_location)
-					spawn(0)
-						D.close()
-
-				create_lighting_overlays(7)
-
-				for(var/obj/machinery/light/A in end_location)
-					var/obj/machinery/light/B = new A.type(A.loc)
-					B.dir = A.dir
-					B.New()
-					B.update()
-					B.set_light(B.brightness_range, B.brightness_power, B.brightness_color)
-					qdel(A)
-
-				for(var/obj/structure/torchwall/A in end_location)
-					var/obj/structure/torchwall/B = new A.type(A.loc)
-					B.dir = A.dir
-					B.New()
-					qdel(A)
-
-				for(var/mob/M in end_location)
-					if(M.client)
-						spawn(0)
-							if(M.buckled)
-								shake_camera(M, 4, 1) // buckled, not a lot of shaking
-							else
-								shake_camera(M, 10, 2) // unbuckled, HOLY SHIT SHAKE THE ROOM
-					if(istype(M, /mob/living/carbon/human))
+					if(ishuman(M))
 						var/mob/living/carbon/human/H = M
 						if(H.buckled && istype(H.buckled, /obj/structure/stool/bed/chair/comfy/babylon))
 							var/obj/structure/stool/bed/chair/comfy/babylon/B = H.buckled
@@ -441,73 +293,17 @@ datum/shuttle_controller/emergency_shuttle/process()
 							step(H,pick(cardinal))//move them
 							H.apply_damage(rand(70) , BRUTE)
 
-				start_location = locate(/area/shuttle/escape_pod2/station)
-				end_location = locate(/area/shuttle/escape_pod2/transit)
-				start_location.move_contents_to(end_location, /turf/simulated/floor/engine/vacuum/hull, NORTH)
-				for(var/obj/machinery/door/D in end_location)
-					spawn(0)
-						D.close()
-
-				for(var/mob/M in end_location)
-					if(M.client)
-						spawn(0)
-							if(M.buckled)
-								shake_camera(M, 4, 1) // buckled, not a lot of shaking
-							else
-								shake_camera(M, 10, 2) // unbuckled, HOLY SHIT SHAKE THE ROOM
-					if(istype(M, /mob/living/carbon))
-						if(!M.buckled)
-							M.Weaken(5)
-
-				start_location = locate(/area/shuttle/escape_pod3/station)
-				end_location = locate(/area/shuttle/escape_pod3/transit)
-				start_location.move_contents_to(end_location, /turf/simulated/floor/engine/vacuum/hull, NORTH)
-				for(var/obj/machinery/door/D in end_location)
-					spawn(0)
-						D.close()
-
-				for(var/mob/M in end_location)
-					if(M.client)
-						spawn(0)
-							if(M.buckled)
-								shake_camera(M, 4, 1) // buckled, not a lot of shaking
-							else
-								shake_camera(M, 10, 2) // unbuckled, HOLY SHIT SHAKE THE ROOM
-					if(istype(M, /mob/living/carbon))
-						if(!M.buckled)
-							M.Weaken(5)
-
-				start_location = locate(/area/shuttle/escape_pod5/station)
-				end_location = locate(/area/shuttle/escape_pod5/transit)
-				start_location.move_contents_to(end_location, /turf/simulated/floor/engine/vacuum/hull, EAST)
-				for(var/obj/machinery/door/D in end_location)
-					spawn(0)
-						D.close()
-
-				for(var/mob/M in end_location)
-					if(M.client)
-						spawn(0)
-							if(M.buckled)
-								shake_camera(M, 4, 1) // buckled, not a lot of shaking
-							else
-								shake_camera(M, 10, 2) // unbuckled, HOLY SHIT SHAKE THE ROOM
-					if(istype(M, /mob/living/carbon))
-						if(!M.buckled)
-							M.Weaken(5)
-
-				return 1
-
+				return TRUE
 		else
 			// Just before it leaves, close the damn doors!
 			if(timeleft == 2 || timeleft == 1)
 				var/area/start_location = locate(/area/shuttle/escape/station)
 				for(var/obj/machinery/door/unpowered/shuttle/D in start_location)
-					spawn(0)
+					ASYNC
 						D.close()
 						D.locked = 1
 				a.autosay("Ulysses launched.", "Ulysses Console")
-				return 1
-
+				return TRUE
 			/* --- Shuttle leaves the station, enters transit --- */
 
 			//I've copied it to previos section

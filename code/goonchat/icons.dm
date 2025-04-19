@@ -7,8 +7,8 @@ var/regex/is_http_protocol = new(regex("^https?://"))
 /proc/icon2base64(icon/icon, iconKey = "misc")
 	if (!isicon(icon))
 		return FALSE
-	to_save(iconCache[iconKey], icon)
-	var/iconData = iconCache.ExportText(iconKey)
+	to_save(global.iconCache[iconKey], icon)
+	var/iconData = global.iconCache.ExportText(iconKey)
 	var/list/partial = splittext(iconData, "{")
 	return replacetext(copytext(partial[2], 3, -5), "\n", "")
 

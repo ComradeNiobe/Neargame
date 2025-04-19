@@ -648,8 +648,8 @@ Turf and target are seperate in case you want to teleport some distance from a t
 
 /proc/do_mob(var/mob/user , var/mob/target, delay as num) //This is quite an ugly solution but i refuse to use the old request system.
 	if(!user || !target) return 0
-	var/user_loc = user.loc
-	var/target_loc = target.loc
+	var/user_loc = get_turf(user)
+	var/target_loc = get_turf(target)
 	var/holding = user.get_active_hand()
 	var/delayfraction = round(delay/10)
 	var/datum/progressbar/progbar
@@ -667,7 +667,7 @@ Turf and target are seperate in case you want to teleport some distance from a t
 			qdel(progbar)
 			user.doing_after = FALSE
 			return 0
-		if (user.loc != user_loc || target.loc != target_loc || user.get_active_hand() != holding)
+		if (get_turf(user) != user_loc || get_turf(target) != target_loc || user.get_active_hand() != holding)
 			qdel(progbar)
 			user.doing_after = FALSE
 			return 0
@@ -736,21 +736,6 @@ Turf and target are seperate in case you want to teleport some distance from a t
 	return areas
 
 //Takes: Area type as text string or as typepath OR an instance of the area.
-//Returns: A list of all turfs in areas of that type of that type in the world.
-/proc/get_area_turfs(var/areatype)
-	if(!areatype) return null
-	if(istext(areatype)) areatype = text2path(areatype)
-	if(isarea(areatype))
-		var/area/areatemp = areatype
-		areatype = areatemp.type
-
-	var/list/turfs = new/list()
-	for(var/area/N in world)
-		if(istype(N, areatype))
-			for(var/turf/T in N) turfs += T
-	return turfs
-
-//Takes: Area type as text string or as typepath OR an instance of the area.
 //Returns: A list of all atoms	(objs, turfs, mobs) in areas of that type of that type in the world.
 /proc/get_area_all_atoms(var/areatype)
 	if(!areatype) return null
@@ -766,162 +751,29 @@ Turf and target are seperate in case you want to teleport some distance from a t
 				atoms += A
 	return atoms
 
-/datum/coords //Simple datum for storing coordinates.
-	var/x_pos = null
-	var/y_pos = null
-	var/z_pos = null
-
-/area/proc/move_contents_to(var/area/A, var/turftoleave=null, var/direction = null)
-	//Takes: Area. Optional: turf type to leave behind.
+/area/proc/move_contents_to(var/area/A, var/move_air)
+	//Takes: Area.
+	//       move_air - Boolean, whether or not air should be translated with the turfs.
 	//Returns: Nothing.
 	//Notes: Attempts to move the contents of one area to another area.
-	//       Movement based on lower left corner. Tiles that do not fit
-	//		 into the new area will not be moved.
+	//       Movement based on lower left corner.
 
-	if(!A || !src) return 0
+	if(!A || !src) return
 
-	var/list/turfs_src = get_area_turfs(src.type)
-	var/list/turfs_trg = get_area_turfs(A.type)
+	var/list/turfs_src = get_area_turfs("\ref[src]")
 
-	var/src_min_x = 0
-	var/src_min_y = 0
-	for (var/turf/T in turfs_src)
-		if(T.x < src_min_x || !src_min_x) src_min_x	= T.x
-		if(T.y < src_min_y || !src_min_y) src_min_y	= T.y
+	if(!turfs_src.len) return
 
-	var/trg_min_x = 0
-	var/trg_min_y = 0
-	for (var/turf/T in turfs_trg)
-		if(T.x < trg_min_x || !trg_min_x) trg_min_x	= T.x
-		if(T.y < trg_min_y || !trg_min_y) trg_min_y	= T.y
+	//figure out a suitable origin - this assumes the shuttle areas are the exact same size and shape
+	//might be worth doing this with a shuttle core object instead of areas, in the future
+	var/src_origin = locate(src.x, src.y, src.z)
+	var/trg_origin = locate(A.x, A.y, A.z)
 
-	var/list/refined_src = new/list()
-	for(var/turf/T in turfs_src)
-		refined_src += T
-		refined_src[T] = new/datum/coords
-		var/datum/coords/C = refined_src[T]
-		C.x_pos = (T.x - src_min_x)
-		C.y_pos = (T.y - src_min_y)
+	if(src_origin && trg_origin)
+		var/translation = get_turf_translation(src_origin, trg_origin, turfs_src)
+		translate_turfs(translation, null, translate_air = move_air)
 
-	var/list/refined_trg = new/list()
-	for(var/turf/T in turfs_trg)
-		refined_trg += T
-		refined_trg[T] = new/datum/coords
-		var/datum/coords/C = refined_trg[T]
-		C.x_pos = (T.x - trg_min_x)
-		C.y_pos = (T.y - trg_min_y)
-
-	var/list/fromupdate = new/list()
-	var/list/toupdate = new/list()
-
-	moving:
-		for (var/turf/T in refined_src)
-			var/datum/coords/C_src = refined_src[T]
-			for (var/turf/B in refined_trg)
-				var/datum/coords/C_trg = refined_trg[B]
-				if(C_src.x_pos == C_trg.x_pos && C_src.y_pos == C_trg.y_pos)
-
-					var/old_dir1 = T.dir
-					var/old_icon_state1 = T.icon_state
-					var/old_icon1 = T.icon
-
-					var/turf/X = new T.type(B)
-					X.dir = old_dir1
-					X.icon_state = old_icon_state1
-					X.icon = old_icon1 //Shuttle floors are in shuttle.dmi while the defaults are floors.dmi
-					X.vis_contents.Cut()
-
-					/* Quick visual fix for some weird shuttle corner artefacts when on transit space tiles */
-					if(direction && findtext(X.icon_state, "swall_s"))
-
-						// Spawn a new shuttle corner object
-						var/obj/corner = new()
-						corner.loc = X
-						corner.density = 1
-						corner.anchored = 1
-						corner.icon = X.icon
-						corner.icon_state = replacetext(X.icon_state, "_s", "_f")
-						corner.tag = "delete me"
-						corner.name = "wall"
-
-						// Find a new turf to take on the property of
-						var/turf/nextturf = get_step(corner, direction)
-						if(!nextturf || !istype(nextturf, /turf/space))
-							nextturf = get_step(corner, turn(direction, 180))
-
-
-						// Take on the icon of a neighboring scrolling space icon
-						X.icon = nextturf.icon
-						X.icon_state = nextturf.icon_state
-
-
-					for(var/obj/O in T)
-
-						// Reset the shuttle corners
-						if(O.tag == "delete me")
-							X.icon = 'icons/turf/shuttle.dmi'
-							X.icon_state = replacetext(O.icon_state, "_f", "_s") // revert the turf to the old icon_state
-							X.name = "wall"
-							qdel(O) // prevents multiple shuttle corners from stacking
-							continue
-						if(!istype(O,/obj)) continue
-						O.loc = X
-					for(var/mob/M in T)
-						if(!istype(M,/mob) || istype(M, /mob/aiEye)) continue // If we need to check for more mobs, I'll add a variable
-						M.loc = X
-
-//					var/area/AR = X.loc
-
-//					if(AR.ul_Lighting)							//TODO: rewrite this code so it's not messed by lighting ~Carn
-//						X.opacity = !X.opacity
-//						X.set_opacity(!X.opacity)
-
-					toupdate += X
-
-					if(turftoleave)
-						var/turf/ttl = new turftoleave(T)
-
-//						var/area/AR2 = ttl.loc
-
-//						if(AR2.ul_Lighting)						//TODO: rewrite this code so it's not messed by lighting ~Carn
-//							ttl.opacity = !ttl.opacity
-//							ttl.sd_set_opacity(!ttl.opacity)
-
-						fromupdate += ttl
-
-					else
-						T.ChangeTurf(/turf/space)
-
-					refined_src -= T
-					refined_trg -= B
-					continue moving
-
-	var/list/doors = new/list()
-
-	if(toupdate.len)
-		for(var/turf/simulated/T1 in toupdate)
-			for(var/obj/machinery/door/D2 in T1)
-				doors += D2
-			/*if(T1.parent)
-				air_master.groups_to_rebuild += T1.parent
-			else
-				air_master.tiles_to_update += T1*/
-
-	if(fromupdate.len)
-		for(var/turf/simulated/T2 in fromupdate)
-			for(var/obj/machinery/door/D2 in T2)
-				doors += D2
-			/*if(T2.parent)
-				air_master.groups_to_rebuild += T2.parent
-			else
-				air_master.tiles_to_update += T2*/
-
-	for(var/obj/O in doors)
-		O:update_nearby_tiles(1)
-
-
-
-proc/DuplicateObject(obj/original, var/perfectcopy = 0 , var/sameloc = 0)
+/proc/DuplicateObject(obj/original, var/perfectcopy = 0 , var/sameloc = 0)
 	if(!original)
 		return null
 
@@ -939,6 +791,11 @@ proc/DuplicateObject(obj/original, var/perfectcopy = 0 , var/sameloc = 0)
 					O.vars[V] = original.vars[V]
 	return O
 
+
+/datum/coords //Simple datum for storing coordinates.
+	var/x_pos = null
+	var/y_pos = null
+	var/z_pos = null
 
 /area/proc/copy_contents_to(var/area/A , var/platingRequired = 0 )
 	//Takes: Area. Optional: If it should copy to areas that don't have plating
@@ -1012,16 +869,10 @@ proc/DuplicateObject(obj/original, var/perfectcopy = 0 , var/sameloc = 0)
 					var/list/newmobs = new/list()
 
 					for(var/obj/O in T)
-
-						if(!istype(O,/obj))
-							continue
-
 						objs += O
-
 
 					for(var/obj/O in objs)
 						newobjs += DuplicateObject(O , 1)
-
 
 					for(var/obj/O in newobjs)
 						O.loc = X
@@ -1058,9 +909,6 @@ proc/DuplicateObject(obj/original, var/perfectcopy = 0 , var/sameloc = 0)
 					refined_trg -= B
 					continue moving
 
-
-
-
 	var/list/doors = new/list()
 
 	if(toupdate.len)
@@ -1072,15 +920,10 @@ proc/DuplicateObject(obj/original, var/perfectcopy = 0 , var/sameloc = 0)
 			else
 				air_master.tiles_to_update += T1*/
 
-	for(var/obj/O in doors)
-		O:update_nearby_tiles(1)
-
-
-
+	for(var/obj/O as anything in doors)
+		O.update_nearby_tiles(1)
 
 	return copiedobjs
-
-
 
 proc/get_cardinal_dir(atom/A, atom/B)
 	var/dx = abs(B.x - A.x)
@@ -1307,8 +1150,6 @@ var/list/WALLITEMS = list(
 	return locate(tX, tY, tZ)
 
 var/mob/dview/dview_mob = new
-var/datum/debugFileOutput/debugFileOutput = new
-var/savefile/iconCache = new("data/iconCache.sav")
 
 //Version of view() which ignores darkness, because BYOND doesn't have it.
 /proc/dview(var/range = world.view, var/center, var/invis_flags = 0)

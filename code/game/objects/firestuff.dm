@@ -145,7 +145,7 @@
 	turn_off()
 
 /obj/structure/fireplace/Destroy()
-	processing_objects -= src
+	processing_objects.Remove(src)
 	return ..()
 
 /obj/structure/fireplace/process()

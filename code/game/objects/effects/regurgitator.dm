@@ -8,7 +8,6 @@
 	icon_state = "regugriator"
 	var/triggerproc = "catchperson" //name of the proc thats called when the mine is triggered
 	var/catched
-	var/mob/living/buckled_mob
 	var/chokingcontents = 0
 	contents = list()
 
@@ -80,7 +79,7 @@
 					H.emote("scream")
 				for(var/obj/item/C in H.contents)
 					if(!istype(C, /obj/item/storage/touchable/organ))
-						contents += C					
+						contents += C
 				H.death()
 				qdel(H)
 				qdel(AM)
@@ -124,7 +123,7 @@
 				if(istype(W, /obj/item/stack/sheet/wood))
 					var/obj/item/stack/sheet/wood/C = W
 					chokingcontents += C.amount
-					
+
 				if(istype(W, /obj/item/stone))
 					chokingcontents += 1
 				playsound(src, 'sound/effects/reg_eat1.ogg', 70, 1)
@@ -141,4 +140,4 @@
 				contents -= S
 			playsound(src, 'sound/effects/reg_die.ogg', 70, 1)
 			qdel(src)
-				
+

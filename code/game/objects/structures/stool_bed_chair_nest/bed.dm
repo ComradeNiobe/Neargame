@@ -11,7 +11,6 @@
 	name = "bed"
 	desc = "This is used to lie in, sleep in or strap on."
 	icon_state = "bed"
-	var/mob/living/buckled_mob
 	flammable = 1
 	can_leave = TRUE
 

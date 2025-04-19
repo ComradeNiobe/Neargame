@@ -270,7 +270,7 @@
 		src.health -= Proj.damage
 	..()
 	if(prob(45) && Proj.damage > 0) src.spark_system.start()
-	del (Proj)
+	qdel(Proj)
 	if (src.health <= 0)
 		src.die()
 	return
@@ -486,26 +486,26 @@
 
 
 	ex_act()
-		del src
+		qdel(src)
 		return
 
 	emp_act()
-		del src
+		qdel(src)
 		return
 
 	meteorhit()
-		del src
+		qdel(src)
 		return
 
 	proc/update_health()
 		if(src.health<=0)
-			del src
+			qdel(src)
 		return
 
 	proc/take_damage(damage)
 		src.health -= damage
 		if(src.health<=0)
-			del src
+			qdel(src)
 		return
 
 

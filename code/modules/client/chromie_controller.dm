@@ -150,7 +150,7 @@ var/global/list/hiden_obols = list()
 		to_chat(usr, "<span class='combatbold'>There can be only one!</span>")
 		return
 
-	var/datum/shuttle/shuttle = shuttleMain
+	var/datum/shuttle/shuttle = global.shuttleMain
 
 	if(shuttle.called)
 		to_chat(usr, "<span class='combat'>The Ulysses launch has already been initiated.</span>")

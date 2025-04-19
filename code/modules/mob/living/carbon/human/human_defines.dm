@@ -146,7 +146,6 @@
 	var/vampirebit = FALSE
 	var/piggybacking = FALSE
 	var/piggybacked = FALSE
-	var/mob/living/buckled_mob
 	var/turf/clinged_turf
 	var/isLeaning = 0
 	var/list/perks = list()

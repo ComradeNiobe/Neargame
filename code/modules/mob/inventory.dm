@@ -221,7 +221,7 @@
 	if(sound)
 		if(!istype(Target, /obj/structure/rack))
 			make_item_drop_sound()
-	
+
 	if(istype(src, /mob/living/carbon/human))
 		var/mob/living/carbon/human/H = src
 		var/obj/item/I = get_active_hand()
@@ -229,7 +229,8 @@
 			qdel(H.malabares)
 	if(hand)
 		return drop_l_hand(Target)
-	else		return drop_r_hand(Target)
+	else
+		return drop_r_hand(Target)
 
 
 /mob/proc/drop_item_vv(var/atom/Target, var/sound = 1)

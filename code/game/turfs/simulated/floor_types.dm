@@ -978,8 +978,7 @@
 	return 1
 
 /turf/simulated/wall/Destroy()
-	dismantle_wall(null,null,1)
-	return ..()
+	. = ..()
 
 /turf/simulated/floor/lifeweb/stone/ladder/attack_hand(mob/living/carbon/human/user as mob)
 	..()
@@ -1176,7 +1175,7 @@
 	if(go_backwards)
 		make_tunnel(backward_cave_dir)
 	// Kill ourselves by replacing ourselves with a normal floor.
-	ChangeTurfNew(/turf/simulated/floor/plating/dirt)
+	ChangeTurf(/turf/simulated/floor/plating/dirt)
 	..()
 
 /turf/simulated/floor/plating/dirt/proc/make_tunnel(var/dir)
@@ -1199,7 +1198,7 @@
 		for(var/edge_angle in L)
 			var/turf/simulated/wall/r_wall/cave/edge = get_step(tunnel, angle2dir(dir2angle(dir) + edge_angle))
 			if(istype(edge))
-				ChangeTurfNew(/turf/simulated/floor/plating/dirt)
+				ChangeTurf(/turf/simulated/floor/plating/dirt)
 
 		// Move our tunnel forward
 		tunnel = get_step(tunnel, dir)
@@ -1209,7 +1208,7 @@
 			if(i > 3 && prob(20))
 				new src.type(tunnel, rand(10, 15), 0, dir)
 			else
-				ChangeTurfNew(/turf/simulated/floor/plating/dirt)
+				ChangeTurf(/turf/simulated/floor/plating/dirt)
 		else
 			break
 

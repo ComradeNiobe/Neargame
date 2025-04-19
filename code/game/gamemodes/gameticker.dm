@@ -1,4 +1,5 @@
 var/global/datum/controller/gameticker/ticker
+var/global/shuttleMain = null
 var/global/quietend = 0
 var/global/deathinfort = 0
 var/global/deathincave = 0
@@ -625,9 +626,9 @@ var/turf/MiniSpawn
 		if(energyInvestimento == 1)
 			treasuryworth.add_money(-3)
 
-		var/datum/shuttle/S = shuttleMain
+		var/datum/shuttle/S = global.shuttleMain
 
-		var/mode_finished = mode.check_finished() || (emergency_shuttle.location == 2 && emergency_shuttle.alert == 1 || S.location == 3) // 3 == LEVIATHAN
+		var/mode_finished = (mode.check_finished() || (emergency_shuttle.location == 2 && emergency_shuttle.alert == 1 || S.location_flag & FLAG_LEVIATHAN)) // 3 == LEVIATHAN
 		if((!mode.explosion_in_progress && mode_finished)|| quietend)
 			current_state = GAME_STATE_FINISHED
 

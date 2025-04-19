@@ -10,7 +10,7 @@
 	var/description = ""
 	var/datum/reagents/holder = null
 	var/reagent_state = SOLID
-	var/list/data = null
+	var/alist/data = null
 	var/first_life = TRUE // Tracks wether or not this reagent is on the first life tick, important for some drugs.
 	var/volume = 0
 	var/nutriment_factor = 0
@@ -125,28 +125,29 @@ datum/reagent/proc/addiction_act_stage4(var/mob/living/M as mob)
 	return
 
 
-datum/reagent/blood
-	data = new/list("donor"=null,"viruses"=null,"blood_DNA"=null,"blood_type"=null,"resistances"=null,"trace_chem"=null, "antibodies" = null)
+/datum/reagent/blood
+	data = alist(
+		"donor" = null,
+		"viruses" = null,
+		"blood_DNA" = null,
+		"blood_type" = null,
+		"resistances" = null,
+		"trace_chem" = null,
+		"antibodies" = null,
+	)
 	name = "Blood"
 	id = "blood"
 	reagent_state = LIQUID
 	color = BLOOD_COLOR // rgb: 200, 0, 0
 
-datum/reagent/blood/proc/herege()
-	var/datum/reagent/blood/B = src
-	for(var/i = 1, i <= B.data.len, i++)
-		var/coisas = B.data[i]
-		var/donor = coisas["donor"]
-		if(istype(donor, /mob/living/carbon/human))
-			var/mob/living/carbon/human/H = src
-			if(H.religion != "Gray Church")
-				return 1
-	return 0
+/datum/reagent/blood/proc/is_heretic()
+	for(var/mob/living/carbon/human/blood_donor, donor in data)
+		if(blood_donor.religion != "Gray Church")
+			return TRUE
+		else
+			return FALSE
 
-
-
-
-datum/reagent/blood/reaction_mob(var/mob/M, var/method=TOUCH, var/volume)
+/datum/reagent/blood/reaction_mob(var/mob/M, var/method=TOUCH, var/volume)
 	var/datum/reagent/blood/self = src
 	src = null
 	if(self.data && self.data["viruses"])
@@ -1429,7 +1430,7 @@ datum/reagent/toxin/plantbgone
 			var/turf/simulated/wall/W = T
 			if(W.rotting)
 				W.rotting = 0
-				for(var/obj/effect/E in W) if(E.name == "Wallrot") del E
+				for(var/obj/effect/E in W) if(E.name == "Wallrot") qdel(E)
 
 				for(var/mob/O in viewers(W, null))
 					O.show_message(text("\blue The fungi are completely dissolved by the solution!"), 1)
@@ -1624,7 +1625,7 @@ datum/reagent/toxin/acid
 				if(H.wear_mask)
 					if(prob(meltprob) && !H.wear_mask.unacidable)
 						H << "<span class='danger'>Your mask melts away but protects you from the acid!</span>"
-						del (H.wear_mask)
+						qdel(H.wear_mask)
 						H.update_inv_wear_mask(0)
 						H.update_hair(0)
 					else
@@ -1634,7 +1635,7 @@ datum/reagent/toxin/acid
 				if(H.glasses) //Doesn't protect you from the acid but can melt anyways!
 					if(prob(meltprob) && !H.glasses.unacidable)
 						H << "<span class='danger'>Your glasses melts away!</span>"
-						del (H.glasses)
+						qdel(H.glasses)
 						H.update_inv_glasses(0)
 
 			else if(ismonkey(M))
@@ -1642,7 +1643,7 @@ datum/reagent/toxin/acid
 				if(MK.wear_mask)
 					if(!MK.wear_mask.unacidable)
 						MK << "<span class='danger'>Your mask melts away but protects you from the acid!</span>"
-						del (MK.wear_mask)
+						qdel(MK.wear_mask)
 						MK.update_inv_wear_mask(0)
 					else
 						MK << "<span class='warning'>Your mask protects you from the acid.</span>"

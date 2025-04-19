@@ -1,30 +1,59 @@
-var/runtime_diary = null
-//print an error message to world.log
-/proc/error(msg)
-	world.log << "## ERROR: [msg]"
+// On Linux/Unix systems the line endings are LF, on windows it's CRLF, admins that don't use notepad++
+// will get logs that are one big line if the system is Linux and they are using notepad.  This solves it by adding CR to every line ending
+// in the logs.  ascii character 13 = CR
 
+var/global/log_end= world.system_type == UNIX ? ascii2text(13) : ""
+
+var/runtime_diary = null
+
+/proc/error(msg)
+	to_world_log("## ERROR: [msg][log_end]")
+
+/proc/log_ss(subsystem, text, log_world = TRUE)
+	if (!subsystem)
+		subsystem = "UNKNOWN"
+	var/msg = "[subsystem]: [text]"
+	game_log("SS", msg)
+	if (log_world)
+		to_world_log("SS[subsystem]: [text]")
+
+#define WARNING(MSG) warning("[MSG] in [__FILE__] at line [__LINE__] src: [src] usr: [usr].")
 //print a warning message to world.log
 /proc/warning(msg)
-	world.log << "## WARNING: [msg]"
+	to_world_log("## WARNING: [msg][log_end]")
 
 //print a testing-mode debug message to world.log
 /proc/testing(msg)
-	world.log << "## TESTING: [msg]"
+	to_world_log("## TESTING: [msg][log_end]")
+
+/proc/game_log(category, text)
+	to_file(diary, "\[[time_stamp()]] [story_id] [category]: [text][log_end]")
+
+/proc/log_to_dd(text)
+	to_chat(text) //this comes before the config check because it can't possibly runtime
+	game_log("DD_OUTPUT", text)
 
 /proc/log_admin(text)
-	admin_log.Add(text)
-	if (config.log_admin)
-		diary << "\[[time_stamp()]]ADMIN: [text]"
-
+	global.admin_log.Add(text)
+	//if (get_config_value(/decl/config/toggle/log_admin))
+	game_log("ADMIN", text)
 
 /proc/log_debug(text)
-	if (config.log_debug)
-		diary << "\[[time_stamp()]]DEBUG: [text]"
+	//if (get_config_value(/decl/config/toggle/log_debug))
+	game_log("DEBUG", text)
+	to_debug_listeners(text)
 
-	for(var/client/C in admins)
-		if(C.prefs.toggles & CHAT_DEBUGLOGS)
-			C << "DEBUG: [text]"
+/proc/log_error(text)
+	error(text)
+	to_debug_listeners(text, "ERROR")
 
+/proc/log_warning(text)
+	warning(text)
+	to_debug_listeners(text, "WARNING")
+
+/proc/to_debug_listeners(text, prefix = "DEBUG")
+	for(var/client/C in global.admins)
+		to_chat(C, "[prefix]: [text]")
 
 /proc/log_game(text)
 	if (config.log_game)

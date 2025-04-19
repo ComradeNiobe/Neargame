@@ -28,6 +28,17 @@
 	var/list/decals
 	var/burnAble = 1 // Able to make fire on it
 
+	var/turf_flags
+
+	var/tmp/changing_turf
+	var/tmp/prev_type // Previous type of the turf, prior to turf translation.
+
+	///Whether this tile is willing to copy air from a previous tile through ChangeTurf, transfer_turf_properties etc.
+	var/can_inherit_air = TRUE
+
+	var/zone/zone
+	var/open_directions
+
 var/list/turfs = list()
 
 /turf/New()
@@ -258,55 +269,93 @@ var/list/turfs = list()
 /turf/proc/RemoveLattice()
 	var/obj/structure/lattice/L = locate(/obj/structure/lattice, src)
 	if(L)
-		del L
+		qdel(L)
 
-/turf/proc/ChangeTurfNew(var/turf/N, var/tell_universe=1, var/force_lighting_update = 0)
+/turf/proc/ChangeTurf(var/turf/N, var/tell_universe = TRUE, var/force_lighting_update = FALSE, var/keep_air = FALSE, var/update_open_turfs_above = TRUE, var/keep_height = FALSE)
+
 	if (!N)
 		return
 
-	// This makes sure that turfs are not changed to space when one side is part of a zone
+	//if (!(atom_flags & ATOM_FLAG_INITIALIZED))
+	//	return new N(src)
 
-	var/obj/fire/old_fire = fire
-	var/old_opacity = opacity
-	var/old_dynamic_lighting = dynamic_lighting
-	var/list/old_affecting_lights = affecting_lights
+	// Track a number of old values for the purposes of raising
+	// state change events after changing the turf to the new type.
+	var/old_fire =             fire
+	var/old_opacity =          opacity
+	var/old_prev_type =        prev_type
+	var/old_affecting_lights = affecting_lights
 	var/old_lighting_overlay = lighting_overlay
+	var/old_dynamic_lighting = src:dynamic_lighting
+	var/old_event_listeners =  event_listeners
+	var/old_listening_to =     _listening_to
 
-//	log_debug("Replacing [src.type] with [N]")
-
-
-	if(connections) connections.erase_all()
+	if(connections)
+		connections.erase_all()
 
 	overlays.Cut()
 	underlays.Cut()
-	if(istype(src,/turf/simulated))
+
+	if(turf_is_simulated(src))
 		//Yeah, we're just going to rebuild the whole thing.
 		//Despite this being called a bunch during explosions,
 		//the zone will only really do heavy lifting once.
 		var/turf/simulated/S = src
-		if(S.zone) S.zone.rebuild()
+		if(S?.zone)
+			S.zone.rebuild()
+
 
 	if(istype(src, /turf/simulated/floor/open))
 		src.vis_contents.Cut()
-		global_openspace -= src
+		global.global_openspace -= src
 
 	if(istype(src, /turf/simulated/floor/plating/catwalk) || istype(src, /obj/structure/catwalk))
 		src.vis_contents.Cut()
 
-	var/turf/simulated/W = new N( locate(src.x, src.y, src.z) )
+	// Create a copy of the old air value to apply.
+	var/datum/gas_mixture/old_air
+	if(keep_air)
+		var/turf/simulated/S = src
+		// Bypass calling return_air to avoid creating a direct reference to zone air.
+		if(zone)
+			S.c_copy_air()
+			old_air = air
+		else
+			old_air = S.return_air()
 
-	if(ispath(N, /turf/simulated))
+	changing_turf = TRUE
+
+	qdel(src)
+	. = new N(src)
+
+	var/turf/changed_turf = .
+	changed_turf.prev_type =        old_prev_type // Shuttle transition turf tracking.
+	// Set our observation bookkeeping lists back.
+	changed_turf.event_listeners =  old_event_listeners
+	changed_turf._listening_to =    old_listening_to
+
+	// Update ZAS, atmos and fire.
+	if(keep_air && changed_turf.can_inherit_air)
+		changed_turf.air = old_air
+
+	if(turf_is_simulated(changed_turf))
 		if(old_fire)
-			fire = old_fire
-		if (istype(W,/turf/simulated/floor))
-			W.RemoveLattice()
-	else if(old_fire)
-		old_fire.RemoveFire()
-
+			changed_turf.fire = old_fire
+			qdel(old_fire)
+		if(istype(src, /turf/simulated/floor))
+			changed_turf.RemoveLattice()
 	if(air_master)
 		air_master.mark_for_update(src) //handle the addition of the new turf.
 
-	. = W
+	// Raise appropriate events.
+	changed_turf.post_change()
+	//if(tell_universe)
+	//	global.universe.OnTurfChange(changed_turf)
+
+	//if(changed_turf.density != old_density && changed_turf.event_listeners?[/decl/observ/density_set])
+	//	changed_turf.raise_event_non_global(/decl/observ/density_set, old_density, changed_turf.density)
+
+	// lighting stuff
 
 	lighting_overlay = old_lighting_overlay
 	if(lighting_overlay)
@@ -319,92 +368,9 @@ var/list/turfs = list()
 			lighting_build_overlays()
 		else
 			lighting_clear_overlays()
-//Creates a new turf
-/turf/proc/ChangeTurf(var/turf/N)
-	if (!N)
-		return
 
-///// Z-Level Stuff ///// This makes sure that turfs are not changed to space when one side is part of a zone
-	if(N == /turf/space || N == /turf/simulated/wall)
-		var/turf/controller = locate(1, 1, src.z)
-		for(var/obj/effect/landmark/zcontroller/c in controller)
-			if(c.down)
-				var/turf/below = locate(src.x, src.y, c.down_target)
-				if(!istype(below, /turf/simulated/wall) && !istype(below, /turf/space)) // dont make open space into space, its pointless and makes people drop out of the station
-					var/turf/W = src.ChangeTurf(/turf/simulated/floor/open)
-					var/list/temp = list()
-					temp += W
-					global_openspace += temp
-					return W
-///// Z-Level Stuff
-
-//	var/old_lumcount = lighting_lumcount - initial(lighting_lumcount)
-
-//	var/old_lumcount = lighting_lumcount - initial(lighting_lumcount)
-	var/obj/fire/old_fire = fire
-
-	//world << "Replacing [src.type] with [N]"
-
-	if(connections) connections.erase_all()
-
-	if(istype(src,/turf/simulated))
-		//Yeah, we're just going to rebuild the whole thing.
-		//Despite this being called a bunch during explosions,
-		//the zone will only really do heavy lifting once.
-		var/turf/simulated/S = src
-		if(S.zone) S.zone.rebuild()
-
-
-	if(ispath(N, /turf/simulated/floor))
-		//if the old turf had a zone, connect the new turf to it as well - Cael
-		//Adjusted by SkyMarshal 5/10/13 - The air master will handle the addition of the new turf.
-		//if(zone)
-		//	zone.RemoveTurf(src)
-		//	if(!zone.CheckStatus())
-		//		zone.SetStatus(ZONE_ACTIVE)
-
-		var/turf/simulated/W = new N( locate(src.x, src.y, src.z) )
-		//W.Assimilate_Air()
-
-/*		W.lighting_lumcount += old_lumcount
-		if(old_lumcount != W.lighting_lumcount)
-			W.lighting_changed = 1
-			lighting_controller.changed_turfs += W*/
-
-		if(old_fire)
-			fire = old_fire
-
-		if (istype(W,/turf/simulated/floor))
-			W.RemoveLattice()
-
-		if(air_master)
-			air_master.mark_for_update(src)
-
-		W.levelupdate()
-
-		return W
-
-	else
-		//if(zone)
-		//	zone.RemoveTurf(src)
-		//	if(!zone.CheckStatus())
-		//		zone.SetStatus(ZONE_ACTIVE)
-
-		var/turf/W = new N( locate(src.x, src.y, src.z) )
-/*		W.lighting_lumcount += old_lumcount
-		if(old_lumcount != W.lighting_lumcount)
-			W.lighting_changed = 1
-			lighting_controller.changed_turfs += W*/
-
-		if(old_fire)
-			old_fire.RemoveFire()
-
-		if(air_master)
-			air_master.mark_for_update(src)
-
-		W.levelupdate()
-
-		return W
+	// end of lighting stuff
+	changed_turf.levelupdate()
 
 /turf/proc/AddDecal(const/image/decal)
 	if(!decals)
@@ -555,3 +521,20 @@ var/list/turfs = list()
 			playsound(M.loc, 'sound/misc/slip.ogg', 50, 1, -3)
 			return 1
 	return 0 // no success. Used in clown pda and wet floors
+
+/turf/proc/contains_dense_objects(list/exceptions)
+	if(density)
+		return TRUE
+	for(var/atom/A in src)
+		if(exceptions && (exceptions == A || (islist(exceptions) && (A in exceptions))))
+			continue
+		if(A.density && !(A.flags & ON_BORDER))
+			return TRUE
+	return FALSE
+
+/turf/proc/is_solid_structure()
+	return !(turf_flags & TURF_FLAG_BACKGROUND) || locate(/obj/structure/lattice, src)
+
+// Called after turf replaces old one
+/turf/proc/post_change()
+	levelupdate()

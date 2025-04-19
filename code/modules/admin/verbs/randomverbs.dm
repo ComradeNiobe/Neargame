@@ -552,7 +552,7 @@ Traitors and the like can also be revived with the previous role mostly intact.
 	var/confirm = alert(src, "You sure?", "Confirm", "Yes", "No")
 	if(confirm != "Yes") return
 
-	var/datum/shuttle/shuttle = shuttleMain
+	var/datum/shuttle/shuttle = global.shuttleMain
 
 	if(shuttle.called)
 		to_chat(usr, "<span class='combat'>The Ulysses launch has already been initiated.</span>")
@@ -571,7 +571,7 @@ Traitors and the like can also be revived with the previous role mostly intact.
 
 	if(alert(src, "You sure?", "Confirm", "Yes", "No") != "Yes") return
 
-	var/datum/shuttle/shuttle = shuttleMain
+	var/datum/shuttle/shuttle = global.shuttleMain
 
 	if(shuttle.called && !shuttle.launched) //check that shuttle isn't already heading to centcomm
 		emergency_shuttle.recall()

@@ -122,7 +122,7 @@
 	New()
 		..()
 		var/datum/disease/F = new /datum/disease/advance/flu(0)
-		var/list/data = list("viruses"= list(F))
+		var/alist/data = alist("viruses"= list(F))
 		reagents.add_reagent("blood", 20, data)
 
 /obj/item/reagent_containers/glass/bottle/epiglottis_virion
@@ -133,7 +133,7 @@
 	New()
 		..()
 		var/datum/disease/F = new /datum/disease/advance/voice_change(0)
-		var/list/data = list("viruses"= list(F))
+		var/alist/data = alist("viruses"= list(F))
 		reagents.add_reagent("blood", 20, data)
 
 /obj/item/reagent_containers/glass/bottle/liver_enhance_virion
@@ -144,7 +144,7 @@
 	New()
 		..()
 		var/datum/disease/F = new /datum/disease/advance/heal(0)
-		var/list/data = list("viruses"= list(F))
+		var/alist/data = alist("viruses"= list(F))
 		reagents.add_reagent("blood", 20, data)
 
 /obj/item/reagent_containers/glass/bottle/hullucigen_virion
@@ -155,7 +155,7 @@
 	New()
 		..()
 		var/datum/disease/F = new /datum/disease/advance/hullucigen(0)
-		var/list/data = list("viruses"= list(F))
+		var/alist/data = alist("viruses"= list(F))
 		reagents.add_reagent("blood", 20, data)
 
 /obj/item/reagent_containers/glass/bottle/pierrot_throat
@@ -166,7 +166,7 @@
 	New()
 		..()
 		var/datum/disease/F = new /datum/disease/pierrot_throat(0)
-		var/list/data = list("viruses"= list(F))
+		var/alist/data = alist("viruses"= list(F))
 		reagents.add_reagent("blood", 20, data)
 
 /obj/item/reagent_containers/glass/bottle/cold
@@ -177,7 +177,7 @@
 	New()
 		..()
 		var/datum/disease/advance/F = new /datum/disease/advance/cold(0)
-		var/list/data = list("viruses"= list(F))
+		var/alist/data = alist("viruses"= list(F))
 		reagents.add_reagent("blood", 20, data)
 
 /obj/item/reagent_containers/glass/bottle/random
@@ -188,7 +188,7 @@
 	New()
 		..()
 		var/datum/disease/advance/F = new(0)
-		var/list/data = list("viruses"= list(F))
+		var/alist/data = alist("viruses"= list(F))
 		reagents.add_reagent("blood", 20, data)
 
 /obj/item/reagent_containers/glass/bottle/retrovirus
@@ -199,7 +199,7 @@
 	New()
 		..()
 		var/datum/disease/F = new /datum/disease/dna_retrovirus(0)
-		var/list/data = list("viruses"= list(F))
+		var/alist/data = alist("viruses"= list(F))
 		reagents.add_reagent("blood", 20, data)
 
 
@@ -215,7 +215,7 @@
 		reagents = R
 		R.my_atom = src
 		var/datum/disease/F = new /datum/disease/gbs
-		var/list/data = list("virus"= F)
+		var/alist/data = alist("virus"= F)
 		R.add_reagent("blood", 20, data)
 
 /obj/item/reagent_containers/glass/bottle/fake_gbs
@@ -226,7 +226,7 @@
 	New()
 		..()
 		var/datum/disease/F = new /datum/disease/fake_gbs(0)
-		var/list/data = list("viruses"= list(F))
+		var/alist/data = alist("viruses"= list(F))
 		reagents.add_reagent("blood", 20, data)
 /*
 /obj/item/reagent_containers/glass/bottle/rhumba_beat
@@ -241,7 +241,7 @@
 		reagents = R
 		R.my_atom = src
 		var/datum/disease/F = new /datum/disease/rhumba_beat
-		var/list/data = list("virus"= F)
+		var/alist/data = alist("virus"= F)
 		R.add_reagent("blood", 20, data)
 */
 
@@ -253,7 +253,7 @@
 	New()
 		..()
 		var/datum/disease/F = new /datum/disease/brainrot(0)
-		var/list/data = list("viruses"= list(F))
+		var/alist/data = alist("viruses"= list(F))
 		reagents.add_reagent("blood", 20, data)
 
 /obj/item/reagent_containers/glass/bottle/magnitis
@@ -264,7 +264,7 @@
 	New()
 		..()
 		var/datum/disease/F = new /datum/disease/magnitis(0)
-		var/list/data = list("viruses"= list(F))
+		var/alist/data = alist("viruses"= list(F))
 		reagents.add_reagent("blood", 20, data)
 
 
@@ -276,7 +276,7 @@
 	New()
 		..()
 		var/datum/disease/F = new /datum/disease/wizarditis(0)
-		var/list/data = list("viruses"= list(F))
+		var/alist/data = alist("viruses"= list(F))
 		reagents.add_reagent("blood", 20, data)
 
 /obj/item/reagent_containers/glass/bottle/pacid

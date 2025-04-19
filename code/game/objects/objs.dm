@@ -19,6 +19,8 @@
 	var/force = 0
 	var/heavy = 0
 
+	var/obj_flags
+
 /obj/item/proc/is_used_on(obj/O, mob/user)
 
 /obj/proc/process()

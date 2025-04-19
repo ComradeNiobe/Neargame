@@ -195,7 +195,7 @@ its easier to just keep the beam vertical.
 
 		for(var/obj/effect/overlay/beam/O in orange(10,src))	//This section erases the previously drawn beam because I found it was easier to
 			if(O.BeamSource==src)				//just draw another instance of the beam instead of trying to manipulate all the
-				del O							//pieces to a new orientation.
+				qdel(O)							//pieces to a new orientation.
 		var/Angle=round(Get_Angle(src,BeamTarget))
 		var/icon/I=new(icon,icon_state)
 		I.Turn(Angle)
@@ -236,7 +236,7 @@ its easier to just keep the beam vertical.
 			X.pixel_y=Pixel_y
 		sleep(3)	//Changing this to a lower value will cause the beam to follow more smoothly with movement, but it will also be more laggy.
 					//I've found that 3 ticks provided a nice balance for my use.
-	for(var/obj/effect/overlay/beam/O in orange(10,src)) if(O.BeamSource==src) del O
+	for(var/obj/effect/overlay/beam/O in orange(10,src)) if(O.BeamSource==src) qdel(O)
 
 
 //All atoms
@@ -721,6 +721,14 @@ var/list/fonts = list('code/chatpanel/browserassets/rsc/gothic.ttf', 'code/chatp
 		else
 			H.hovertext.maptext = ""  // ui is blank, sad!
 
+/**
+	Attempt to drop this atom onto the destination.
+
+	The destination can instead return another location, recursively chaining.
+
+	- `destination`: The atom that this atom is dropped onto.
+	- Return: The result of the forceMove() at the end.
+*/
 /atom/movable/proc/dropInto(var/atom/destination)
 	while(istype(destination))
 		var/atom/drop_destination = destination.onDropInto(src)
@@ -729,11 +737,21 @@ var/list/fonts = list('code/chatpanel/browserassets/rsc/gothic.ttf', 'code/chatp
 		destination = drop_destination
 	return forceMove(null)
 
+/**
+	Handle dropping an atom onto this atom.
+
+	If the item should move into this atom, return null. Otherwise, return
+	the destination atom where the item should be moved.
+
+	- `AM`: The atom being dropped onto this atom
+	- Return: A location for the atom AM to move to, or null to move it into this atom.
+*/
 /atom/proc/onDropInto(var/atom/movable/AM)
-	return // If onDropInto returns null, then dropInto will forceMove AM into us.
+	RETURN_TYPE(/atom)
+	return
 
 /atom/movable/onDropInto(var/atom/movable/AM)
-	return loc // If onDropInto returns something, then dropInto will attempt to drop AM there.
+	return loc
 
 /atom/proc/fakesay(var/text = "", var/hex = "#add8e6", var/say_verb = "says")
 	var/image/objchatimage = image('icons/mob/talk.dmi', src, "h2", layer)

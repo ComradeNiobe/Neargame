@@ -7,10 +7,11 @@
 	anchored = 1
 	var/active = 0
 	New()
-		..()
+		. = ..()
 		init_obj.Add(src)
 
 /obj/machinery/gateway/initialize()
+	. = ..()
 	update_icon()
 	if(dir == 2)
 		density = 0

@@ -21,7 +21,7 @@
 	var/obj/multiz/target
 
 	New()
-		ladder_list.Add(src)
+		ladder_list |= src
 		. = ..()
 
 	proc/connect()
@@ -40,34 +40,33 @@
 		return
 
 	Destroy()
-		spawn(1)
-			if(target && icon_state == "ladderdown")
-				del target
+		if(target && icon_state == "ladderdown")
+			qdel(target)
 		return ..()
 
 	attack_paw(var/mob/M)
 		return attack_hand(M)
 
 	attack_hand(var/mob/M)
-		var/turf/T = target.loc
+		var/turf/T = get_turf(target)
 		if(M.a_intent == "grab")		// && get_dist(M, src) <= 1
 			var/atom/movable/chosen
 			var/list/avaluable_contents
-			avaluable_contents = new/list()
+			avaluable_contents = list()
 			for(var/obj/C in T.contents)
 				if(!C.anchored)
-					avaluable_contents.Add(C)
+					avaluable_contents |= C
 			for(var/mob/living/carbon/X in T.contents)
 				if(!X.buckled)
-					avaluable_contents.Add(X)
+					avaluable_contents |= X
 			chosen = input("What would you like to pull [src.icon_state == "ladderup" ? "down" : "up"]?", "Cross-ladder Pull", null) as obj|mob in avaluable_contents
 			if(chosen)
 				M.visible_message("\blue \The [M] starts pulling [chosen] [src.icon_state == "ladderup" ? "down" : "up"] \the [src]!", "\blue You start pulling [chosen] [src.icon_state == "ladderup"  ? "down" : "up"] \the [src]!", "You hear some grunting, and clanging of a metal ladder being used.")
 				if(iscarbon(chosen))
 					to_chat(chosen, "\red A hand appears from \the [src] and starts pulling you inside!")
 				if(do_after(M, 50))
-					if(chosen.loc == T)
-						chosen.Move(src.loc)
+					if(get_turf(chosen) == T)
+						chosen.forceMove(src)
 						M.visible_message("\blue \The [M] pulls [chosen] [src.icon_state == "ladderup" ? "down" : "up"] \the [src]!", "\blue You pull [chosen] [src.icon_state == "ladderup"  ? "down" : "up"] \the [src]!", "You hear some grunting, and clanging of a metal ladder being used.")
 						return
 					else
@@ -76,12 +75,12 @@
 				else
 					return
 
-		if(!target || !istype(target.loc, /turf))
+		if(!target || !isloc(target))
 			to_chat(M, "\ red The ladder is incomplete and can't be climbed.")
 		else
 			var/blocked = 0
 			for(var/atom/A in T.contents)
-				if(A.density && !istype(A, /mob))
+				if(A.density && !ismob(A))
 					blocked = 1
 					break
 			if(blocked || istype(T, /turf/simulated/wall))
@@ -90,26 +89,26 @@
 				M.visible_message("<b>[M.name]</b> starts to climb [src.icon_state == "ladderup" ? "up" : "down"] \the [src]!")
 				playsound(src, 'sound/lfwbsounds/ladder.ogg', 70, 1)
 				if(do_after(M, 15))
-					M.Move(target.loc)
+					M.forceMove(target)
 
 	attackby(obj/item/W as obj, mob/M as mob)
 		if (istype(W, /obj/item/grab) && get_dist(src,M)<2)
 			var/obj/item/grab/G = W
 			if(G.state >= 2)
-				if(!target || !istype(target.loc, /turf))
+				if(!target || !isloc(target))
 					to_chat(M,"\red The ladder is incomplete and can't be climbed.")
 					return
-				var/turf/T = target.loc
+				var/turf/T = get_turf(target)
 				var/blocked = 0
 				for(var/atom/A in T.contents)
-					if(A.density && !istype(A, /mob))
+					if(A.density && !ismob(A))
 						blocked = 1
 						break
-				if(blocked || istype(T, /turf/simulated/wall))
+				if(blocked || issimulatedwall(T))
 					to_chat(M,"\red Something is blocking the ladder.")
 				else
 					M.visible_message("\blue \The [M] puts [G.affecting] [src.icon_state == "ladderup" ? "up" : "down"] \the [src]!", "\blue You put [G.affecting] [src.icon_state == "ladderup"  ? "up" : "down"] \the [src]!", "You hear some grunting, and clanging of a metal ladder being used.")
-					G.affecting.Move(target.loc)
+					G.affecting.forceMove(target)
 					qdel(W)
 
 

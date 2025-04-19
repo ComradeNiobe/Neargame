@@ -57,7 +57,7 @@
 	return deleted
 
 
-GLOBAL_DATUM_INIT(debugFileOutput, /datum/debugFileOutput, new)
+GLOBAL_GETTER(debugFileOutput, /datum/debugFileOutput, new)
 
 /client/Topic(href, href_list)
 	..()

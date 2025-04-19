@@ -178,7 +178,7 @@ turf/simulated/hotspot_expose(exposed_temperature, exposed_volume, soh)
 
 
 /obj/fire/New(newLoc,fl)
-	..()
+	. = ..()
 
 	if(!istype(loc, /turf))
 		del src
@@ -190,13 +190,11 @@ turf/simulated/hotspot_expose(exposed_temperature, exposed_volume, soh)
 
 
 /obj/fire/Destroy()
-	if (istype(loc, /turf/simulated))
-
-
+	if (turf_is_simulated(loc))
 		loc = null
 	air_master.active_hotspots.Remove(src)
 
-	..()
+	return ..()
 
 /obj/fire/proc/RemoveFire()
 	if (istype(loc, /turf))

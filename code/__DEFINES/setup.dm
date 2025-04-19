@@ -1,6 +1,5 @@
 //This file was auto-corrected by findeclaration.exe on 25.5.2012 20:42:31
 // TODO: Half of the defines in this file should be bitflags. Correct them eventually ~ Niobe
-#define DEBUG
 
 #define PI 3.1415
 

@@ -186,7 +186,7 @@ var/global/list/allRecipes = list("Cult", "Old Ways", "Gray Church", "Furniture"
 		var/newItemPath =  CR.path_type
 		var/atom/newItem
 		if(ispath(newItemPath, /turf))
-			newLoc.ChangeTurfNew(newItemPath, TRUE, TRUE)
+			newLoc.ChangeTurf(newItemPath, TRUE, TRUE)
 			itemscrafted += 1
 		else if(CR.max_count > 1 && rolled[GP_MARGIN])
 			var/max_c = min(CR.max_count, rolled[GP_MARGIN] / 2)

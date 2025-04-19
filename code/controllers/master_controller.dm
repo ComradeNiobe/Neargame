@@ -84,7 +84,7 @@ var/global/pipe_processing_killed = 0
 	for(var/obj/effect/landmark/zcontroller/controller in controllerlocation)
 		if(!controller.initialized)
 			controller.initialized = 1
-			controller.calc(global_openspace)
+			controller.calc(global.global_openspace)
 // TODO: remove this abomination
 #define CHECK_SLEEP_MASTER if(++initialized_objects > 50) { initialized_objects=0;sleep(world.tick_lag); }
 

@@ -20,7 +20,6 @@
 	// Life vars/
 	var/energy = 0
 	var/obj/effect/plant_controller/master = null
-	var/mob/living/buckled_mob
 	var/datum/seed/seed
 
 /obj/effect/plantsegment/New()

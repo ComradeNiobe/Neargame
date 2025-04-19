@@ -1366,7 +1366,7 @@
 			else
 				for(var/atom/a in hallucinations)
 					if(client && mind && mind.special_role != "Waker")
-						del a
+						qdel(a)
 			if(paralysis)
 				AdjustParalysis(-1)
 				blinded = 1

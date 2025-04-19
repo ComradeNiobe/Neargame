@@ -17,7 +17,7 @@
 		if(prob(50))
 			var/area/A = get_area(src)
 			if(istype(A, /area/dunwell/surface))
-				ChangeTurfNew(/turf/simulated/floor/plating/dirt/cave) //Generate caves.
+				ChangeTurf(/turf/simulated/floor/plating/dirt/cave) //Generate caves.
 */ //Disabled for now
 
 /turf/simulated/wall/r_wall/cave/white
@@ -88,7 +88,7 @@
 							if(prob(50))
 								new /obj/item/stone(SS.loc)
 								new /obj/item/stone(SS.loc)
-					SS.ChangeTurfNew(turf_above)
+					SS.ChangeTurf(turf_above)
 			playsound(src,pick('sound/effects/dustdrop.ogg','sound/effects/fx_dust_a_01.ogg','sound/effects/fx_dust_a_02.ogg','sound/effects/fx_dust_a_03.ogg'),75,1,8)
 			for(var/turf/simulated/floor/T in range(src,6))
 				T.overlays += image(icon='icons/mining.dmi',icon_state="dustofdanger", layer = 5)
@@ -283,7 +283,7 @@
 		return
 	var/amount = rand(1, 2)
 	var/list/loc_use = list("x" = src.x, "y" = src.y, "z" = src.z)
-	ChangeTurfNew(turf_above)
+	ChangeTurf(turf_above)
 	for(var/turf/simulated/wall/W in range(1, src))
 		W.relativewall()
 	var/ore_loc = locate(loc_use["x"],loc_use["y"],loc_use["z"])

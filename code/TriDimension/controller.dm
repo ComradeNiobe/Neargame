@@ -27,6 +27,6 @@
 						T.vis_contents += belower
 				if(!istype(below, /turf/simulated/floor/open))
 					T.vis_contents += below
-		global_openspace -= T
+		global.global_openspace -= T
 	return
 

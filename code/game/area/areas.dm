@@ -1,11 +1,15 @@
+/// This list of names is here to make sure we don't state our descriptive blurb to a person more than once.
+var/global/list/area_blurb_stated_to = list()
+var/global/list/areas = list()
+
 // Areas.dm
 #define CLOSED 2
-
 
 // ===
 /area
 	var/global/global_uid = 0
 	var/uid
+	var/area_flags = 0
 	var/area_lights_luminosity = 9
 	var/musVolume = 25
 	var/sound = null
@@ -28,9 +32,9 @@
 	layer = TURF_LAYER+4
 	mouse_opacity = 0
 
-var/list/areas = list()
-
 /area/New()
+	. = ..()
+
 	icon_state = ""
 	layer = 10
 	master = src //moved outside the spawn(1) to avoid runtimes in lighting.dm when it references loc.loc.master ~Carn
@@ -38,7 +42,7 @@ var/list/areas = list()
 	proper_name = strip_improper(name)
 	if(requires_power)
 		active_areas += src
-	areas.Add(src)
+	global.areas += src
 	spawn(1)
 	//world.log << "New: [src] [tag]"
 		related = list(src)
@@ -62,6 +66,23 @@ var/list/areas = list()
 			luminosity = 0
 			area_lights_luminosity = rand(6,8)
 	..()
+
+// qdel(area) should not be attempted on an area with turfs in contents. ChangeArea every turf in it first.
+
+/area/Destroy()
+	global.areas -= src
+	var/failure = FALSE
+	for(var/atom/A in contents)
+		if(isturf(A))
+			failure = TRUE
+			contents.Remove(A) // note: A.loc == null after this
+		else
+			qdel(A)
+	if(failure)
+		PRINT_STACK_TRACE("Area [log_info_line(src)] was qdeleted with turfs in contents.")
+	//area_repository.clear_cache()
+	..()
+	return QDEL_HINT_HARDDEL
 
 /area/proc/poweralert(var/state, var/obj/source as obj)
 	if (state != poweralm)
@@ -678,3 +699,43 @@ proc/get_doors(area/A) //Luckily for the CPU, this generally is only run once pe
 
 /area/proc/SetName(new_name)
 	proper_name = strip_improper(new_name)
+
+// Changes the area of T to A. Do not do this manually.
+// Area is expected to be a non-null instance.
+/proc/ChangeArea(var/turf/T, var/area/A)
+	if(!istype(A))
+		CRASH("Area change attempt failed: invalid area supplied.")
+	//var/old_outside = T.is_outside()
+	var/area/old_area = get_area(T)
+	if(old_area == A)
+		return
+
+	//var/old_area_ambience = old_area?.interior_ambient_light_modifier
+
+	A.contents.Add(T)
+	if(old_area)
+		old_area.Exited(T, A)
+		for(var/atom/movable/AM as anything in T)
+			old_area.Exited(AM, A)  // Note: this _will_ raise exited events.
+	A.Entered(T, old_area)
+	for(var/atom/movable/AM as anything in T)
+		A.Entered(AM, old_area) // Note: this will _not_ raise moved or entered events. If you change this, you must also change everything which uses them.
+
+	//for(var/obj/machinery/M in T)
+	//	M.area_changed(old_area, A) // They usually get moved events, but this is the one way an area can change without triggering one.
+
+	//T.update_registrations_on_adjacent_area_change()
+	//for(var/direction in global.cardinal)
+	//	var/turf/adjacent_turf = get_step(T, direction)
+	//	if(adjacent_turf)
+	//		adjacent_turf.update_registrations_on_adjacent_area_change()
+
+	// Handle updating weather and atmos if the outside status of the turf changed.
+	//if(T.is_outside == OUTSIDE_AREA)
+	//	T.update_external_atmos_participation() // Refreshes outside status and adds exterior air to turf air if necessary.
+
+	//if(T.is_outside() != old_outside)
+	//	T.update_weather()
+	//	AMBIENCE_QUEUE_TURF(T)
+	//else if(A.interior_ambient_light_modifier != old_area_ambience)
+	//	AMBIENCE_QUEUE_TURF(T)

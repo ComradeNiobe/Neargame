@@ -44,6 +44,35 @@
 //	This flag overrides SS_KEEP_TIMING
 #define SS_POST_FIRE_TIMING 128
 
+// -- SStimer stuff --
+
+#define TIMER_UNIQUE       BITFLAG(0) // Don't run if there is an identical unique timer active.
+#define TIMER_OVERRIDE     BITFLAG(1) // For unique timers: Replace the old timer rather than not start this one.
+#define TIMER_CLIENT_TIME  BITFLAG(2) // Timing should be based on how timing progresses on clients, not the server - this is more expensive, so should only be used with things that need to progress client-side (like animate or sound).
+#define TIMER_STOPPABLE    BITFLAG(3) // Timer can be stopped using deltimer().
+#define TIMER_NO_HASH_WAIT BITFLAG(4) // For unique timers: don't distinguish timers by wait.
+#define TIMER_LOOP         BITFLAG(5) // Repeat the timer until it's deleted or the parent is destroyed.
+
+// TIMER_OVERRIDE is impossible to support because we don't track that for DPC queued calls, and adding a third list for that would be a lot of overhead for no real benefit
+// TIMER_STOPPABLE can't work because it uses timer IDs instead of hashes, and DPC queued calls don't have IDs.
+// TIMER_LOOP doesn't work because it needs to be a timer that can re-insert in the list, and a zero-wait looping timer should really be a ticker subsystem instead.
+// Update these defines if any of those change.
+/// These are the flags forbidden when putting zero-wait timers on SSdpc instead of SStimer.
+#define DPC_FORBID_FLAGS   TIMER_UNIQUE | TIMER_OVERRIDE | TIMER_STOPPABLE | TIMER_LOOP
+/// These are the flags forbidden when putting zero-wait TIMER_UNIQUE timers on SSdpc instead of SStimer.
+#define UDPC_FORBID_FLAGS  TIMER_OVERRIDE | TIMER_STOPPABLE | TIMER_LOOP
+
+#define TIMER_ID_NULL -1
+
+/**
+	Create a new timer and add it to the queue.
+	* Arguments:
+	* * callback the callback to call on timer finish
+	* * wait deciseconds to run the timer for
+	* * flags flags for this timer, see: code\__DEFINES\subsystems.dm
+*/
+#define addtimer(args...) _addtimer(args, file = __FILE__, line = __LINE__)
+
 //SUBSYSTEM STATES
 #define SS_IDLE 0		//aint doing shit.
 #define SS_QUEUED 1		//queued to run

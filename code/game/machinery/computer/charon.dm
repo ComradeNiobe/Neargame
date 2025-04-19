@@ -18,7 +18,7 @@
 	if(do_after(user, 10))
 		playsound(src.loc, sounds, 25, 1)
 		var/choice = input("Ulysses Panel","ULYSSES") in list("Launch","Cancel Launch", "(CANCEL)")
-		var/datum/shuttle/shuttle = shuttleMain
+		var/datum/shuttle/shuttle = global.shuttleMain
 		switch(choice)
 			if("Launch")
 				src.add_fingerprint(usr)

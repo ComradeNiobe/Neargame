@@ -417,3 +417,4 @@ Class Procs:
 		AI << "<span class='[style]'><b><a href='byond://?src=\ref[AI];track2=\ref[AI];jumptomachine=\ref[machine]'>[machine]</a> [pick("reports", "inform", "communicate", "data", "pings")] </b> - \"[message].\"</span>"
 	last_notice = world.time
 	return
+

@@ -18,8 +18,8 @@
 	. = ..()
 	for(var/obj/machinery/door/firedoor/F in loc)
 		if(F != src)
-			spawn(1)
-				del src
+			ASYNC
+				qdel(src)
 			return .
 	var/area/A = get_area(src)
 	ASSERT(istype(A))
@@ -220,7 +220,7 @@
 
 
 
-/obj/machinery/door/firedoor/border_only
+/obj/machinery/door/firedoor/border
 //These are playing merry hell on ZAS.  Sorry fellas :(
 /*
 	icon = 'icons/obj/doors/edge_Doorfire.dmi'

@@ -7,7 +7,7 @@
 /mob
 	vis_flags = VIS_INHERIT_PLANE|VIS_INHERIT_ID
 
-var/turf/global_openspace = list()
+var/global/turf/global_openspace = list()
 
 /turf/simulated/floor/open
 	name = "open space"
@@ -28,7 +28,7 @@ var/turf/global_openspace = list()
 	return
 
 /turf/simulated/floor/open/New()
-	..()
+	. = ..()
 	if(!darkover)
 		darkover = new()
 		darkover.icon = 'icons/turf/walls.dmi'
@@ -45,7 +45,7 @@ var/turf/global_openspace = list()
 			dark_side.layer = 6
 			overlays += dark_side
 	src.vis_contents += darkover
-	global_openspace += src
+	global.global_openspace += src
 	getbelow()
 
 /turf/simulated/floor/open/Entered(atom/movable/M)
@@ -92,7 +92,7 @@ var/turf/global_openspace = list()
 /turf/simulated/floor/open/attackby(obj/item/C as obj, mob/living/carbon/human/H)
 	. = ..()
 
-	if(!canFall(H)) 
+	if(!canFall(H))
 		return
 	H.visible_message("<span class='passiveboldsmaller'>[H.name]</span> <span class='passivesmaller'>starts to climb down.</span>")
 	if(do_after(H, 42-H.my_skills.get_skill(SKILL_CLIMB)))

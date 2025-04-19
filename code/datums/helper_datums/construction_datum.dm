@@ -11,8 +11,8 @@
 		..()
 		holder = atom
 		if(!holder) //don't want this without a holder
-			spawn
-				del src
+			ASYNC
+				qdel(src)
 		set_desc(steps.len)
 		return
 
@@ -60,8 +60,8 @@
 	proc/spawn_result()
 		if(result)
 			new result(get_turf(holder))
-			spawn()
-				del holder
+			ASYNC
+				qdel(holder)
 		return
 
 	proc/set_desc(index as num)

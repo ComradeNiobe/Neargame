@@ -472,11 +472,30 @@ datum/proc/dd_SortValue()
 		for(var/i=0, i<len, ++i)
 			L.Swap(fromIndex++, toIndex++)
 
-/proc/filter_list(list/L, type)
+#define listequal(A, B) (A.len == B.len && !length(A^B))
+
+/proc/filter_list(var/list/target_list, var/type)
 	. = list()
-	for(var/entry in L)
+	for(var/entry in target_list)
 		if(istype(entry, type))
 			. += entry
+
+/proc/group_by(var/list/group_list, var/key, var/value)
+	var/values = group_list[key]
+	if(!values)
+		values = list()
+		group_list[key] = values
+
+	values += value
+
+/proc/duplicates(var/list/target_list)
+	. = list()
+	var/list/checked = list()
+	for(var/value in target_list)
+		if(value in checked)
+			. |= value
+		else
+			checked += value
 
 //Move a single element from position fromIndex within a list, to position toIndex
 //All elements in the range [1,toIndex) before the move will be before the pivot afterwards

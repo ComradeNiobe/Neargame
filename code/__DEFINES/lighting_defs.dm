@@ -12,3 +12,7 @@
 	for(type in view(range, dview_mob))
 
 #define END_FOR_DVIEW dview_mob.loc = null
+
+// mostly identical to below, but doesn't make sure T is valid first. Should only be used by lighting code.
+#define TURF_IS_DYNAMICALLY_LIT_UNSAFE(T) ((T:dynamic_lighting && T:loc:dynamic_lighting))
+#define TURF_IS_DYNAMICALLY_LIT(T) (isturf(T) && TURF_IS_DYNAMICALLY_LIT_UNSAFE(T))

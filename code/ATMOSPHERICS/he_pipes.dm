@@ -16,6 +16,7 @@ obj/machinery/atmospherics/pipe/simple/heat_exchanging
 	// BubbleWrap END
 
 	initialize()
+		. = ..()
 		normalize_dir()
 		var/node1_dir
 		var/node2_dir

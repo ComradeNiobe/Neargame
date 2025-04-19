@@ -5,10 +5,10 @@
 
 /datum/controller/process/shuttle/started()
 	..()
-	if(!shuttleMain)
+	if(!global.shuttleMain)
 		var/datum/shuttle/E = new
-		shuttleMain = E
+		global.shuttleMain = E
 
 /datum/controller/process/shuttle/doWork()
-	var/datum/shuttle/shuttle = shuttleMain
+	var/datum/shuttle/shuttle = global.shuttleMain
 	shuttle.process()

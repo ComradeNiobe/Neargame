@@ -1,7 +1,7 @@
-var/list/clients = list()							//list of all clients
-var/list/admins = list()							//list of all clients whom are admins
-var/list/puppeteers = list("raiddean", "coroneljones", "alanii") //actual people responsible for handling donoses, bans and ranks/deranks.
-var/list/directory = list()							//list of all ckeys with associated client
+var/global/list/clients = list()							//list of all clients
+var/global/list/admins = list()							//list of all clients whom are admins
+var/global/list/puppeteers = list("raiddean", "coroneljones", "alanii") //actual people responsible for handling donoses, bans and ranks/deranks.
+var/global/list/directory = list()							//list of all ckeys with associated client
 
 //Since it didn't really belong in any other category, I'm putting this here
 //This is for procs to replace all the goddamn 'in world's that are chilling around the code

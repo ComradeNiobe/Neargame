@@ -3,7 +3,6 @@ var/const/VIRTUAL_ABILITY_HEAR = 1
 var/const/VIRTUAL_ABILITY_SEE  = 2
 var/const/VIRTUAL_ABILITY_ALL  = (~VIRTUAL_ABILITY_NONE)
 
-#define DEBUG
 // Turf-only flags.
 #define NOJAUNT 1 // This is used in literally one place, turf.dm, to block ethereal jaunt.
 

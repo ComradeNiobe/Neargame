@@ -152,7 +152,7 @@ var/const/tk_maxrange = 15
 	proc/focus_object(var/obj/target, var/mob/living/user)
 		if(!istype(target,/obj))	return//Cant throw non objects atm might let it do mobs later
 		if(target.anchored || !isturf(target.loc))
-			del src
+			qdel_self()
 			return
 		focus = target
 		update_icon()

@@ -69,3 +69,5 @@
 			__BIN_LIST.Insert(__BIN_MID, INPUT);\
 		};\
 	} while(FALSE)
+
+#define LIST_CLEAR_NULLS(L) L.RemoveAll(null)

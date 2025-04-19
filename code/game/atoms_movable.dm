@@ -15,8 +15,14 @@
 	var/inertia_dir = 0
 	appearance_flags = TILE_BOUND | PIXEL_SCALE | LONG_GLIDE
 	//glide_size = 6
-	// Garbage collection (controller).
 	var/waterproof
+
+	var/mob/living/buckled_mob = null
+
+	/// (DATUM) /datum/storage instance to use for this obj. Set to a type for instantiation on init.
+	var/obj/item/storage/storage_ui
+
+	var/movable_flags
 
 /atom/movable/Bump(var/atom/A as mob|obj|turf|area, yes)
 	if(src.throwing)
@@ -62,8 +68,13 @@
 	return
 
 /atom/movable/proc/forceMove(atom/destination)
+
+	if(QDELETED(src) && !QDESTROYING(src) && !isnull(destination))
+		CRASH("Attempted to forceMove a QDELETED [src] out of nullspace!!!")
+
 	if(loc == destination)
-		return 0
+		return FALSE
+
 	var/is_origin_turf = isturf(loc)
 	var/is_destination_turf = isturf(destination)
 	// It is a new area if:
@@ -90,7 +101,79 @@
 					AM.Crossed(src)
 			if(is_new_area && is_destination_turf)
 				destination.loc.Entered(src, origin)
-	return 1
+
+	. = TRUE
+
+	// observ
+	if(!loc && event_listeners?[/decl/observ/moved])
+		raise_event_non_global(/decl/observ/moved, origin, null)
+	/*
+	// lighting
+	if (light_source_solo)
+		light_source_solo.source_atom.update_light()
+	else if (light_source_multi)
+		var/datum/light_source/L
+		var/thing
+		for (thing in light_source_multi)
+			L = thing
+			L.source_atom.update_light()
+
+	if(buckled_mob)
+		if(isturf(loc))
+			buckled_mob.glide_size = glide_size // Setting loc apparently does animate with glide size.
+			buckled_mob.forceMove(loc)
+			refresh_buckled_mob(0)
+		else
+			unbuckle_mob()
+	*/
+/atom/movable/Move(...)
+
+	var/old_loc = loc
+
+	. = ..()
+
+	if(.)
+
+		/*
+		if(buckled_mob)
+			if(isturf(loc))
+				buckled_mob.glide_size = glide_size // Setting loc apparently does animate with glide size.
+				buckled_mob.forceMove(loc)
+				refresh_buckled_mob(0)
+			else
+				unbuckle_mob()
+		*/
+		if(!loc && event_listeners?[/decl/observ/moved])
+			raise_event_non_global(/decl/observ/moved, old_loc, null)
+		/*
+		// lighting
+		if (light_source_solo)
+			light_source_solo.source_atom.update_light()
+		else if (light_source_multi)
+			var/datum/light_source/L
+			var/thing
+			for (thing in light_source_multi)
+				L = thing
+				L.source_atom.update_light()
+
+		// Z-Mimic.
+		if (bound_overlay)
+			// The overlay will handle cleaning itself up on non-openspace turfs.
+			bound_overlay.forceMove(get_step(src, UP))
+			if (bound_overlay.dir != dir)
+				bound_overlay.set_dir(dir)
+		else if (isturf(loc) && (!old_loc || !TURF_IS_MIMICKING(old_loc)) && MOVABLE_SHALL_MIMIC(src))
+			SSzcopy.discover_movable(src)
+
+		if(isturf(loc))
+			var/turf/T = loc
+			if(T.reagents?.total_volume && submerged())
+				fluid_act(T.reagents)
+		*/
+
+		for(var/mob/viewer as anything in storage_ui?.is_seeing)
+			if(!(viewer.s_active == src && viewer.client))
+				storage_ui.close(viewer)
 
 /atom/movable/proc/set_glide_size(glide_size_override = 0, var/min = 0.9, var/max = 32/2)
 	if(!glide_size_override || glide_size_override > max)
@@ -319,3 +402,6 @@
 	if (src.master)
 		return src.master.attack_hand(a, b, c)
 	return
+
+// Buckling
+
