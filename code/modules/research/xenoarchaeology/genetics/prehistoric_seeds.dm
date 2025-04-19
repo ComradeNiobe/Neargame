@@ -3,7 +3,7 @@
 	name = "telriis"
 	seed_name = "telriis"
 	display_name = "telriis grass"
-	products = list(/obj/item/weapon/reagent_containers/food/snacks/grown/telriis_clump)
+	products = list(/obj/item/reagent_containers/food/snacks/grown/telriis_clump)
 	packet_icon = "seed-alien1"
 	plant_icon = "telriis"
 
@@ -20,7 +20,7 @@
 	name = "thaadra"
 	seed_name = "thaa'dra"
 	display_name = "thaa'dra lichen"
-	products = list(/obj/item/weapon/reagent_containers/food/snacks/grown/thaadrabloom)
+	products = list(/obj/item/reagent_containers/food/snacks/grown/thaadrabloom)
 	packet_icon = "seed-alien3"
 	plant_icon = "thaadra"
 
@@ -37,7 +37,7 @@
 	name = "jurlmah"
 	seed_name = "jurl'mah"
 	display_name = "jurl'mah reeds"
-	products = list(/obj/item/weapon/reagent_containers/food/snacks/grown/jurlmah)
+	products = list(/obj/item/reagent_containers/food/snacks/grown/jurlmah)
 	packet_icon = "seed-alien3"
 	plant_icon = "jurlmah"
 
@@ -54,7 +54,7 @@
 	name = "amauri"
 	seed_name = "amauri"
 	display_name = "amauri plant"
-	products = list(/obj/item/weapon/reagent_containers/food/snacks/grown/amauri)
+	products = list(/obj/item/reagent_containers/food/snacks/grown/amauri)
 	packet_icon = "seed-alien3"
 	plant_icon = "amauri"
 
@@ -71,7 +71,7 @@
 	name = "gelthi"
 	seed_name = "gelthi"
 	display_name = "gelthi plant"
-	products = list(/obj/item/weapon/reagent_containers/food/snacks/grown/gelthi)
+	products = list(/obj/item/reagent_containers/food/snacks/grown/gelthi)
 	packet_icon = "seed-alien2"
 	plant_icon = "gelthi"
 
@@ -88,7 +88,7 @@
 	name = "vale"
 	seed_name = "vale"
 	display_name = "vale bush"
-	products = list(/obj/item/weapon/reagent_containers/food/snacks/grown/vale)
+	products = list(/obj/item/reagent_containers/food/snacks/grown/vale)
 	packet_icon = "seed-alien2"
 	plant_icon = "vale"
 
@@ -105,7 +105,7 @@
 	name = "surik"
 	seed_name = "surik"
 	display_name = "surik vine"
-	products = list(/obj/item/weapon/reagent_containers/food/snacks/grown/surik)
+	products = list(/obj/item/reagent_containers/food/snacks/grown/surik)
 	packet_icon = "seed-alien3"
 	plant_icon = "surik"
 

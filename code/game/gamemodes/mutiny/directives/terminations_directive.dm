@@ -61,7 +61,7 @@ datum/directive/terminations/get_remaining_orders()
 
 	return 1
 
-/hook/terminate_employee/proc/termination_directive(obj/item/weapon/card/id)
+/hook/terminate_employee/proc/termination_directive(obj/item/card/id)
 	var/datum/directive/terminations/D = get_directive("terminations")
 	if (!D) return 1
 

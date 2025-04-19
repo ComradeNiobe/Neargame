@@ -1,4 +1,4 @@
-/obj/item/weapon/mutiny/auth_key
+/obj/item/mutiny/auth_key
 	name = "authentication key"
 	desc = "Better keep this safe."
 	icon = 'icons/obj/items.dmi'
@@ -32,8 +32,8 @@
 		spawn(10 SECONDS)
 			keep_alive()
 
-/obj/item/weapon/mutiny/auth_key/captain
+/obj/item/mutiny/auth_key/captain
 	name = "Captain's Authentication Key"
 
-/obj/item/weapon/mutiny/auth_key/secondary
+/obj/item/mutiny/auth_key/secondary
 	name = "Emergency Secondary Authentication Key"

@@ -58,16 +58,17 @@ var/global/normal_ooc_colour = "#666699"
 			display_colour = normal_ooc_colour
 	msg = emoji_parse(msg)
 
-	if(findtext(lowertext(msg), config.ooc_filter_regex))
-		src << 'sound/vam_ban.ogg'
-		to_chat(src, "That was pretty cringe!")
-		log_admin("[key] just tried to say OOC cringe")
-		message_admins("[key] just tried to OOC say cringe")
-		//if(!holder)
-		//	bans.Add(key)
-		//	game_remove_whitelist(reason = "Automatic ban: ([key] : [msg])")
-		//	qdel(src)
-		return
+	if(config.ooc_filter_regex)
+		if(findtext(lowertext(msg), config.ooc_filter_regex))
+			src << 'sound/vam_ban.ogg'
+			to_chat(src, "That was pretty cringe!")
+			log_admin("[key] just tried to say OOC cringe")
+			message_admins("[key] just tried to OOC say cringe")
+			//if(!holder)
+			//	bans.Add(key)
+			//	game_remove_whitelist(reason = "Automatic ban: ([key] : [msg])")
+			//	qdel(src)
+			return
 
 	if(ticker.current_state == GAME_STATE_PREGAME || ticker.current_state == GAME_STATE_FINISHED || ticker.current_state == GAME_STATE_SETTING_UP)
 		for(var/client/C in clients)

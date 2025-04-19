@@ -1,4 +1,4 @@
-/obj/item/weapon/pinpointer/advpinpointer/auth_key
+/obj/item/pinpointer/advpinpointer/auth_key
 	name = "\improper Authentication Key Pinpointer"
 	desc = "Tracks the positions of the emergency authentication keys."
 	var/datum/game_mode/mutiny/mutiny
@@ -7,7 +7,7 @@
 		mutiny = ticker.mode
 		..()
 
-/obj/item/weapon/pinpointer/advpinpointer/auth_key/attack_self()
+/obj/item/pinpointer/advpinpointer/auth_key/attack_self()
 	switch(mode)
 		if (0)
 			mode = 1
@@ -25,7 +25,7 @@
 			icon_state = "pinoff"
 			usr << "\blue You switch \the [src] off."
 
-/obj/item/weapon/pinpointer/advpinpointer/auth_key/examine()
+/obj/item/pinpointer/advpinpointer/auth_key/examine()
 	switch(mode)
 		if (1)
 			usr << "Is is calibrated for the Captain's Authentication Key."
@@ -36,7 +36,7 @@
 
 /datum/supply_packs/key_pinpointer
 	name = "Authentication Key Pinpointer crate"
-	contains = list(/obj/item/weapon/pinpointer/advpinpointer/auth_key)
+	contains = list(/obj/item/pinpointer/advpinpointer/auth_key)
 	cost = 250
 	containertype = /obj/structure/closet/crate
 	containername = "Authentication Key Pinpointer crate"

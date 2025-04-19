@@ -1,4 +1,4 @@
-/obj/item/weapon/gun/rocketlauncher
+/obj/item/gun/rocketlauncher
 	var/projectile
 	name = "rocket launcher"
 	desc = "MAGGOT."
@@ -17,13 +17,13 @@
 	var/max_rockets = 1
 	var/list/rockets = new/list()
 
-/obj/item/weapon/gun/rocketlauncher/examine()
+/obj/item/gun/rocketlauncher/examine()
 	set src in view()
 	..()
 	if (!(usr in view(2)) && usr!=src.loc) return
 	usr << "\blue [rockets.len] / [max_rockets] rockets."
 
-/obj/item/weapon/gun/rocketlauncher/attackby(obj/item/I as obj, mob/user as mob)
+/obj/item/gun/rocketlauncher/attackby(obj/item/I as obj, mob/user as mob)
 	if(istype(I, /obj/item/ammo_casing/rocket))
 		if(rockets.len < max_rockets)
 			user.drop_item()
@@ -34,10 +34,10 @@
 		else
 			usr << "\red [src] cannot hold more rockets."
 
-/obj/item/weapon/gun/rocketlauncher/can_fire()
+/obj/item/gun/rocketlauncher/can_fire()
 	return rockets.len
 
-/obj/item/weapon/gun/rocketlauncher/Fire(atom/target as mob|obj|turf|area, mob/living/user as mob|obj, params, reflex = 0)
+/obj/item/gun/rocketlauncher/Fire(atom/target as mob|obj|turf|area, mob/living/user as mob|obj, params, reflex = 0)
 	if(rockets.len)
 		var/obj/item/ammo_casing/rocket/I = rockets[1]
 		var/obj/item/missile/M = new projectile(user.loc)

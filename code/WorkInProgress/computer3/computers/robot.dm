@@ -111,7 +111,7 @@
 			<A href='?src=\ref[src];temp=1'>Cancel</A>"}
 
 		if ("do_killall" in href_list)
-			var/obj/item/weapon/card/id/I = usr.get_active_hand()
+			var/obj/item/card/id/I = usr.get_active_hand()
 			if (istype(I, /obj/item/device/pda))
 				var/obj/item/device/pda/pda = I
 				I = pda.id

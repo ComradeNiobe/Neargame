@@ -83,7 +83,7 @@
 
 					var/amount = rand(2,6)
 					var/list/possible_spawns = list()
-					for(var/coin_type in typesof(/obj/item/weapon/coin))
+					for(var/coin_type in typesof(/obj/item/coin))
 						possible_spawns += coin_type
 
 					var/coin_type = pick(possible_spawns)
@@ -122,9 +122,9 @@
 				if(prob(25))
 					new /obj/effect/glowshroom(src.loc)
 				else if(prob(33))
-					new /obj/item/weapon/reagent_containers/food/snacks/grown/mushroom/libertycap(src.loc)
+					new /obj/item/reagent_containers/food/snacks/grown/mushroom/libertycap(src.loc)
 				else if(prob(50))
-					new /obj/item/weapon/reagent_containers/food/snacks/grown/ambrosiavulgaris(src.loc)
+					new /obj/item/reagent_containers/food/snacks/grown/ambrosiavulgaris(src.loc)
 			if("blob")
 				new /obj/effect/blob/core(src.loc)
 			if("clothes")
@@ -157,10 +157,10 @@
 			if("weapons")
 				var/obj/structure/closet/crate/secure/weapon/C = new(src.loc)
 				var/new_type = pick(
-				200; /obj/item/weapon/hatchet, \
-				/obj/item/weapon/gun/projectile/pistol, \
-				/obj/item/weapon/gun/projectile/deagle, \
-				/obj/item/weapon/gun/projectile/russian, \
+				200; /obj/item/hatchet, \
+				/obj/item/gun/projectile/pistol, \
+				/obj/item/gun/projectile/deagle, \
+				/obj/item/gun/projectile/russian, \
 				)
 				new new_type(C)
 			if("spacesuit")
@@ -168,47 +168,47 @@
 				if(prob(25))
 					new /obj/item/clothing/suit/space/syndicate/black(C)
 					new /obj/item/clothing/head/helmet/space/syndicate/black(C)
-					new /obj/item/weapon/tank/oxygen/red(C)
+					new /obj/item/tank/oxygen/red(C)
 					new /obj/item/clothing/mask/breath(C)
 				else if(prob(33))
 					new /obj/item/clothing/suit/space/syndicate/blue(C)
 					new /obj/item/clothing/head/helmet/space/syndicate/blue(C)
-					new /obj/item/weapon/tank/oxygen/red(C)
+					new /obj/item/tank/oxygen/red(C)
 					new /obj/item/clothing/mask/breath(C)
 				else if(prob(50))
 					new /obj/item/clothing/suit/space/syndicate/green(C)
 					new /obj/item/clothing/head/helmet/space/syndicate/green(C)
-					new /obj/item/weapon/tank/oxygen/red(C)
+					new /obj/item/tank/oxygen/red(C)
 					new /obj/item/clothing/mask/breath(C)
 				else
 					new /obj/item/clothing/suit/space/syndicate/orange(C)
 					new /obj/item/clothing/head/helmet/space/syndicate/orange(C)
-					new /obj/item/weapon/tank/oxygen/red(C)
+					new /obj/item/tank/oxygen/red(C)
 					new /obj/item/clothing/mask/breath(C)
 			if("health")
 				//hopefully won't be necessary, but there were an awful lot of traps to get through...
 				var/obj/structure/closet/crate/medical/C = new(src.loc)
 				if(prob(50))
-					new /obj/item/weapon/storage/firstaid/regular(C)
+					new /obj/item/storage/firstaid/regular(C)
 				if(prob(50))
-					new /obj/item/weapon/storage/firstaid/fire(C)
+					new /obj/item/storage/firstaid/fire(C)
 				if(prob(50))
-					new /obj/item/weapon/storage/firstaid/o2(C)
+					new /obj/item/storage/firstaid/o2(C)
 				if(prob(50))
-					new /obj/item/weapon/storage/firstaid/toxin(C)
+					new /obj/item/storage/firstaid/toxin(C)
 			if("snacks")
 				//you're come so far, you must be in need of refreshment
 				var/obj/structure/closet/crate/freezer/C = new(src.loc)
 				var/num = rand(2,6)
 				var/new_type = pick(
-				/obj/item/weapon/reagent_containers/food/drinks/cans/beer, \
-				/obj/item/weapon/reagent_containers/food/drinks/tea, \
-				/obj/item/weapon/reagent_containers/food/drinks/dry_ramen, \
-				/obj/item/weapon/reagent_containers/food/snacks/candiedapple, \
-				/obj/item/weapon/reagent_containers/food/snacks/chocolatebar, \
-				/obj/item/weapon/reagent_containers/food/snacks/cookie, \
-				/obj/item/weapon/reagent_containers/food/snacks/meatball, \
-				/obj/item/weapon/reagent_containers/food/snacks/plump_pie, \
+				/obj/item/reagent_containers/food/drinks/cans/beer, \
+				/obj/item/reagent_containers/food/drinks/tea, \
+				/obj/item/reagent_containers/food/drinks/dry_ramen, \
+				/obj/item/reagent_containers/food/snacks/candiedapple, \
+				/obj/item/reagent_containers/food/snacks/chocolatebar, \
+				/obj/item/reagent_containers/food/snacks/cookie, \
+				/obj/item/reagent_containers/food/snacks/meatball, \
+				/obj/item/reagent_containers/food/snacks/plump_pie, \
 				)
 				for(var/i=0,i<num,i++)
 					new new_type(C)
@@ -232,24 +232,24 @@
 				var/obj/structure/closet/crate/secure/gear/C = new(src.loc)
 				var/num = rand(2,6)
 				for(var/i=0,i<num,i++)
-					var/spawn_type = pick(/obj/item/device/flashlight/flare, /obj/item/trash/candle, /obj/item/weapon/flame/candle/, /obj/item/weapon/storage/box/matches)
+					var/spawn_type = pick(/obj/item/device/flashlight/flare, /obj/item/trash/candle, /obj/item/flame/candle/, /obj/item/storage/box/matches)
 					new spawn_type(C)
 			if("engineering")
 				var/obj/structure/closet/crate/secure/gear/C = new(src.loc)
 
 				//chance to have any combination of up to two electrical/mechanical toolboxes and one cell
 				if(prob(33))
-					new /obj/item/weapon/storage/toolbox/electrical(C)
+					new /obj/item/storage/toolbox/electrical(C)
 				else if(prob(50))
-					new /obj/item/weapon/storage/toolbox/mechanical(C)
+					new /obj/item/storage/toolbox/mechanical(C)
 
 				if(prob(33))
-					new /obj/item/weapon/storage/toolbox/mechanical(C)
+					new /obj/item/storage/toolbox/mechanical(C)
 				else if(prob(50))
-					new /obj/item/weapon/storage/toolbox/electrical(C)
+					new /obj/item/storage/toolbox/electrical(C)
 
 				if(prob(25))
-					new /obj/item/weapon/cell(C)
+					new /obj/item/cell(C)
 
 			if("coffin")
 				new /obj/structure/closet/coffin(src.loc)

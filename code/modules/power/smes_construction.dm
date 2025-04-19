@@ -4,16 +4,16 @@
 
 
 //Board
-/obj/item/weapon/circuitboard/smes
+/obj/item/circuitboard/smes
 	name = "Circuit board (SMES Cell)"
 	build_path = "/obj/machinery/power/smes/buildable"
 	board_type = "machine"
 	origin_tech = "powerstorage=6;engineering=4" // Board itself is high tech. Coils have to be ordered from cargo or salvaged from existing SMESs.
 	frame_desc = "Requires 1 superconducting magnetic coil and 30 wires."
-	req_components = list("/obj/item/weapon/smes_coil" = 1, "/obj/item/stack/cable_coil" = 30)
+	req_components = list("/obj/item/smes_coil" = 1, "/obj/item/stack/cable_coil" = 30)
 
 //Construction Item
-/obj/item/weapon/smes_coil
+/obj/item/smes_coil
 	name = "Superconducting Magnetic Coil"
 	desc = "Heavy duty superconducting magnetic coil, mainly used in construction of SMES units."
 	icon = 'icons/obj/stock_parts.dmi'
@@ -36,11 +36,11 @@
 /obj/machinery/power/smes/buildable/New()
 	component_parts = list()
 	component_parts += new /obj/item/stack/cable_coil(src,30)
-	component_parts += new /obj/item/weapon/circuitboard/smes(src)
+	component_parts += new /obj/item/circuitboard/smes(src)
 
 	// Allows for mapped-in SMESs with larger capacity/IO
 	for(var/i = 1, i <= cur_coils, i++)
-		component_parts += new /obj/item/weapon/smes_coil(src)
+		component_parts += new /obj/item/smes_coil(src)
 
 	recalc_coils()
 	..()
@@ -50,7 +50,7 @@
 		capacity = 0
 		input_level_max = 0
 		output_level_max = 0
-		for(var/obj/item/weapon/smes_coil/C in component_parts)
+		for(var/obj/item/smes_coil/C in component_parts)
 			capacity += C.ChargeCapacity
 			input_level_max += C.IOCapacity
 			output_level_max += C.IOCapacity
@@ -194,7 +194,7 @@
 	else
 		..()
 
-/obj/machinery/power/smes/buildable/attackby(var/obj/item/weapon/W as obj, var/mob/user as mob)
+/obj/machinery/power/smes/buildable/attackby(var/obj/item/W as obj, var/mob/user as mob)
 	// No more disassembling of overloaded SMESs. You broke it, now enjoy the consequences.
 	if (failing)
 		user << "<span class='warning'>The [src]'s screen is flashing with alerts. It seems to be overloaded! Touching it now is probably not a good idea.</span>"
@@ -221,7 +221,7 @@
 			failure_probability = 0
 
 		// Crowbar - Disassemble the SMES.
-		if(istype(W, /obj/item/weapon/crowbar))
+		if(istype(W, /obj/item/crowbar))
 			if (terminal)
 				user << "<span class='warning'>You have to disassemble the terminal first!</span>"
 				return
@@ -246,7 +246,7 @@
 				return
 
 		// Superconducting Magnetic Coil - Upgrade the SMES
-		else if(istype(W, /obj/item/weapon/smes_coil))
+		else if(istype(W, /obj/item/smes_coil))
 			if (cur_coils < max_coils)
 
 				if (failure_probability && prob(failure_probability))

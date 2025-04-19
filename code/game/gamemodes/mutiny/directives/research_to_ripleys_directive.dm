@@ -16,7 +16,7 @@ datum/directive/research_to_ripleys
 
 	proc/count_researchers_reassigned()
 		var/researchers_reassigned = 0
-		for(var/obj/item/weapon/card/id in ids_to_reassign)
+		for(var/obj/item/card/id in ids_to_reassign)
 			if (ids_to_reassign[id])
 				researchers_reassigned++
 
@@ -58,7 +58,7 @@ datum/directive/research_to_ripleys/get_remaining_orders()
 
 	return text
 
-/hook/reassign_employee/proc/research_reassignments(obj/item/weapon/card/id/id_card)
+/hook/reassign_employee/proc/research_reassignments(obj/item/card/id/id_card)
 	var/datum/directive/research_to_ripleys/D = get_directive("research_to_ripleys")
 	if(!D) return 1
 

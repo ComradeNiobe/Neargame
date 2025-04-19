@@ -1,6 +1,6 @@
 
 
-/obj/item/weapon/gun/grenadelauncher
+/obj/item/gun/grenadelauncher
 	name = "grenade launcher"
 	icon = 'icons/obj/gun.dmi'
 	icon_state = "riotgun"
@@ -11,7 +11,6 @@
 	force = 5.0
 	var/list/grenades = new/list()
 	var/max_grenades = 3
-	matter = list("metal" = 2000)
 
 	examine()
 		set src in view()
@@ -22,7 +21,7 @@
 
 	attackby(obj/item/I as obj, mob/user as mob)
 
-		if((istype(I, /obj/item/weapon/grenade)))
+		if((istype(I, /obj/item/grenade)))
 			if(grenades.len < max_grenades)
 				user.drop_item()
 				I.loc = src
@@ -34,7 +33,7 @@
 
 	afterattack(obj/target, mob/user , flag)
 
-		if (istype(target, /obj/item/weapon/storage/backpack ))
+		if (istype(target, /obj/item/storage/backpack ))
 			return
 
 		else if (locate (/obj/structure/table, src.loc))
@@ -53,7 +52,7 @@
 			for(var/mob/O in viewers(world.view, user))
 				O.show_message(text("\red [] fired a grenade!", user), 1)
 			user << "\red You fire the grenade launcher!"
-			var/obj/item/weapon/grenade/chem_grenade/F = grenades[1] //Now with less copypasta!
+			var/obj/item/grenade/chem_grenade/F = grenades[1] //Now with less copypasta!
 			grenades -= F
 			F.loc = user.loc
 			F.throw_at(target, 30, 2, user)

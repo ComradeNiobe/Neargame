@@ -1,4 +1,4 @@
-/obj/item/weapon/reagent_containers/food/snacks/grown/telriis_clump
+/obj/item/reagent_containers/food/snacks/grown/telriis_clump
 	name = "telriis grass"
 	desc = "A clump of telriis grass, not recommended for consumption by sentients."
 	icon = 'icons/obj/xenoarchaeology.dmi'
@@ -9,7 +9,7 @@
 		reagents.add_reagent("nutriment", potency)
 		bitesize = 1+round(reagents.total_volume / 2, 1)
 
-/obj/item/weapon/reagent_containers/food/snacks/grown/thaadrabloom
+/obj/item/reagent_containers/food/snacks/grown/thaadrabloom
 	name = "thaa'dra bloom"
 	desc = "Looks chewy, might be good to eat."
 	icon = 'icons/obj/xenoarchaeology.dmi'
@@ -20,7 +20,7 @@
 		reagents.add_reagent("nutriment", potency)
 		bitesize = 1+round(reagents.total_volume / 2, 1)
 
-/obj/item/weapon/reagent_containers/food/snacks/grown/jurlmah
+/obj/item/reagent_containers/food/snacks/grown/jurlmah
 	name = "jurl'mah pod"
 	desc = "Bulbous and veiny, it appears to pulse slightly as you look at it."
 	icon = 'icons/obj/xenoarchaeology.dmi'
@@ -31,7 +31,7 @@
 		reagents.add_reagent("nutriment", potency)
 		bitesize = 1+round(reagents.total_volume / 2, 1)
 
-/obj/item/weapon/reagent_containers/food/snacks/grown/amauri
+/obj/item/reagent_containers/food/snacks/grown/amauri
 	name = "amauri fruit"
 	desc = "It is small, round and hard. Its skin is a thick dark purple."
 	icon = 'icons/obj/xenoarchaeology.dmi'
@@ -43,7 +43,7 @@
 		reagents.add_reagent("nutriment", potency)
 		bitesize = 1+round(reagents.total_volume / 2, 1)
 
-/obj/item/weapon/reagent_containers/food/snacks/grown/gelthi
+/obj/item/reagent_containers/food/snacks/grown/gelthi
 	name = "gelthi berries"
 	desc = "They feel fluffy and slightly warm to the touch."
 	icon = 'icons/obj/xenoarchaeology.dmi'
@@ -56,7 +56,7 @@
 		reagents.add_reagent("nutriment", potency)
 		bitesize = 1+round(reagents.total_volume / 2, 1)
 
-/obj/item/weapon/reagent_containers/food/snacks/grown/vale
+/obj/item/reagent_containers/food/snacks/grown/vale
 	name = "vale leaves"
 	desc = "Small, curly leaves covered in a soft pale fur."
 	icon = 'icons/obj/xenoarchaeology.dmi'
@@ -68,7 +68,7 @@
 		reagents.add_reagent("nutriment", potency)
 		bitesize = 1+round(reagents.total_volume / 2, 1)
 
-/obj/item/weapon/reagent_containers/food/snacks/grown/surik
+/obj/item/reagent_containers/food/snacks/grown/surik
 	name = "surik fruit"
 	desc = "Multiple layers of blue skin peeling away to reveal a spongey core, vaguely resembling an ear."
 	icon = 'icons/obj/xenoarchaeology.dmi'

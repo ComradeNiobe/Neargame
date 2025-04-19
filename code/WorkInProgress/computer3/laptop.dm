@@ -94,7 +94,7 @@
 		usr << "There is no card port on the laptop."
 		return
 
-	var/obj/item/weapon/card/id/card
+	var/obj/item/card/id/card
 	if(C.reader)
 		card = C.reader
 	else if(C.writer)
@@ -122,7 +122,7 @@
 
 	New(var/L, var/built = 0)
 		if(!built && !battery)
-			battery = new /obj/item/weapon/cell(src)
+			battery = new /obj/item/cell(src)
 		..(L,built)
 
 	verb/close_computer()

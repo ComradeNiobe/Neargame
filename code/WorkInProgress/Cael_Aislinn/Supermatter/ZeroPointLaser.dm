@@ -117,7 +117,7 @@
 
 /obj/machinery/zero_point_emitter/attackby(obj/item/W, mob/user)
 
-	if(istype(W, /obj/item/weapon/wrench))
+	if(istype(W, /obj/item/wrench))
 		if(active)
 			user << "Turn off the [src] first."
 			return
@@ -140,8 +140,8 @@
 				user << "\red The [src.name] needs to be unwelded from the floor."
 		return
 
-	if(istype(W, /obj/item/weapon/weldingtool))
-		var/obj/item/weapon/weldingtool/WT = W
+	if(istype(W, /obj/item/weldingtool))
+		var/obj/item/weldingtool/WT = W
 		if(active)
 			user << "Turn off the [src] first."
 			return
@@ -174,7 +174,7 @@
 					user << "\red You need more welding fuel to complete this task."
 		return
 
-	if(istype(W, /obj/item/weapon/card/id) || istype(W, /obj/item/device/pda))
+	if(istype(W, /obj/item/card/id) || istype(W, /obj/item/device/pda))
 		if(emagged)
 			user << "\red The lock seems to be broken"
 			return
@@ -190,7 +190,7 @@
 		return
 
 
-	if(istype(W, /obj/item/weapon/card/emag) && !emagged)
+	if(istype(W, /obj/item/card/emag) && !emagged)
 		locked = 0
 		emagged = 1
 		user.visible_message("[user.name] emags the [src.name].","\red You short out the lock.")

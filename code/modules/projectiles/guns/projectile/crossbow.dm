@@ -1,6 +1,6 @@
 //AMMUNITION
 
-/obj/item/weapon/arrow
+/obj/item/arrow
 
 	name = "bolt"
 	desc = "It's got a tip for you - get the point?"
@@ -13,10 +13,10 @@
 	sharp = 1
 	edge = 0
 
-/obj/item/weapon/arrow/proc/removed() //Helper for metal rods falling apart.
+/obj/item/arrow/proc/removed() //Helper for metal rods falling apart.
 	return
 
-/obj/item/weapon/spike
+/obj/item/spike
 	name = "alloy spike"
 	desc = "It's about a foot of weird silver metal with a wicked point."
 	sharp = 1
@@ -27,7 +27,7 @@
 	icon_state = "metal-rod"
 	item_state = "bolt"
 
-/obj/item/weapon/arrow/quill
+/obj/item/arrow/quill
 
 	name = "vox quill"
 	desc = "A wickedly barbed quill from some bizarre animal."
@@ -36,20 +36,20 @@
 	item_state = "quill"
 	throwforce = 5
 
-/obj/item/weapon/arrow/rod
+/obj/item/arrow/rod
 
 	name = "metal rod"
 	desc = "Don't cry for me, Orithena."
 	icon_state = "metal-rod"
 
-/obj/item/weapon/arrow/rod/removed(mob/user)
+/obj/item/arrow/rod/removed(mob/user)
 	if(throwforce == 15) // The rod has been superheated - we don't want it to be useable when removed from the bow.
 		user  << "[src] shatters into a scattering of overstressed metal shards as it leaves the crossbow."
-		var/obj/item/weapon/shard/shrapnel/S = new()
+		var/obj/item/shard/shrapnel/S = new()
 		S.loc = get_turf(src)
 		src.Del()
 
-/obj/item/weapon/gun/launcher/crossbow
+/obj/item/gun/launcher/crossbow
 
 	name = "powered crossbow"
 	desc = "A 2557AD twist on an old classic. Pick up that can."
@@ -64,34 +64,34 @@
 	var/tension = 0                         // Current draw on the bow.
 	var/max_tension = 5                     // Highest possible tension.
 	var/release_speed = 5                   // Speed per unit of tension.
-	var/obj/item/weapon/cell/cell = null    // Used for firing superheated rods.
+	var/obj/item/cell/cell = null    // Used for firing superheated rods.
 	var/current_user                        // Used to check if the crossbow has changed hands since being drawn.
 
-/obj/item/weapon/gun/launcher/crossbow/emp_act(severity)
+/obj/item/gun/launcher/crossbow/emp_act(severity)
 	if(cell && severity)
 		cell.use(100*severity)
 
-/obj/item/weapon/gun/launcher/crossbow/special_check(user)
+/obj/item/gun/launcher/crossbow/special_check(user)
 	if(tension <= 0)
 		user << "\red \The [src] is not drawn back!"
 		return 0
 	return 1
 
-/obj/item/weapon/gun/launcher/crossbow/update_release_force()
+/obj/item/gun/launcher/crossbow/update_release_force()
 	release_force = tension*release_speed
 
-/obj/item/weapon/gun/launcher/crossbow/Fire(atom/target as mob|obj|turf|area, mob/living/user as mob|obj, params, reflex = 0)
+/obj/item/gun/launcher/crossbow/Fire(atom/target as mob|obj|turf|area, mob/living/user as mob|obj, params, reflex = 0)
 
 	if(!..()) return //Only do this on a successful shot.
 	icon_state = "crossbow"
 	tension = 0
 
-/obj/item/weapon/gun/launcher/crossbow/attack_self(mob/living/user as mob)
+/obj/item/gun/launcher/crossbow/attack_self(mob/living/user as mob)
 	if(tension)
 		if(in_chamber && in_chamber.loc == src) //Just in case they click it the tick after firing.
 			user.visible_message("[user] relaxes the tension on [src]'s string and removes [in_chamber].","You relax the tension on [src]'s string and remove [in_chamber].")
 			in_chamber.loc = get_turf(src)
-			var/obj/item/weapon/arrow/A = in_chamber
+			var/obj/item/arrow/A = in_chamber
 			in_chamber = null
 			A.removed(user)
 		else
@@ -101,7 +101,7 @@
 	else
 		draw(user)
 
-/obj/item/weapon/gun/launcher/crossbow/proc/draw(var/mob/user as mob)
+/obj/item/gun/launcher/crossbow/proc/draw(var/mob/user as mob)
 
 	if(!in_chamber)
 		user << "You don't have anything nocked to [src]."
@@ -115,7 +115,7 @@
 	tension = 1
 	spawn(25) increase_tension(user) //TODO: This needs to be changed to something less shit.
 
-/obj/item/weapon/gun/launcher/crossbow/proc/increase_tension(var/mob/user as mob)
+/obj/item/gun/launcher/crossbow/proc/increase_tension(var/mob/user as mob)
 
 	if(!in_chamber || !tension || current_user != user) //Arrow has been fired, bow has been relaxed or user has changed.
 		return
@@ -130,9 +130,9 @@
 		user.visible_message("[usr] draws back the string of [src]!","You continue drawing back the string of [src]!")
 		spawn(25) increase_tension(user)
 
-/obj/item/weapon/gun/launcher/crossbow/attackby(obj/item/W as obj, mob/user as mob)
+/obj/item/gun/launcher/crossbow/attackby(obj/item/W as obj, mob/user as mob)
 	if(!in_chamber)
-		if (istype(W,/obj/item/weapon/arrow))
+		if (istype(W,/obj/item/arrow))
 			user.drop_item()
 			in_chamber = W
 			in_chamber.loc = src
@@ -142,7 +142,7 @@
 		else if(istype(W,/obj/item/stack/rods))
 			var/obj/item/stack/rods/R = W
 			if (R.use(1))
-				in_chamber = new /obj/item/weapon/arrow/rod(src)
+				in_chamber = new /obj/item/arrow/rod(src)
 				in_chamber.fingerprintslast = src.fingerprintslast
 				in_chamber.loc = src
 				icon_state = "crossbow-nocked"
@@ -150,7 +150,7 @@
 				superheat_rod(user)
 			return
 
-	if(istype(W, /obj/item/weapon/cell))
+	if(istype(W, /obj/item/cell))
 		if(!cell)
 			user.drop_item()
 			W.loc = src
@@ -160,7 +160,7 @@
 		else
 			user << "<span class='notice'>[src] already has a cell installed.</span>"
 
-	else if(istype(W, /obj/item/weapon/screwdriver))
+	else if(istype(W, /obj/item/screwdriver))
 		if(cell)
 			var/obj/item/C = cell
 			C.loc = get_turf(user)
@@ -172,12 +172,12 @@
 	else
 		..()
 
-/obj/item/weapon/gun/launcher/crossbow/proc/superheat_rod(var/mob/user)
+/obj/item/gun/launcher/crossbow/proc/superheat_rod(var/mob/user)
 
 	if(!user || !cell || !in_chamber) return
 	if(cell.charge < 500) return
 	if(in_chamber.throwforce >= 15) return
-	if(!istype(in_chamber,/obj/item/weapon/arrow/rod)) return
+	if(!istype(in_chamber,/obj/item/arrow/rod)) return
 
 	user << "<span class='notice'>[in_chamber] plinks and crackles as it begins to glow red-hot.</span>"
 	in_chamber.throwforce = 15
@@ -186,7 +186,7 @@
 
 
 // Crossbow construction.
-/obj/item/weapon/crossbowframe
+/obj/item/crossbowframe
 	name = "crossbow frame"
 	desc = "A half-finished crossbow."
 	icon_state = "crossbowframe0"
@@ -194,10 +194,10 @@
 
 	var/buildstate = 0
 
-/obj/item/weapon/crossbowframe/update_icon()
+/obj/item/crossbowframe/update_icon()
 	icon_state = "crossbowframe[buildstate]"
 
-/obj/item/weapon/crossbowframe/examine()
+/obj/item/crossbowframe/examine()
 	..()
 	switch(buildstate)
 		if(1) usr << "It has a loose rod frame in place."
@@ -206,7 +206,7 @@
 		if(4) usr << "It has a steel backbone, plastic lath and a cell mount installed."
 		if(5) usr << "It has a steel cable loosely strung across the lath."
 
-/obj/item/weapon/crossbowframe/attackby(obj/item/W as obj, mob/user as mob)
+/obj/item/crossbowframe/attackby(obj/item/W as obj, mob/user as mob)
 	if(istype(W,/obj/item/stack/rods))
 		if(buildstate == 0)
 			var/obj/item/stack/rods/R = W
@@ -217,9 +217,9 @@
 			else
 				user << "\blue You need at least three rods to complete this task."
 			return
-	else if(istype(W,/obj/item/weapon/weldingtool))
+	else if(istype(W,/obj/item/weldingtool))
 		if(buildstate == 1)
-			var/obj/item/weapon/weldingtool/T = W
+			var/obj/item/weldingtool/T = W
 			if(T.remove_fuel(0,user))
 				if(!src || !T.isOn()) return
 				playsound(src.loc, 'sound/items/Welder2.ogg', 100, 1)
@@ -255,10 +255,10 @@
 			else
 				user << "\blue You need at least three plastic sheets to complete this task."
 			return
-	else if(istype(W,/obj/item/weapon/screwdriver))
+	else if(istype(W,/obj/item/screwdriver))
 		if(buildstate == 5)
 			user << "\blue You secure the crossbow's various parts."
-			new /obj/item/weapon/gun/launcher/crossbow(get_turf(src))
+			new /obj/item/gun/launcher/crossbow(get_turf(src))
 			del(src)
 		return
 	else

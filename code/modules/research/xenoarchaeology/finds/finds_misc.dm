@@ -1,5 +1,5 @@
 
-/obj/item/weapon/shard/phoron
+/obj/item/shard/phoron
 	name = "phoron shard"
 	desc = "A shard of phoron glass. Considerably tougher then normal glass shards. Apparently not tough enough to be a window."
 	force = 8.0
@@ -8,7 +8,7 @@
 	sharp = 1
 	edge = 1
 
-/obj/item/weapon/shard/phoron/New()
+/obj/item/shard/phoron/New()
 
 	src.icon_state = pick("phoronlarge", "phoronmedium", "phoronsmall")
 	switch(src.icon_state)
@@ -24,10 +24,10 @@
 		else
 	return
 
-/obj/item/weapon/shard/phoron/attackby(obj/item/weapon/W as obj, mob/user as mob)
+/obj/item/shard/phoron/attackby(obj/item/W as obj, mob/user as mob)
 	..()
-	if ( istype(W, /obj/item/weapon/weldingtool))
-		var/obj/item/weapon/weldingtool/WT = W
+	if ( istype(W, /obj/item/weldingtool))
+		var/obj/item/weldingtool/WT = W
 		if(WT.remove_fuel(0, user))
 			var/obj/item/stack/sheet/glass/phoronglass/NG = new (user.loc)
 			for (var/obj/item/stack/sheet/glass/phoronglass/G in user.loc)

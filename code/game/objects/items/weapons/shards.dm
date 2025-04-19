@@ -1,6 +1,6 @@
 // Glass shards
 
-/obj/item/weapon/shard
+/obj/item/shard
 	name = "glass shard"
 	icon = 'icons/obj/shards.dmi'
 	icon_state = "large"
@@ -14,16 +14,16 @@
 	matter = list("glass" = 3750)
 	attack_verb = list("stabbed", "slashed", "sliced", "cut")
 
-/obj/item/weapon/shard/suicide_act(mob/user)
+/obj/item/shard/suicide_act(mob/user)
 		viewers(user) << pick("\red <b>[user] is slitting \his wrists with \the [src]! It looks like \he's trying to commit suicide.</b>", \
 							"\red <b>[user] is slitting \his throat with \the [src]! It looks like \he's trying to commit suicide.</b>")
 		return (BRUTELOSS)
 
-/obj/item/weapon/shard/attack(mob/living/carbon/M as mob, mob/living/carbon/user as mob)
+/obj/item/shard/attack(mob/living/carbon/M as mob, mob/living/carbon/user as mob)
 	playsound(loc, 'sound/weapons/bladeslice.ogg', 50, 1, -1)
 	return ..()
 
-/obj/item/weapon/shard/Bump()
+/obj/item/shard/Bump()
 
 	spawn( 0 )
 		if (prob(20))
@@ -34,7 +34,7 @@
 		return
 	return
 
-/obj/item/weapon/shard/New()
+/obj/item/shard/New()
 
 	src.icon_state = pick("large", "medium", "small")
 	switch(src.icon_state)
@@ -50,10 +50,10 @@
 		else
 	return
 
-/obj/item/weapon/shard/attackby(obj/item/weapon/W as obj, mob/user as mob)
+/obj/item/shard/attackby(obj/item/W as obj, mob/user as mob)
 	..()
-	if ( istype(W, /obj/item/weapon/weldingtool))
-		var/obj/item/weapon/weldingtool/WT = W
+	if ( istype(W, /obj/item/weldingtool))
+		var/obj/item/weldingtool/WT = W
 		if(WT.remove_fuel(0, user))
 			var/obj/item/stack/sheet/glass/NG = new (user.loc)
 			for (var/obj/item/stack/sheet/glass/G in user.loc)
@@ -68,7 +68,7 @@
 			return
 	return ..()
 
-/obj/item/weapon/shard/Crossed(AM as mob|obj)
+/obj/item/shard/Crossed(AM as mob|obj)
 	if(ismob(AM))
 		var/mob/M = AM
 		M << "\red <B>You step on \the [src]!</B>"
@@ -91,13 +91,13 @@
 
 // Shrapnel
 
-/obj/item/weapon/shard/shrapnel
+/obj/item/shard/shrapnel
 	name = "shrapnel"
 	icon = 'icons/obj/shards.dmi'
 	icon_state = "shrapnellarge"
 	desc = "A bunch of tiny bits of shattered metal."
 
-/obj/item/weapon/shard/shrapnel/New()
+/obj/item/shard/shrapnel/New()
 
 	src.icon_state = pick("shrapnellarge", "shrapnelmedium", "shrapnelsmall")
 	switch(src.icon_state)

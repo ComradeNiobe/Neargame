@@ -37,15 +37,15 @@
 	return
 
 
-/obj/machinery/lapvend/attackby(obj/item/weapon/W as obj, mob/user as mob)
+/obj/machinery/lapvend/attackby(obj/item/W as obj, mob/user as mob)
 	if(vendmode == 1)
-		if(istype(W, /obj/item/weapon/card))
-			var/obj/item/weapon/card/I = W
+		if(istype(W, /obj/item/card))
+			var/obj/item/card/I = W
 			scan_card(I)
 			vendmode = 0
 	if(vendmode == 3)
-		if(istype(W,/obj/item/weapon/card))
-			var/obj/item/weapon/card/I = W
+		if(istype(W,/obj/item/card))
+			var/obj/item/card/I = W
 			reimburse(I)
 			vendmode = 0
 	if(vendmode == 0)
@@ -202,16 +202,16 @@
 		newlap.spawn_parts += (/obj/item/part/computer/networking/cable)
 	if (power == 1)
 		del(newlap.battery)
-		newlap.battery = new /obj/item/weapon/cell/high(newlap)
+		newlap.battery = new /obj/item/cell/high(newlap)
 	if (power == 2)
 		del(newlap.battery)
-		newlap.battery = new /obj/item/weapon/cell/super(newlap)
+		newlap.battery = new /obj/item/cell/super(newlap)
 
 	newlap.spawn_parts()
 
-/obj/machinery/lapvend/proc/scan_card(var/obj/item/weapon/card/I)
-	if (istype(I, /obj/item/weapon/card/id))
-		var/obj/item/weapon/card/id/C = I
+/obj/machinery/lapvend/proc/scan_card(var/obj/item/card/I)
+	if (istype(I, /obj/item/card/id))
+		var/obj/item/card/id/C = I
 		visible_message("<span class='info'>[usr] swipes a card through [src].</span>")
 		var/datum/money_account/CH = get_account(C.associated_account_number)
 		if(CH.security_level != 0) //If card requires pin authentication (ie seclevel 1 or 2)
@@ -229,7 +229,7 @@
 
 
 // Transfers money and vends the laptop.
-/obj/machinery/lapvend/proc/transfer_and_vend(var/datum/money_account/D, var/obj/item/weapon/card/C)
+/obj/machinery/lapvend/proc/transfer_and_vend(var/datum/money_account/D, var/obj/item/card/C)
 	var/transaction_amount = total()
 	if(transaction_amount <= D.money)
 
@@ -300,7 +300,7 @@
 
 	return total
 
-/obj/machinery/lapvend/proc/choose_progs(var/obj/item/weapon/card/id/C)
+/obj/machinery/lapvend/proc/choose_progs(var/obj/item/card/id/C)
 	if(access_security in C.access)
 		newlap.spawn_files += (/datum/file/program/secure_data)
 		newlap.spawn_files += (/datum/file/camnet_key)
@@ -350,16 +350,16 @@
 		network = 2
 	if(istype(L.stored_computer.net,/obj/item/part/computer/networking/cable))
 		network = 3
-	if(istype(L.stored_computer.battery, /obj/item/weapon/cell/high))
+	if(istype(L.stored_computer.battery, /obj/item/cell/high))
 		power = 1
-	if(istype(L.stored_computer.battery, /obj/item/weapon/cell/super))
+	if(istype(L.stored_computer.battery, /obj/item/cell/super))
 		power = 2
 
 
 
-/obj/machinery/lapvend/proc/reimburse(var/obj/item/weapon/card/I)
-	if (istype(I, /obj/item/weapon/card/id))
-		var/obj/item/weapon/card/id/C = I
+/obj/machinery/lapvend/proc/reimburse(var/obj/item/card/I)
+	if (istype(I, /obj/item/card/id))
+		var/obj/item/card/id/C = I
 		visible_message("<span class='info'>[usr] swipes a card through [src].</span>")
 		var/datum/money_account/CH = get_account(C.associated_account_number)
 		if(CH.security_level != 0) //If card requires pin authentication (ie seclevel 1 or 2)

@@ -113,8 +113,8 @@
 	var/auth_name
 	var/dna_hash
 
-	if(istype(ident, /obj/item/weapon/card/id))
-		var/obj/item/weapon/card/id/ID = ident
+	if(istype(ident, /obj/item/card/id))
+		var/obj/item/card/id/ID = ident
 		access = ID.access
 		auth_name = "[ID.registered_name] ([ID.assignment])"
 		dna_hash = ID.dna_hash
@@ -145,8 +145,8 @@
 
 
 
-/obj/machinery/computer/shuttle_control/emergency/attackby(obj/item/weapon/W as obj, mob/user as mob)
-	if (istype(W, /obj/item/weapon/card/emag) && !emagged)
+/obj/machinery/computer/shuttle_control/emergency/attackby(obj/item/W as obj, mob/user as mob)
+	if (istype(W, /obj/item/card/emag) && !emagged)
 		user << "\blue You short out the [src]'s authorization protocols."
 		emagged = 1
 		return

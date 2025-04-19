@@ -1,15 +1,15 @@
-/obj/item/weapon/gun/energy/temperature
+/obj/item/gun/energy/temperature
 	name = "temperature gun"
 	icon_state = "freezegun"
 	fire_sound = 'sound/weapons/pulse3.ogg'
 	desc = "A gun that changes temperatures."
-	var/temperature = T20C
+	temperature = T20C
 	var/current_temperature = T20C
 	charge_cost = 100
 	origin_tech = "combat=3;materials=4;powerstorage=3;magnets=2"
 
 	projectile_type = "/obj/item/projectile/temp"
-	cell_type = "/obj/item/weapon/cell/crap"
+	cell_type = "/obj/item/cell/crap"
 
 
 	New()

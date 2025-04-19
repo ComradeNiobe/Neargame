@@ -94,7 +94,7 @@
 			dat += "<h4>[active_record.fields["name"]]</h4>"
 			dat += "Scan ID [active_record.fields["id"]] [topic_link(src,"clone","Clone")]<br>"
 
-			var/obj/item/weapon/implant/health/H = locate(active_record.fields["imp"])
+			var/obj/item/implant/health/H = locate(active_record.fields["imp"])
 
 			if ((H) && (istype(H)))
 				dat += "<b>Health Implant Data:</b><br />[H.sensehealth()]<br><br />"
@@ -212,7 +212,7 @@
 				menu = 4
 
 			else if (menu == 4)
-				var/obj/item/weapon/card/id/C = usr.get_active_hand()
+				var/obj/item/card/id/C = usr.get_active_hand()
 				if (istype(C)||istype(C, /obj/item/device/pda))
 					if(check_access(C))
 						temp = "[active_record.fields["name"]] => Record deleted."
@@ -340,9 +340,9 @@
 
 
 		//Add an implant if needed
-		var/obj/item/weapon/implant/health/imp = locate(/obj/item/weapon/implant/health, subject)
+		var/obj/item/implant/health/imp = locate(/obj/item/implant/health, subject)
 		if (isnull(imp))
-			imp = new /obj/item/weapon/implant/health(subject)
+			imp = new /obj/item/implant/health(subject)
 			imp.implanted = subject
 			R.fields["imp"] = "\ref[imp]"
 		//Update it if needed

@@ -218,7 +218,7 @@
 				return
 			buffer.check_integrity()
 			var/which = href_list["generate"]
-			var/obj/item/weapon/dnainjector/inj
+			var/obj/item/dnainjector/inj
 			switch(which)
 				if("se")
 					inj = new(computer.loc)

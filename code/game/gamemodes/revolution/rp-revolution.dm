@@ -44,7 +44,7 @@
 
 	for (var/obj/machinery/computer/communications/comm in world)
 		if (!(comm.stat & (BROKEN | NOPOWER)) && comm.prints_intercept)
-			var/obj/item/weapon/paper/intercept = new /obj/item/weapon/paper( comm.loc )
+			var/obj/item/paper/intercept = new /obj/item/paper( comm.loc )
 			intercept.name = "Cent. Com. Status Summary"
 			intercept.info = intercepttext
 
@@ -112,7 +112,7 @@
 
 	for (var/obj/machinery/computer/communications/comm in world)
 		if (!(comm.stat & (BROKEN | NOPOWER)) && comm.prints_intercept)
-			var/obj/item/weapon/paper/intercept = new /obj/item/weapon/paper( comm.loc )
+			var/obj/item/paper/intercept = new /obj/item/paper( comm.loc )
 			intercept.name = "Cent. Com. Status Summary"
 			intercept.info = intercepttext
 
@@ -130,7 +130,7 @@
 		intercepttext += "<br>Please arrest them at once."
 		for (var/obj/machinery/computer/communications/comm in world)
 			if (!(comm.stat & (BROKEN | NOPOWER)) && comm.prints_intercept)
-				var/obj/item/weapon/paper/intercept = new /obj/item/weapon/paper( comm.loc )
+				var/obj/item/paper/intercept = new /obj/item/paper( comm.loc )
 				intercept.name = "Cent. Com. Status Summary"
 				intercept.info = intercepttext
 
@@ -155,9 +155,9 @@
 
 //	spawn (100)
 //		if (rev_mob.r_store)
-//			rev_mob.equip_if_possible(new /obj/item/weapon/paper/communist_manifesto(rev_mob), rev_mob.slot_l_store)
+//			rev_mob.equip_if_possible(new /obj/item/paper/communist_manifesto(rev_mob), rev_mob.slot_l_store)
 //		if (rev_mob.l_store)
-//			rev_mob.equip_if_possible(new /obj/item/weapon/paper/communist_manifesto(rev_mob), rev_mob.slot_r_store)
+//			rev_mob.equip_if_possible(new /obj/item/paper/communist_manifesto(rev_mob), rev_mob.slot_r_store)
 
 
 /datum/game_mode/rp_revolution/check_win()

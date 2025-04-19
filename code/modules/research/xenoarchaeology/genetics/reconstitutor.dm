@@ -14,14 +14,14 @@ datum/genesequence
 	name = "Flora reconstitution console"
 	icon = 'icons/obj/computer.dmi'
 	icon_state = "dna"
-	circuit = "/obj/item/weapon/circuitboard/reconstitutor"
+	circuit = "/obj/item/circuitboard/reconstitutor"
 	req_access = list(access_heads) //Only used for record deletion right now.
 	var/obj/machinery/clonepod/pod1 = 1 //Linked cloning pod.
 	var/temp = ""
 	var/menu = 1 //Which menu screen to display
 	var/list/records = list()
 	var/datum/dna2/record/active_record = null
-	var/obj/item/weapon/disk/data/diskette = null //Mostly so the geneticist can steal everything.
+	var/obj/item/disk/data/diskette = null //Mostly so the geneticist can steal everything.
 	var/loading = 0 // Nice loading text
 	var/list/undiscovered_genesequences = null
 	var/list/discovered_genesequences = list()
@@ -29,7 +29,7 @@ datum/genesequence
 	var/list/undiscovered_genomes = list()
 	var/list/manually_placed_genomes = list()
 	var/list/discovered_genomes = list("! Clear !")
-	var/list/accepted_fossil_types = list(/obj/item/weapon/fossil/plant)
+	var/list/accepted_fossil_types = list(/obj/item/fossil/plant)
 
 
 /obj/machinery/computer/reconstitutor/initialize()
@@ -40,9 +40,9 @@ datum/genesequence
 
 /obj/machinery/computer/reconstitutor/animal
 	name = "Fauna reconstitution console"
-	accepted_fossil_types = list(/obj/item/weapon/fossil/bone,/obj/item/weapon/fossil/shell,/obj/item/weapon/fossil/skull)
+	accepted_fossil_types = list(/obj/item/fossil/bone,/obj/item/fossil/shell,/obj/item/fossil/skull)
 	pod1 = null
-	circuit = "/obj/item/weapon/circuitboard/reconstitutor/animal"
+	circuit = "/obj/item/circuitboard/reconstitutor/animal"
 
 /obj/machinery/computer/reconstitutor/animal/initialize()
 	spawn(50)
@@ -50,7 +50,7 @@ datum/genesequence
 	..()
 
 /obj/machinery/computer/reconstitutor/attackby(obj/item/W, mob/user)
-	if(istype(W,/obj/item/weapon/fossil))
+	if(istype(W,/obj/item/fossil))
 		user.drop_item()
 		W.loc = src.loc
 		switch(scan_fossil(W))
@@ -62,13 +62,13 @@ datum/genesequence
 				src.visible_message("\blue \icon[src] [user] inserts [W] into [src], the fossil is consumed as [src] extracts genetic data from it.")
 				del(W)
 				updateDialog()
-	else if (istype(W, /obj/item/weapon/storage))
-		var/obj/item/weapon/storage/S = W
+	else if (istype(W, /obj/item/storage))
+		var/obj/item/storage/S = W
 		S.hide_from(usr)
 		var/numaccepted = 0
 		var/numrejected = 0
 		var/full = 0
-		for(var/obj/item/weapon/fossil/F in S.contents)
+		for(var/obj/item/fossil/F in S.contents)
 			switch(scan_fossil(F))
 				if(SCANFOSSIL_RETVAL_WRONGTYPE)
 					numrejected += 1
@@ -255,7 +255,7 @@ datum/genesequence
 	else
 		..()
 
-/obj/machinery/computer/reconstitutor/proc/scan_fossil(var/obj/item/weapon/fossil/scan_fossil)
+/obj/machinery/computer/reconstitutor/proc/scan_fossil(var/obj/item/fossil/scan_fossil)
 	//see whether we accept these kind of fossils
 	if(accepted_fossil_types.len && !accepted_fossil_types.Find(scan_fossil.type))
 		return SCANFOSSIL_RETVAL_WRONGTYPE
@@ -301,24 +301,24 @@ datum/genesequence
 #undef SCANFOSSIL_RETVAL_SUCCESS
 
 
-/obj/item/weapon/circuitboard/reconstitutor
+/obj/item/circuitboard/reconstitutor
 	name = "Circuit board (Flora Reconstitution Console)"
 	build_path = "/obj/machinery/computer/reconstitutor"
 	origin_tech = "programming=2;biotech=4;materials=6"
 	frame_desc = "Requires 2 Advanced Scanning Module, 1 Nano Manipulator, 1 Matter Bin and 1 Advanced Capacitor."
 	req_components = list(
-							"/obj/item/weapon/stock_parts/scanning_module/adv" = 2,
-							"/obj/item/weapon/stock_parts/manipulator/nano" = 1,
-							"/obj/item/weapon/stock_parts/matter_bin" = 1,
-							"/obj/item/weapon/stock_parts/capacitor/adv" = 1)
+							"/obj/item/stock_parts/scanning_module/adv" = 2,
+							"/obj/item/stock_parts/manipulator/nano" = 1,
+							"/obj/item/stock_parts/matter_bin" = 1,
+							"/obj/item/stock_parts/capacitor/adv" = 1)
 
-/obj/item/weapon/circuitboard/reconstitutor/animal
+/obj/item/circuitboard/reconstitutor/animal
 	name = "Circuit board (Fauna Reconstitution Console)"
 	build_path = "/obj/machinery/computer/reconstitutor/animal"
 	origin_tech = "programming=2;biotech=4;materials=6"
 	frame_desc = "Requires 2 Advanced Scanning Module, 1 Nano Manipulator, 1 Matter Bin and 1 Advanced Capacitor."
 	req_components = list(
-							"/obj/item/weapon/stock_parts/scanning_module/adv" = 2,
-							"/obj/item/weapon/stock_parts/manipulator/nano" = 1,
-							"/obj/item/weapon/stock_parts/matter_bin" = 1,
-							"/obj/item/weapon/stock_parts/capacitor/adv" = 1)
+							"/obj/item/stock_parts/scanning_module/adv" = 2,
+							"/obj/item/stock_parts/manipulator/nano" = 1,
+							"/obj/item/stock_parts/matter_bin" = 1,
+							"/obj/item/stock_parts/capacitor/adv" = 1)

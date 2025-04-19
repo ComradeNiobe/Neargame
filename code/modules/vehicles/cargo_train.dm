@@ -13,9 +13,9 @@
 
 	var/car_limit = 3		//how many cars an engine can pull before performance degrades
 	active_engines = 1
-	var/obj/item/weapon/key/cargo_train/key
+	var/obj/item/key/cargo_train/key
 
-/obj/item/weapon/key/cargo_train
+/obj/item/key/cargo_train
 	name = "key"
 	desc = "A keyring with a small steel key, and a yellow fob reading \"Choo Choo!\"."
 	icon = 'icons/obj/vehicles.dmi'
@@ -40,7 +40,7 @@
 //-------------------------------------------
 /obj/vehicle/train/cargo/engine/New()
 	..()
-	cell = new /obj/item/weapon/cell/high
+	cell = new /obj/item/cell/high
 	verbs -= /atom/movable/verb/pull
 	key = new()
 	var/image/I = new(icon = 'icons/obj/vehicles.dmi', icon_state = "cargo_engine_overlay", layer = src.layer + 0.2) //over mobs
@@ -53,21 +53,21 @@
 		update_stats()
 		if(load && is_train_head())
 			load << "The drive motor briefly whines, then drones to a stop."
-	
+
 	if(is_train_head() && !on)
 		return 0
 
 	return ..()
 
-/obj/vehicle/train/cargo/trolley/attackby(obj/item/weapon/W as obj, mob/user as mob)
-	if(open && istype(W, /obj/item/weapon/wirecutters))
+/obj/vehicle/train/cargo/trolley/attackby(obj/item/W as obj, mob/user as mob)
+	if(open && istype(W, /obj/item/wirecutters))
 		passenger_allowed = !passenger_allowed
 		user.visible_message("<span class='notice'>[user] [passenger_allowed ? "cuts" : "mends"] a cable in [src].</span>","<span class='notice'>You [passenger_allowed ? "cut" : "mend"] the load limiter cable.</span>")
 	else
 		..()
 
-/obj/vehicle/train/cargo/engine/attackby(obj/item/weapon/W as obj, mob/user as mob)
-	if(istype(W, /obj/item/weapon/key/cargo_train))
+/obj/vehicle/train/cargo/engine/attackby(obj/item/W as obj, mob/user as mob)
+	if(istype(W, /obj/item/key/cargo_train))
 		if(!key)
 			user.drop_item()
 			W.forceMove(src)
@@ -82,10 +82,10 @@
 	else
 		icon_state = initial(icon_state)
 
-/obj/vehicle/train/cargo/trolley/insert_cell(var/obj/item/weapon/cell/C, var/mob/living/carbon/human/H)
+/obj/vehicle/train/cargo/trolley/insert_cell(var/obj/item/cell/C, var/mob/living/carbon/human/H)
 	return
 
-/obj/vehicle/train/cargo/engine/insert_cell(var/obj/item/weapon/cell/C, var/mob/living/carbon/human/H)
+/obj/vehicle/train/cargo/engine/insert_cell(var/obj/item/cell/C, var/mob/living/carbon/human/H)
 	..()
 	update_stats()
 
@@ -118,7 +118,7 @@
 
 		verbs -= /obj/vehicle/train/cargo/engine/verb/stop_engine
 		verbs -= /obj/vehicle/train/cargo/engine/verb/start_engine
-		
+
 		if(on)
 			verbs += /obj/vehicle/train/cargo/engine/verb/stop_engine
 		else
@@ -129,7 +129,7 @@
 
 	verbs -= /obj/vehicle/train/cargo/engine/verb/stop_engine
 	verbs -= /obj/vehicle/train/cargo/engine/verb/start_engine
-	
+
 	if(!on)
 		verbs += /obj/vehicle/train/cargo/engine/verb/start_engine
 	else
@@ -180,7 +180,7 @@
 
 	if(!istype(usr, /mob/living/carbon/human))
 		return
-	
+
 	if(get_dist(usr,src) <= 1)
 		usr << "The power light is [on ? "on" : "off"].\nThere are[key ? "" : " no"] keys in the ignition."
 		usr << "The charge meter reads [cell? round(cell.percent(), 0.01) : 0]%"
@@ -192,7 +192,7 @@
 
 	if(!istype(usr, /mob/living/carbon/human))
 		return
-	
+
 	if(on)
 		usr << "The engine is already running."
 		return
@@ -210,10 +210,10 @@
 	set name = "Stop engine"
 	set category = "Object"
 	set src in view(1)
-	
+
 	if(!istype(usr, /mob/living/carbon/human))
 		return
-	
+
 	if(!on)
 		usr << "The engine is already stopped."
 		return
@@ -229,10 +229,10 @@
 
 	if(!istype(usr, /mob/living/carbon/human))
 		return
-	
+
 	if(!key || (load && load != usr))
 		return
-	
+
 	if(on)
 		turn_off()
 
@@ -291,7 +291,7 @@
 /obj/vehicle/train/cargo/trolley/update_car(var/train_length, var/active_engines)
 	src.train_length = train_length
 	src.active_engines = active_engines
-	
+
 	if(!lead && !tow)
 		anchored = 0
 		if(verbs.Find(/atom/movable/verb/pull))

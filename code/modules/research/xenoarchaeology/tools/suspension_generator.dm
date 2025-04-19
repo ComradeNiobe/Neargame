@@ -5,8 +5,8 @@
 	icon_state = "suspension2"
 	density = 1
 	req_access = list(access_research)
-	var/obj/item/weapon/cell/cell
-	var/obj/item/weapon/card/id/auth_card
+	var/obj/item/cell/cell
+	var/obj/item/card/id/auth_card
 	var/locked = 1
 	var/open = 0
 	var/screwed = 1
@@ -16,7 +16,7 @@
 	var/list/secured_mobs = list()
 
 /obj/machinery/suspension_gen/New()
-	src.cell = new/obj/item/weapon/cell/high(src)
+	src.cell = new/obj/item/cell/high(src)
 	..()
 
 /obj/machinery/suspension_gen/process()
@@ -127,7 +127,7 @@
 		field_type = href_list["select_field"]
 	else if(href_list["insertcard"])
 		var/obj/item/I = usr.get_active_hand()
-		if (istype(I, /obj/item/weapon/card))
+		if (istype(I, /obj/item/card))
 			usr.drop_item()
 			I.loc = src
 			auth_card = I
@@ -165,15 +165,15 @@
 		cell = null
 		user << "<span class='info'>You remove the power cell</span>"
 
-/obj/machinery/suspension_gen/attackby(obj/item/weapon/W as obj, mob/user as mob)
-	if (istype(W, /obj/item/weapon/screwdriver))
+/obj/machinery/suspension_gen/attackby(obj/item/W as obj, mob/user as mob)
+	if (istype(W, /obj/item/screwdriver))
 		if(!open)
 			if(screwed)
 				screwed = 0
 			else
 				screwed = 1
 			user << "<span class='info'>You [screwed ? "screw" : "unscrew"] the battery panel.</span>"
-	else if (istype(W, /obj/item/weapon/crowbar))
+	else if (istype(W, /obj/item/crowbar))
 		if(!locked)
 			if(!screwed)
 				if(!suspension_field)
@@ -189,7 +189,7 @@
 				user << "<span class='warning'>Unscrew [src]'s battery panel first.</span>"
 		else
 			user << "<span class='warning'>[src]'s security locks are engaged.</span>"
-	else if (istype(W, /obj/item/weapon/wrench))
+	else if (istype(W, /obj/item/wrench))
 		if(!suspension_field)
 			if(anchored)
 				anchored = 0
@@ -202,7 +202,7 @@
 				desc = "It has stubby legs bolted up against it's body for stabilising."
 		else
 			user << "<span class='warning'>You are unable to secure [src] while it is active!</span>"
-	else if (istype(W, /obj/item/weapon/cell))
+	else if (istype(W, /obj/item/cell))
 		if(open)
 			if(cell)
 				user << "<span class='warning'>There is a power cell already installed.</span>"
@@ -212,8 +212,8 @@
 				cell = W
 				user << "<span class='info'>You insert the power cell.</span>"
 				icon_state = "suspension1"
-	else if(istype(W, /obj/item/weapon/card))
-		var/obj/item/weapon/card/I = W
+	else if(istype(W, /obj/item/card))
+		var/obj/item/card/I = W
 		if(!auth_card)
 			if(attempt_unlock(I))
 				user << "<span class='info'>You swipe [I], the console flashes \'<i>Access granted.</i>\'</span>"
@@ -222,13 +222,13 @@
 		else
 			user << "<span class='warning'>Remove [auth_card] first.</span>"
 
-/obj/machinery/suspension_gen/proc/attempt_unlock(var/obj/item/weapon/card/C)
+/obj/machinery/suspension_gen/proc/attempt_unlock(var/obj/item/card/C)
 	if(!open)
-		if(istype(C, /obj/item/weapon/card/emag) && cell.charge > 0)
+		if(istype(C, /obj/item/card/emag) && cell.charge > 0)
 			//put sparks here
 			if(prob(95))
 				locked = 0
-		else if(istype(C, /obj/item/weapon/card/id) && check_access(C))
+		else if(istype(C, /obj/item/card/id) && check_access(C))
 			locked = 0
 
 		if(!locked)

@@ -2,7 +2,7 @@
 	var/name = "playing card"
 	var/card_icon = "card_back"
 
-/obj/item/weapon/deck
+/obj/item/deck
 	name = "deck of cards"
 	desc = "A simple deck of playing cards."
 	icon = 'icons/obj/playing_cards.dmi'
@@ -11,7 +11,7 @@
 
 	var/list/cards = list()
 
-/obj/item/weapon/deck/New()
+/obj/item/deck/New()
 	..()
 
 	var/datum/playingcard/P
@@ -42,9 +42,9 @@
 		P.card_icon = "joker"
 		cards += P
 
-/obj/item/weapon/deck/attackby(obj/O as obj, mob/user as mob)
-	if(istype(O,/obj/item/weapon/hand))
-		var/obj/item/weapon/hand/H = O
+/obj/item/deck/attackby(obj/O as obj, mob/user as mob)
+	if(istype(O,/obj/item/hand))
+		var/obj/item/hand/H = O
 		for(var/datum/playingcard/P in H.cards)
 			cards += P
 		del(O)
@@ -52,7 +52,7 @@
 		return
 	..()
 
-/obj/item/weapon/deck/verb/draw_card()
+/obj/item/deck/verb/draw_card()
 
 	set category = "Object"
 	set name = "Draw"
@@ -70,10 +70,10 @@
 		usr << "There are no cards in the deck."
 		return
 
-	var/obj/item/weapon/hand/H
-	if(user.l_hand && istype(user.l_hand,/obj/item/weapon/hand))
+	var/obj/item/hand/H
+	if(user.l_hand && istype(user.l_hand,/obj/item/hand))
 		H = user.l_hand
-	else if(user.r_hand && istype(user.r_hand,/obj/item/weapon/hand))
+	else if(user.r_hand && istype(user.r_hand,/obj/item/hand))
 		H = user.r_hand
 	else
 		H = new(get_turf(src))
@@ -88,7 +88,7 @@
 	user.visible_message("\The [user] draws a card.")
 	user << "It's the [P]."
 
-/obj/item/weapon/deck/verb/deal_card()
+/obj/item/deck/verb/deal_card()
 
 	set category = "Object"
 	set name = "Deal"
@@ -112,8 +112,8 @@
 
 	deal_at(usr, M)
 
-/obj/item/weapon/deck/proc/deal_at(mob/user, mob/target)
-	var/obj/item/weapon/hand/H = new(get_step(user, user.dir))
+/obj/item/deck/proc/deal_at(mob/user, mob/target)
+	var/obj/item/hand/H = new(get_step(user, user.dir))
 
 	H.cards += cards[1]
 	cards -= cards[1]
@@ -125,9 +125,9 @@
 		user.visible_message("\The [user] deals a card to \the [target].")
 	H.throw_at(get_step(target,target.dir),10,1,H)
 
-/obj/item/weapon/hand/attackby(obj/O as obj, mob/user as mob)
-	if(istype(O,/obj/item/weapon/hand))
-		var/obj/item/weapon/hand/H = O
+/obj/item/hand/attackby(obj/O as obj, mob/user as mob)
+	if(istype(O,/obj/item/hand))
+		var/obj/item/hand/H = O
 		for(var/datum/playingcard/P in H.cards)
 			cards += P
 		src.concealed = H.concealed
@@ -137,7 +137,7 @@
 		return
 	..()
 
-/obj/item/weapon/deck/attack_self(var/mob/user as mob)
+/obj/item/deck/attack_self(var/mob/user as mob)
 
 	var/list/newcards = list()
 	while(cards.len)
@@ -147,7 +147,7 @@
 	cards = newcards
 	user.visible_message("\The [user] shuffles [src].")
 
-/obj/item/weapon/deck/MouseDrop(atom/over)
+/obj/item/deck/MouseDrop(atom/over)
 	if(!usr || !over) return
 	if(!Adjacent(usr) || !over.Adjacent(usr)) return // should stop you from dragging through windows
 
@@ -159,7 +159,7 @@
 
 	deal_at(usr, over)
 
-/obj/item/weapon/hand
+/obj/item/hand
 	name = "hand of cards"
 	desc = "Some playing cards."
 	icon = 'icons/obj/playing_cards.dmi'
@@ -169,7 +169,7 @@
 	var/concealed = 0
 	var/list/cards = list()
 
-/obj/item/weapon/hand/verb/discard()
+/obj/item/hand/verb/discard()
 
 	set category = "Object"
 	set name = "Discard"
@@ -185,7 +185,7 @@
 	var/datum/playingcard/card = to_discard[discarding]
 	del(to_discard)
 
-	var/obj/item/weapon/hand/H = new(src.loc)
+	var/obj/item/hand/H = new(src.loc)
 	H.cards += card
 	cards -= card
 	H.concealed = 0
@@ -197,19 +197,19 @@
 	if(!cards.len)
 		del(src)
 
-/obj/item/weapon/hand/attack_self(var/mob/user as mob)
+/obj/item/hand/attack_self(var/mob/user as mob)
 	concealed = !concealed
 	update_icon()
 	user.visible_message("\The [user] [concealed ? "conceals" : "reveals"] their hand.")
 
-/obj/item/weapon/hand/examine()
+/obj/item/hand/examine()
 	..()
 	if((!concealed || src.loc == usr) && cards.len)
 		usr << "It contains: "
 		for(var/datum/playingcard/P in cards)
 			usr << "The [P.name]."
 
-/obj/item/weapon/hand/update_icon(var/direction = 0)
+/obj/item/hand/update_icon(var/direction = 0)
 
 	if(!cards.len)
 		del(src)
@@ -264,11 +264,11 @@
 		overlays += I
 		i++
 
-/obj/item/weapon/hand/dropped(mob/user as mob)
+/obj/item/hand/dropped(mob/user as mob)
 	if(locate(/obj/structure/table, loc))
 		src.update_icon(user.dir)
 	else
 		update_icon()
 
-/obj/item/weapon/hand/pickup(mob/user as mob)
+/obj/item/hand/pickup(mob/user as mob)
 	src.update_icon()

@@ -216,7 +216,7 @@ This function completely restores a damaged organ to perfect condition.
 
 	// remove embedded objects and drop them on the floor
 	for(var/obj/implanted_object in implants)
-		if(!istype(implanted_object,/obj/item/weapon/implant))	// We don't want to remove REAL implants. Just shrapnel etc.
+		if(!istype(implanted_object,/obj/item/implant))	// We don't want to remove REAL implants. Just shrapnel etc.
 			implanted_object.loc = owner.loc
 			implants -= implanted_object
 
@@ -599,9 +599,9 @@ Note that amputating the affected organ does in fact remove the infection from t
 		switch(body_part)
 			if(HEAD)
 				if(owner.species.flags & IS_SYNTHETIC)
-					organ= new /obj/item/weapon/organ/head/posi(owner.loc, owner)
+					organ= new /obj/item/organ/head/posi(owner.loc, owner)
 				else
-					organ= new /obj/item/weapon/organ/head(owner.loc, owner)
+					organ= new /obj/item/organ/head(owner.loc, owner)
 				owner.u_equip(owner.glasses)
 				owner.u_equip(owner.head)
 				owner.u_equip(owner.l_ear)
@@ -611,37 +611,37 @@ Note that amputating the affected organ does in fact remove the infection from t
 				if(status & ORGAN_ROBOT)
 					organ = new /obj/item/robot_parts/r_arm(owner.loc)
 				else
-					organ= new /obj/item/weapon/organ/r_arm(owner.loc, owner)
+					organ= new /obj/item/organ/r_arm(owner.loc, owner)
 			if(ARM_LEFT)
 				if(status & ORGAN_ROBOT)
 					organ= new /obj/item/robot_parts/l_arm(owner.loc)
 				else
-					organ= new /obj/item/weapon/organ/l_arm(owner.loc, owner)
+					organ= new /obj/item/organ/l_arm(owner.loc, owner)
 			if(LEG_RIGHT)
 				if(status & ORGAN_ROBOT)
 					organ = new /obj/item/robot_parts/r_leg(owner.loc)
 				else
-					organ= new /obj/item/weapon/organ/r_leg(owner.loc, owner)
+					organ= new /obj/item/organ/r_leg(owner.loc, owner)
 			if(LEG_LEFT)
 				if(status & ORGAN_ROBOT)
 					organ = new /obj/item/robot_parts/l_leg(owner.loc)
 				else
-					organ= new /obj/item/weapon/organ/l_leg(owner.loc, owner)
+					organ= new /obj/item/organ/l_leg(owner.loc, owner)
 			if(HAND_RIGHT)
 				if(!(status & ORGAN_ROBOT))
-					organ= new /obj/item/weapon/organ/r_hand(owner.loc, owner)
+					organ= new /obj/item/organ/r_hand(owner.loc, owner)
 				owner.u_equip(owner.gloves)
 			if(HAND_LEFT)
 				if(!(status & ORGAN_ROBOT))
-					organ= new /obj/item/weapon/organ/l_hand(owner.loc, owner)
+					organ= new /obj/item/organ/l_hand(owner.loc, owner)
 				owner.u_equip(owner.gloves)
 			if(FOOT_RIGHT)
 				if(!(status & ORGAN_ROBOT))
-					organ= new /obj/item/weapon/organ/r_foot/(owner.loc, owner)
+					organ= new /obj/item/organ/r_foot/(owner.loc, owner)
 				owner.u_equip(owner.shoes)
 			if(FOOT_LEFT)
 				if(!(status & ORGAN_ROBOT))
-					organ = new /obj/item/weapon/organ/l_foot(owner.loc, owner)
+					organ = new /obj/item/organ/l_foot(owner.loc, owner)
 				owner.u_equip(owner.shoes)
 
 		destspawn = 1
@@ -836,7 +836,7 @@ Note that amputating the affected organ does in fact remove the infection from t
 		spawn(10)
 			del(spark_system)
 
-/datum/organ/external/proc/embed(var/obj/item/weapon/W, var/silent = 0)
+/datum/organ/external/proc/embed(var/obj/item/W, var/silent = 0)
 	if(!silent)
 		owner.visible_message("<span class='danger'>\The [W] sticks in the wound!</span>")
 	implants += W
@@ -1002,10 +1002,10 @@ Note that amputating the affected organ does in fact remove the infection from t
 			   EXTERNAL ORGAN ITEMS
 ****************************************************/
 
-obj/item/weapon/organ
+obj/item/organ
 	icon = 'icons/mob/human_races/r_human.dmi'
 
-obj/item/weapon/organ/New(loc, mob/living/carbon/human/H)
+obj/item/organ/New(loc, mob/living/carbon/human/H)
 	..(loc)
 	if(!istype(H))
 		return
@@ -1045,41 +1045,41 @@ obj/item/weapon/organ/New(loc, mob/living/carbon/human/H)
 			   EXTERNAL ORGAN ITEMS DEFINES
 ****************************************************/
 
-obj/item/weapon/organ/l_arm
+obj/item/organ/l_arm
 	name = "left arm"
 	icon_state = "l_arm"
-obj/item/weapon/organ/l_foot
+obj/item/organ/l_foot
 	name = "left foot"
 	icon_state = "l_foot"
-obj/item/weapon/organ/l_hand
+obj/item/organ/l_hand
 	name = "left hand"
 	icon_state = "l_hand"
-obj/item/weapon/organ/l_leg
+obj/item/organ/l_leg
 	name = "left leg"
 	icon_state = "l_leg"
-obj/item/weapon/organ/r_arm
+obj/item/organ/r_arm
 	name = "right arm"
 	icon_state = "r_arm"
-obj/item/weapon/organ/r_foot
+obj/item/organ/r_foot
 	name = "right foot"
 	icon_state = "r_foot"
-obj/item/weapon/organ/r_hand
+obj/item/organ/r_hand
 	name = "right hand"
 	icon_state = "r_hand"
-obj/item/weapon/organ/r_leg
+obj/item/organ/r_leg
 	name = "right leg"
 	icon_state = "r_leg"
 
-obj/item/weapon/organ/head
+obj/item/organ/head
 	name = "head"
 	icon_state = "head_m"
 	var/mob/living/carbon/brain/brainmob
 	var/brain_op_stage = 0
 
-/obj/item/weapon/organ/head/posi
+/obj/item/organ/head/posi
 	name = "robotic head"
 
-obj/item/weapon/organ/head/New(loc, mob/living/carbon/human/H)
+obj/item/organ/head/New(loc, mob/living/carbon/human/H)
 	if(istype(H))
 		src.icon_state = H.gender == MALE? "head_m" : "head_f"
 	..()
@@ -1118,7 +1118,7 @@ obj/item/weapon/organ/head/New(loc, mob/living/carbon/human/H)
 	brainmob.stat = 2
 	brainmob.death()
 
-obj/item/weapon/organ/head/proc/transfer_identity(var/mob/living/carbon/human/H)//Same deal as the regular brain proc. Used for human-->head
+obj/item/organ/head/proc/transfer_identity(var/mob/living/carbon/human/H)//Same deal as the regular brain proc. Used for human-->head
 	brainmob = new(src)
 	brainmob.name = H.real_name
 	brainmob.real_name = H.real_name
@@ -1127,8 +1127,8 @@ obj/item/weapon/organ/head/proc/transfer_identity(var/mob/living/carbon/human/H)
 		H.mind.transfer_to(brainmob)
 	brainmob.container = src
 
-obj/item/weapon/organ/head/attackby(obj/item/weapon/W as obj, mob/user as mob)
-	if(istype(W,/obj/item/weapon/scalpel))
+obj/item/organ/head/attackby(obj/item/W as obj, mob/user as mob)
+	if(istype(W,/obj/item/scalpel))
 		switch(brain_op_stage)
 			if(0)
 				for(var/mob/O in (oviewers(brainmob) - user))
@@ -1147,7 +1147,7 @@ obj/item/weapon/organ/head/attackby(obj/item/weapon/W as obj, mob/user as mob)
 				brain_op_stage = 3.0
 			else
 				..()
-	else if(istype(W,/obj/item/weapon/circular_saw))
+	else if(istype(W,/obj/item/circular_saw))
 		switch(brain_op_stage)
 			if(1)
 				for(var/mob/O in (oviewers(brainmob) - user))
@@ -1167,7 +1167,7 @@ obj/item/weapon/organ/head/attackby(obj/item/weapon/W as obj, mob/user as mob)
 				msg_admin_attack("[user] ([user.ckey]) debrained [brainmob] ([brainmob.ckey]) (INTENT: [uppertext(user.a_intent)]) (<A HREF='?_src_=holder;adminplayerobservecoodjump=1;X=[user.x];Y=[user.y];Z=[user.z]'>JMP</a>)")
 
 				//TODO: ORGAN REMOVAL UPDATE.
-				if(istype(src,/obj/item/weapon/organ/head/posi))
+				if(istype(src,/obj/item/organ/head/posi))
 					var/obj/item/device/mmi/posibrain/B = new(loc)
 					B.transfer_identity(brainmob)
 				else

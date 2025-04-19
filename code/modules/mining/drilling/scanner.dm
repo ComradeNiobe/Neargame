@@ -1,4 +1,4 @@
-/obj/item/weapon/mining_scanner
+/obj/item/mining_scanner
 	name = "ore detector"
 	desc = "A complex device used to locate ore deep underground."
 	icon = 'icons/obj/device.dmi'
@@ -8,7 +8,7 @@
 
 	origin_tech = "magnets=1;engineering=1"
 
-/obj/item/weapon/mining_scanner/attack_self(mob/user as mob)
+/obj/item/mining_scanner/attack_self(mob/user as mob)
 
 	user << "You begin sweeping \the [src] about, scanning for metal deposits."
 

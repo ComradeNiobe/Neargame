@@ -1,6 +1,6 @@
 // Veil render //
 
-/obj/item/weapon/veilrender
+/obj/item/veilrender
 	name = "veil render"
 	desc = "A wicked curved blade of alien origin, recovered from the ruins of a vast city."
 	icon = 'icons/obj/wizard.dmi'
@@ -31,7 +31,7 @@
 	return
 
 
-/obj/item/weapon/veilrender/attack_self(mob/user as mob)
+/obj/item/veilrender/attack_self(mob/user as mob)
 	if(charged == 1)
 		new /obj/effect/rend(get_turf(usr))
 		charged = 0
@@ -41,7 +41,7 @@
 
 // Scrying orb //
 
-/obj/item/weapon/scrying
+/obj/item/scrying
 	name = "scrying orb"
 	desc = "An incandescent orb of otherworldly energy, staring into it gives you vision beyond mortal means."
 	icon = 'icons/obj/projectiles.dmi'
@@ -53,7 +53,7 @@
 	force = 10
 	hitsound = 'sound/items/welder2.ogg'
 
-/obj/item/weapon/scrying/attack_self(mob/user as mob)
+/obj/item/scrying/attack_self(mob/user as mob)
 	user << "<span class='info'>You can see... everything!</span>"
 	visible_message("<span class='danger'>[usr] stares into [src], their eyes glazing over.</span>")
 	user.ghostize(1)

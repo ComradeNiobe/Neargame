@@ -7,7 +7,7 @@
 	proc/announce_directives()
 		for (var/obj/machinery/faxmachine/fax in world)
 			if (fax.department == "Captain's Office")
-				var/obj/item/weapon/paper/directive_x = new(fax.loc)
+				var/obj/item/paper/directive_x = new(fax.loc)
 				directive_x.name = "emergency action message"
 				directive_x.info = get_fax_body()
 

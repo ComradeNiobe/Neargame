@@ -1,4 +1,4 @@
-/obj/item/weapon/weldpack
+/obj/item/weldpack
 	name = "Welding kit"
 	desc = "A heavy-duty, portable welding fluid carrier."
 	slot_flags = SLOT_BACK
@@ -7,15 +7,15 @@
 	w_class = 4.0
 	var/max_fuel = 350
 
-/obj/item/weapon/weldpack/New()
+/obj/item/weldpack/New()
 	var/datum/reagents/R = new/datum/reagents(max_fuel) //Lotsa refills
 	reagents = R
 	R.my_atom = src
 	R.add_reagent("fuel", max_fuel)
 
-/obj/item/weapon/weldpack/attackby(obj/item/W as obj, mob/user as mob)
-	if(istype(W, /obj/item/weapon/weldingtool))
-		var/obj/item/weapon/weldingtool/T = W
+/obj/item/weldpack/attackby(obj/item/W as obj, mob/user as mob)
+	if(istype(W, /obj/item/weldingtool))
+		var/obj/item/weldingtool/T = W
 		if(T.welding & prob(50))
 			message_admins("[key_name_admin(user)] triggered a fueltank explosion.")
 			log_game("[key_name(user)] triggered a fueltank explosion.")
@@ -34,7 +34,7 @@
 	user << "\blue The tank scoffs at your insolence.  It only provides services to welders."
 	return
 
-/obj/item/weapon/weldpack/afterattack(obj/O as obj, mob/user as mob, proximity)
+/obj/item/weldpack/afterattack(obj/O as obj, mob/user as mob, proximity)
 	if(!proximity) // this replaces and improves the get_dist(src,O) <= 1 checks used previously
 		return
 	if (istype(O, /obj/structure/reagent_dispensers/fueltank) && src.reagents.total_volume < max_fuel)
@@ -46,7 +46,7 @@
 		user << "\blue The pack is already full!"
 		return
 
-/obj/item/weapon/weldpack/examine()
+/obj/item/weldpack/examine()
 	set src in usr
 	usr << text("\icon[] [] units of fuel left!", src, src.reagents.total_volume)
 	..()

@@ -2,7 +2,7 @@
 //////////////////////////////////////
 // RUST Core Control computer
 
-/obj/item/weapon/circuitboard/rust_core_control
+/obj/item/circuitboard/rust_core_control
 	name = "Circuit board (RUST core controller)"
 	build_path = "/obj/machinery/computer/rust_core_control"
 	origin_tech = "programming=4;engineering=4"
@@ -14,12 +14,12 @@ datum/design/rust_core_control
 	req_tech = list("programming" = 4, "engineering" = 4)
 	build_type = IMPRINTER
 	materials = list("$glass" = 2000, "sacid" = 20)
-	build_path = "/obj/item/weapon/circuitboard/rust_core_control"
+	build_path = "/obj/item/circuitboard/rust_core_control"
 
 //////////////////////////////////////
 // RUST Fuel Control computer
 
-/obj/item/weapon/circuitboard/rust_fuel_control
+/obj/item/circuitboard/rust_fuel_control
 	name = "Circuit board (RUST fuel controller)"
 	build_path = "/obj/machinery/computer/rust_fuel_control"
 	origin_tech = "programming=4;engineering=4"
@@ -31,12 +31,12 @@ datum/design/rust_fuel_control
 	req_tech = list("programming" = 4, "engineering" = 4)
 	build_type = IMPRINTER
 	materials = list("$glass" = 2000, "sacid" = 20)
-	build_path = "/obj/item/weapon/circuitboard/rust_fuel_control"
+	build_path = "/obj/item/circuitboard/rust_fuel_control"
 
 //////////////////////////////////////
 // RUST Fuel Port board
 
-/obj/item/weapon/module/rust_fuel_port
+/obj/item/module/rust_fuel_port
 	name = "Internal circuitry (RUST fuel port)"
 	icon_state = "card_mod"
 	origin_tech = "engineering=4;materials=5"
@@ -48,12 +48,12 @@ datum/design/rust_fuel_port
 	req_tech = list("engineering" = 4, "materials" = 5)
 	build_type = IMPRINTER
 	materials = list("$glass" = 2000, "sacid" = 20, "$uranium" = 3000)
-	build_path = "/obj/item/weapon/module/rust_fuel_port"
+	build_path = "/obj/item/module/rust_fuel_port"
 
 //////////////////////////////////////
 // RUST Fuel Compressor board
 
-/obj/item/weapon/module/rust_fuel_compressor
+/obj/item/module/rust_fuel_compressor
 	name = "Internal circuitry (RUST fuel compressor)"
 	icon_state = "card_mod"
 	origin_tech = "materials=6;phorontech=4"
@@ -65,22 +65,22 @@ datum/design/rust_fuel_compressor
 	req_tech = list("materials" = 6, "phorontech" = 4)
 	build_type = IMPRINTER
 	materials = list("$glass" = 2000, "sacid" = 20, "$phoron" = 3000, "$diamond" = 1000)
-	build_path = "/obj/item/weapon/module/rust_fuel_compressor"
+	build_path = "/obj/item/module/rust_fuel_compressor"
 
 //////////////////////////////////////
 // RUST Tokamak Core board
 
-/obj/item/weapon/circuitboard/rust_core
+/obj/item/circuitboard/rust_core
 	name = "Internal circuitry (RUST tokamak core)"
 	build_path = "/obj/machinery/power/rust_core"
 	board_type = "machine"
 	origin_tech = "bluespace=3;phorontech=4;magnets=5;powerstorage=6"
 	frame_desc = "Requires 2 Pico Manipulators, 1 Ultra Micro-Laser, 5 Pieces of Cable, 1 Subspace Crystal and 1 Console Screen."
 	req_components = list(
-							"/obj/item/weapon/stock_parts/manipulator/pico" = 2,
-							"/obj/item/weapon/stock_parts/micro_laser/ultra" = 1,
-							"/obj/item/weapon/stock_parts/subspace/crystal" = 1,
-							"/obj/item/weapon/stock_parts/console_screen" = 1,
+							"/obj/item/stock_parts/manipulator/pico" = 2,
+							"/obj/item/stock_parts/micro_laser/ultra" = 1,
+							"/obj/item/stock_parts/subspace/crystal" = 1,
+							"/obj/item/stock_parts/console_screen" = 1,
 							"/obj/item/stack/cable_coil" = 5)
 
 datum/design/rust_core
@@ -91,22 +91,22 @@ datum/design/rust_core
 	build_type = IMPRINTER
 	reliability_base = 79
 	materials = list("$glass" = 2000, "sacid" = 20, "$phoron" = 3000, "$diamond" = 2000)
-	build_path = "/obj/item/weapon/circuitboard/rust_core"
+	build_path = "/obj/item/circuitboard/rust_core"
 
 //////////////////////////////////////
 // RUST Fuel Injector board
 
-/obj/item/weapon/circuitboard/rust_injector
+/obj/item/circuitboard/rust_injector
 	name = "Internal circuitry (RUST fuel injector)"
 	build_path = "/obj/machinery/power/rust_fuel_injector"
 	board_type = "machine"
 	origin_tech = "powerstorage=3;engineering=4;phorontech=4;materials=6"
 	frame_desc = "Requires 2 Pico Manipulators, 1 Phasic Scanning Module, 1 Super Matter Bin, 1 Console Screen and 5 Pieces of Cable."
 	req_components = list(
-							"/obj/item/weapon/stock_parts/manipulator/pico" = 2,
-							"/obj/item/weapon/stock_parts/scanning_module/phasic" = 1,
-							"/obj/item/weapon/stock_parts/matter_bin/super" = 1,
-							"/obj/item/weapon/stock_parts/console_screen" = 1,
+							"/obj/item/stock_parts/manipulator/pico" = 2,
+							"/obj/item/stock_parts/scanning_module/phasic" = 1,
+							"/obj/item/stock_parts/matter_bin/super" = 1,
+							"/obj/item/stock_parts/console_screen" = 1,
 							"/obj/item/stack/cable_coil" = 5)
 
 datum/design/rust_injector
@@ -117,4 +117,4 @@ datum/design/rust_injector
 	build_type = IMPRINTER
 	reliability_base = 79
 	materials = list("$glass" = 2000, "sacid" = 20, "$phoron" = 3000, "$uranium" = 2000)
-	build_path = "/obj/item/weapon/circuitboard/rust_core"
+	build_path = "/obj/item/circuitboard/rust_core"

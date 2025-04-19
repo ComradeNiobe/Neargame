@@ -63,7 +63,7 @@
 	var/search_range = 7
 	var/is_attacking = 0
 
-	var/obj/item/weapon/secbot_assembly = /obj/item/weapon/secbot_assembly
+	var/obj/item/secbot_assembly = /obj/item/secbot_assembly
 
 	var/list/threat_found_sounds = new('sound/voice/bcriminal.ogg', 'sound/voice/bjustice.ogg', 'sound/voice/bfreeze.ogg')
 	var/list/preparing_arrest_sounds = new('sound/voice/bgod.ogg', 'sound/voice/biamthelaw.ogg', 'sound/voice/bsecureday.ogg', 'sound/voice/bradio.ogg', 'sound/voice/binsult.ogg', 'sound/voice/bcreep.ogg')
@@ -74,7 +74,7 @@
 	idcheck = 0
 	auto_patrol = 1
 
-/obj/item/weapon/secbot_assembly
+/obj/item/secbot_assembly
 	name = "helmet/signaler assembly"
 	desc = "Some sort of bizarre assembly."
 	icon = 'icons/obj/aibots.dmi'
@@ -89,7 +89,7 @@
 	if(created_lasercolor)	lasercolor = created_lasercolor
 	update_icon()
 	spawn(3)
-		src.botcard = new /obj/item/weapon/card/id(src)
+		src.botcard = new /obj/item/card/id(src)
 		var/datum/job/detective/J = new/datum/job/detective
 		src.botcard.access = J.get_access()
 		if(radio_controller)
@@ -198,8 +198,8 @@ Auto Patrol: []"},
 			src.declare_arrests = !src.declare_arrests
 	src.updateUsrDialog()
 
-/obj/machinery/bot/secbot/attackby(obj/item/weapon/W as obj, mob/user as mob)
-	if(istype(W, /obj/item/weapon/card/id)||istype(W, /obj/item/device/pda))
+/obj/machinery/bot/secbot/attackby(obj/item/W as obj, mob/user as mob)
+	if(istype(W, /obj/item/card/id)||istype(W, /obj/item/device/pda))
 		if(src.allowed(user) && !open && !emagged)
 			src.locked = !src.locked
 			user << "<span class='notice'>Controls are now [src.locked ? "locked" : "unlocked"].</span>"
@@ -212,7 +212,7 @@ Auto Patrol: []"},
 				user << "<span class='notice'>Access denied.</span>"
 	else
 		..()
-		if(!istype(W, /obj/item/weapon/screwdriver) && W.force && !src.target)
+		if(!istype(W, /obj/item/screwdriver) && W.force && !src.target)
 			src.target = user
 			if(lasercolor)//To make up for the fact that lasertag bots don't hunt
 				src.shootAt(user)
@@ -351,7 +351,7 @@ Auto Patrol: []"},
 							if(istype(src.target,/mob/living/carbon))
 								C = target
 								if(!C.handcuffed)
-									C.handcuffed = new /obj/item/weapon/handcuffs(target)
+									C.handcuffed = new /obj/item/handcuffs(target)
 									C.update_inv_handcuffed()	//update the handcuffs overlay
 
 							mode = SECBOT_IDLE
@@ -680,22 +680,22 @@ Auto Patrol: []"},
 	if(src.emagged == 2) return 10 //Everyone is a criminal!
 
 	if(src.idcheck && !src.allowed(perp))
-		if(istype(perp.l_hand, /obj/item/weapon/gun) || istype(perp.l_hand, /obj/item/weapon/melee))
-			if(!istype(perp.l_hand, /obj/item/weapon/gun/energy/laser/bluetag) \
-			&& !istype(perp.l_hand, /obj/item/weapon/gun/energy/laser/redtag) \
-			&& !istype(perp.l_hand, /obj/item/weapon/gun/energy/laser/practice))
+		if(istype(perp.l_hand, /obj/item/gun) || istype(perp.l_hand, /obj/item/melee))
+			if(!istype(perp.l_hand, /obj/item/gun/energy/laser/bluetag) \
+			&& !istype(perp.l_hand, /obj/item/gun/energy/laser/redtag) \
+			&& !istype(perp.l_hand, /obj/item/gun/energy/laser/practice))
 				threatcount += 4
 
-		if(istype(perp.r_hand, /obj/item/weapon/gun) || istype(perp.r_hand, /obj/item/weapon/melee))
-			if(!istype(perp.r_hand, /obj/item/weapon/gun/energy/laser/bluetag) \
-			&& !istype(perp.r_hand, /obj/item/weapon/gun/energy/laser/redtag) \
-			&& !istype(perp.r_hand, /obj/item/weapon/gun/energy/laser/practice))
+		if(istype(perp.r_hand, /obj/item/gun) || istype(perp.r_hand, /obj/item/melee))
+			if(!istype(perp.r_hand, /obj/item/gun/energy/laser/bluetag) \
+			&& !istype(perp.r_hand, /obj/item/gun/energy/laser/redtag) \
+			&& !istype(perp.r_hand, /obj/item/gun/energy/laser/practice))
 				threatcount += 4
 
-		if(istype(perp.belt, /obj/item/weapon/gun) || istype(perp.belt, /obj/item/weapon/melee))
-			if(!istype(perp.belt, /obj/item/weapon/gun/energy/laser/bluetag) \
-			&& !istype(perp.belt, /obj/item/weapon/gun/energy/laser/redtag) \
-			&& !istype(perp.belt, /obj/item/weapon/gun/energy/laser/practice))
+		if(istype(perp.belt, /obj/item/gun) || istype(perp.belt, /obj/item/melee))
+			if(!istype(perp.belt, /obj/item/gun/energy/laser/bluetag) \
+			&& !istype(perp.belt, /obj/item/gun/energy/laser/redtag) \
+			&& !istype(perp.belt, /obj/item/gun/energy/laser/practice))
 				threatcount += 2
 
 		if(istype(perp.wear_suit, /obj/item/clothing/suit/wizrobe))
@@ -705,31 +705,31 @@ Auto Patrol: []"},
 			threatcount += 2
 
 		//Agent cards lower threatlevel.
-		if(perp.wear_id && istype(perp.wear_id.GetID(), /obj/item/weapon/card/id/syndicate))
+		if(perp.wear_id && istype(perp.wear_id.GetID(), /obj/item/card/id/syndicate))
 			threatcount -= 2
 
 	if(src.lasercolor == "b")//Lasertag turrets target the opposing team, how great is that? -Sieve
 		threatcount = 0//They will not, however shoot at people who have guns, because it gets really fucking annoying
 		if(istype(perp.wear_suit, /obj/item/clothing/suit/redtag))
 			threatcount += 4
-		if((istype(perp.r_hand,/obj/item/weapon/gun/energy/laser/redtag)) || (istype(perp.l_hand,/obj/item/weapon/gun/energy/laser/redtag)))
+		if((istype(perp.r_hand,/obj/item/gun/energy/laser/redtag)) || (istype(perp.l_hand,/obj/item/gun/energy/laser/redtag)))
 			threatcount += 4
-		if(istype(perp.belt, /obj/item/weapon/gun/energy/laser/redtag))
+		if(istype(perp.belt, /obj/item/gun/energy/laser/redtag))
 			threatcount += 2
 
 	if(src.lasercolor == "r")
 		threatcount = 0
 		if(istype(perp.wear_suit, /obj/item/clothing/suit/bluetag))
 			threatcount += 4
-		if((istype(perp.r_hand,/obj/item/weapon/gun/energy/laser/bluetag)) || (istype(perp.l_hand,/obj/item/weapon/gun/energy/laser/bluetag)))
+		if((istype(perp.r_hand,/obj/item/gun/energy/laser/bluetag)) || (istype(perp.l_hand,/obj/item/gun/energy/laser/bluetag)))
 			threatcount += 4
-		if(istype(perp.belt, /obj/item/weapon/gun/energy/laser/bluetag))
+		if(istype(perp.belt, /obj/item/gun/energy/laser/bluetag))
 			threatcount += 2
 
 	if(src.check_records)
 		var/perpname = perp.name
 		if(perp.wear_id)
-			var/obj/item/weapon/card/id/id = perp.wear_id.GetID()
+			var/obj/item/card/id/id = perp.wear_id.GetID()
 			if(id)
 				perpname = id.registered_name
 
@@ -770,12 +770,12 @@ Auto Patrol: []"},
 	src.visible_message("\red <B>[src] blows apart!</B>", 1)
 	var/turf/Tsec = get_turf(src)
 
-	var/obj/item/weapon/secbot_assembly/Sa = new secbot_assembly(Tsec)
+	var/obj/item/secbot_assembly/Sa = new secbot_assembly(Tsec)
 	Sa.build_step = 1
 	Sa.overlays += image('icons/obj/aibots.dmi', "hs_hole")
 	Sa.created_name = src.name
 	new /obj/item/device/assembly/prox_sensor(Tsec)
-	new /obj/item/weapon/melee/baton(Tsec)
+	new /obj/item/melee/baton(Tsec)
 
 	on_explosion()
 
@@ -788,7 +788,7 @@ Auto Patrol: []"},
 
 
 /obj/machinery/bot/secbot/proc/on_explosion(var/turf/Tsec)
-	new /obj/item/weapon/melee/baton(Tsec)
+	new /obj/item/melee/baton(Tsec)
 	if(prob(50))
 		new /obj/item/robot_parts/l_arm(Tsec)
 
@@ -805,7 +805,7 @@ Auto Patrol: []"},
 
 	if(S.secured)
 		del(S)
-		var/obj/item/weapon/secbot_assembly/A = new /obj/item/weapon/secbot_assembly
+		var/obj/item/secbot_assembly/A = new /obj/item/secbot_assembly
 		user.put_in_hands(A)
 		user << "You add the signaler to the helmet."
 		user.drop_from_inventory(src)
@@ -813,10 +813,10 @@ Auto Patrol: []"},
 	else
 		return
 
-/obj/item/weapon/secbot_assembly/attackby(obj/item/weapon/W as obj, mob/user as mob)
+/obj/item/secbot_assembly/attackby(obj/item/W as obj, mob/user as mob)
 	..()
-	if((istype(W, /obj/item/weapon/weldingtool)) && (!src.build_step))
-		var/obj/item/weapon/weldingtool/WT = W
+	if((istype(W, /obj/item/weldingtool)) && (!src.build_step))
+		var/obj/item/weldingtool/WT = W
 		if(WT.remove_fuel(0,user))
 			src.build_step++
 			src.overlays += image('icons/obj/aibots.dmi', "hs_hole")
@@ -838,7 +838,7 @@ Auto Patrol: []"},
 		src.overlays += image('icons/obj/aibots.dmi', "hs_arm")
 		del(W)
 
-	else if((istype(W, /obj/item/weapon/melee/baton)) && (src.build_step >= 3))
+	else if((istype(W, /obj/item/melee/baton)) && (src.build_step >= 3))
 		user.drop_item()
 		src.build_step++
 		user << "You complete the Securitron! Beep boop."
@@ -848,7 +848,7 @@ Auto Patrol: []"},
 		del(W)
 		del(src)
 
-	else if(istype(W, /obj/item/weapon/pen))
+	else if(istype(W, /obj/item/pen))
 		var/t = copytext(stripped_input(user, "Enter new robot name", src.name, src.created_name),1,MAX_NAME_LEN)
 		if(!t)
 			return

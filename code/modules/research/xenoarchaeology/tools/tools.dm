@@ -23,7 +23,7 @@
 
 //todo: dig site tape
 
-/obj/item/weapon/storage/bag/fossils
+/obj/item/storage/bag/fossils
 	name = "Fossil Satchel"
 	desc = "Transports delicate fossils in suspension so they don't break during transit."
 	icon = 'icons/obj/mining.dmi'
@@ -33,4 +33,4 @@
 	storage_slots = 50
 	max_combined_w_class = 200 //Doesn't matter what this is, so long as it's more or equal to storage_slots * ore.w_class
 	max_w_class = 3
-	can_hold = list("/obj/item/weapon/fossil")
+	can_hold = list("/obj/item/fossil")

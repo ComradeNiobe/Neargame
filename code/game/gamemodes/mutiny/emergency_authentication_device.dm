@@ -68,7 +68,7 @@
 	// Impossible!
 	state("Command aborted. This unit is defective.")
 
-/obj/machinery/emergency_authentication_device/attackby(obj/item/weapon/O, mob/user)
+/obj/machinery/emergency_authentication_device/attackby(obj/item/O, mob/user)
 	if(activated)
 		user << "\blue \The [src] is already active!"
 		return
@@ -78,7 +78,7 @@
 		return
 
 	check_key_existence()
-	if(istype(O, /obj/item/weapon/mutiny/auth_key/captain) && !captains_key)
+	if(istype(O, /obj/item/mutiny/auth_key/captain) && !captains_key)
 		captains_key = O
 		user.drop_item()
 		O.loc = src
@@ -88,7 +88,7 @@
 			state(secondary_key ? "Your keys have been authenticated. Communication with CentCom is now authorized." : "Please insert the Emergency Secondary Authentication Key now.")
 		return
 
-	if(istype(O, /obj/item/weapon/mutiny/auth_key/secondary) && !secondary_key)
+	if(istype(O, /obj/item/mutiny/auth_key/secondary) && !secondary_key)
 		secondary_key = O
 		user.drop_item()
 		O.loc = src

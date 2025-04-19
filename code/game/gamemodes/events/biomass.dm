@@ -20,27 +20,27 @@
 			master.growth_queue -= src
 		..()
 
-/obj/effect/biomass/attackby(obj/item/weapon/W as obj, mob/user as mob)
+/obj/effect/biomass/attackby(obj/item/W as obj, mob/user as mob)
 	if (!W || !user || !W.type) return
 	switch(W.type)
-		if(/obj/item/weapon/circular_saw) del src
-		if(/obj/item/weapon/kitchen/utensil/knife) del src
-		if(/obj/item/weapon/scalpel) del src
-		if(/obj/item/weapon/twohanded/fireaxe) del src
-		if(/obj/item/weapon/hatchet) del src
-		if(/obj/item/weapon/melee/energy) del src
-		if(/obj/item/weapon/pickaxe/plasmacutter) del src
+		if(/obj/item/circular_saw) del src
+		if(/obj/item/kitchen/utensil/knife) del src
+		if(/obj/item/scalpel) del src
+		if(/obj/item/twohanded/fireaxe) del src
+		if(/obj/item/hatchet) del src
+		if(/obj/item/melee/energy) del src
+		if(/obj/item/pickaxe/plasmacutter) del src
 
 		//less effective weapons
-		if(/obj/item/weapon/wirecutters)
+		if(/obj/item/wirecutters)
 			if(prob(25)) del src
-		if(/obj/item/weapon/shard)
+		if(/obj/item/shard)
 			if(prob(25)) del src
 
 		else //weapons with subtypes
-			if(istype(W, /obj/item/weapon/melee/energy/sword)) del src
-			else if(istype(W, /obj/item/weapon/weldingtool))
-				var/obj/item/weapon/weldingtool/WT = W
+			if(istype(W, /obj/item/melee/energy/sword)) del src
+			else if(istype(W, /obj/item/weldingtool))
+				var/obj/item/weldingtool/WT = W
 				if(WT.remove_fuel(0, user)) del src
 			else
 				return

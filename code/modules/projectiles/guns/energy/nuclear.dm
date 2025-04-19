@@ -1,4 +1,4 @@
-/obj/item/weapon/gun/energy/gun
+/obj/item/gun/energy/gun
 	name = "energy gun"
 	desc = "A basic energy-based gun with two settings: Stun and kill."
 	icon_state = "energystun100"
@@ -38,7 +38,7 @@
 
 
 
-/obj/item/weapon/gun/energy/gun/nuclear
+/obj/item/gun/energy/gun/nuclear
 	name = "Advanced Energy Gun"
 	desc = "An energy gun with an experimental miniaturized reactor."
 	icon_state = "nucgun"

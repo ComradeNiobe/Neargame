@@ -86,7 +86,7 @@ datum/directive/ipc_virus/get_remaining_orders()
 
 	return 1
 
-/hook/terminate_employee/proc/ipc_termination(obj/item/weapon/card/id)
+/hook/terminate_employee/proc/ipc_termination(obj/item/card/id)
 	var/datum/directive/ipc_virus/D = get_directive("ipc_virus")
 	if (!D) return 1
 

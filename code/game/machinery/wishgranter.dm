@@ -59,14 +59,12 @@
 
 		user.update_mutations()
 
-		ticker.mode.traitors += user.mind
 		user.mind.special_role = "Avatar of the Wish Granter"
 
 		var/datum/objective/silence/silence = new
 		silence.owner = user.mind
 		user.mind.objectives += silence
 
-		show_objectives(user.mind)
 		user << "You have a very bad feeling about this."
 
 	return

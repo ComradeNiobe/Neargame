@@ -34,7 +34,7 @@ datum/directive/tau_ceti_needs_women
 
 	proc/count_heads_reassigned()
 		var/heads_reassigned = 0
-		for(var/obj/item/weapon/card/id in command_targets)
+		for(var/obj/item/card/id in command_targets)
 			if (command_targets[id])
 				heads_reassigned++
 
@@ -86,7 +86,7 @@ datum/directive/tau_ceti_needs_women/get_remaining_orders()
 
 	return text
 
-/hook/reassign_employee/proc/command_reassignments(obj/item/weapon/card/id/id_card)
+/hook/reassign_employee/proc/command_reassignments(obj/item/card/id/id_card)
 	var/datum/directive/tau_ceti_needs_women/D = get_directive("tau_ceti_needs_women")
 	if(!D) return 1
 
@@ -95,7 +95,7 @@ datum/directive/tau_ceti_needs_women/get_remaining_orders()
 
 	return 1
 
-/hook/terminate_employee/proc/gender_target_termination_directive(obj/item/weapon/card/id)
+/hook/terminate_employee/proc/gender_target_termination_directive(obj/item/card/id)
 	var/datum/directive/tau_ceti_needs_women/D = get_directive("tau_ceti_needs_women")
 	if (!D) return 1
 

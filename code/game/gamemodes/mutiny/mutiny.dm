@@ -3,8 +3,8 @@
 datum/game_mode/mutiny
 	var/datum/mutiny_fluff/fluff
 	var/datum/directive/current_directive
-	var/obj/item/weapon/mutiny/auth_key/captain/captains_key
-	var/obj/item/weapon/mutiny/auth_key/secondary/secondary_key
+	var/obj/item/mutiny/auth_key/captain/captains_key
+	var/obj/item/mutiny/auth_key/secondary/secondary_key
 	var/obj/machinery/emergency_authentication_device/ead
 	var/datum/mind/head_loyalist
 	var/datum/mind/head_mutineer
@@ -198,7 +198,7 @@ datum/game_mode/mutiny
 		var/obj/machinery/computer/telecomms/server/S = locate(/obj/machinery/computer/telecomms/server)
 		if(!S) return
 
-		var/obj/item/weapon/paper/crumpled/bloody/transcript = new(S.loc)
+		var/obj/item/paper/crumpled/bloody/transcript = new(S.loc)
 		transcript.name = "secret transcript"
 		transcript.info = fluff.secret_transcript()
 

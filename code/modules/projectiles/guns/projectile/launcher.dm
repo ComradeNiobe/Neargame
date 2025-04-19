@@ -1,4 +1,4 @@
-/obj/item/weapon/gun/launcher
+/obj/item/gun/launcher
 
 	name = "launcher"
 	desc = "A device that launches things."
@@ -11,32 +11,32 @@
 	var/fire_sound_text = "a launcher firing"
 
 //Check if we're drawing and if the bow is loaded.
-/obj/item/weapon/gun/launcher/load_into_chamber()
+/obj/item/gun/launcher/load_into_chamber()
 	return (!isnull(in_chamber))
 
 //This should not fit in a combat belt or holster.
-/obj/item/weapon/gun/launcher/isHandgun()
+/obj/item/gun/launcher/isHandgun()
 	return 0
 
 //Launchers are mechanical, no other impact.
-/obj/item/weapon/gun/launcher/emp_act(severity)
+/obj/item/gun/launcher/emp_act(severity)
 	return
 
 //This normally uses a proc on projectiles and our ammo is not strictly speaking a projectile.
-/obj/item/weapon/gun/launcher/can_hit(var/mob/living/target as mob, var/mob/living/user as mob)
+/obj/item/gun/launcher/can_hit(var/mob/living/target as mob, var/mob/living/user as mob)
 	return
 
 //Override this to avoid a runtime with suicide handling.
-/obj/item/weapon/gun/launcher/attack(mob/living/M as mob, mob/living/user as mob, def_zone)
+/obj/item/gun/launcher/attack(mob/living/M as mob, mob/living/user as mob, def_zone)
 	if (M == user && user.zone_sel.selecting == "mouth")
 		user << "\red Shooting yourself with \a [src] is pretty tricky. You can't seem to manage it."
 		return
 	..()
 
-/obj/item/weapon/gun/launcher/proc/update_release_force()
+/obj/item/gun/launcher/proc/update_release_force()
 	return 0
 
-/obj/item/weapon/gun/launcher/Fire(atom/target as mob|obj|turf|area, mob/living/user as mob|obj, params, reflex = 0)
+/obj/item/gun/launcher/Fire(atom/target as mob|obj|turf|area, mob/living/user as mob|obj, params, reflex = 0)
 
 	if (!user.IsAdvancedToolUser())
 		user << "\red You don't have the dexterity to do this!"
@@ -87,5 +87,5 @@
 
 	return 1
 
-/obj/item/weapon/gun/launcher/attack_self(mob/living/user as mob)
+/obj/item/gun/launcher/attack_self(mob/living/user as mob)
 	return

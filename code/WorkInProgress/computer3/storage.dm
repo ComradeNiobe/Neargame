@@ -96,8 +96,8 @@
 	max_volume = 3000
 	removeable = 1
 
-	attackby_types = list(/obj/item/weapon/disk/file, /obj/item/weapon/pen)
-	var/obj/item/weapon/disk/file/inserted = null
+	attackby_types = list(/obj/item/disk/file, /obj/item/pen)
+	var/obj/item/disk/file/inserted = null
 
 	proc/eject_disk(var/forced = 0)
 		if(!forced)
@@ -115,12 +115,12 @@
 
 
 	attackby(obj/O as obj, mob/user as mob)
-		if(inserted && istype(O,/obj/item/weapon/pen))
+		if(inserted && istype(O,/obj/item/pen))
 			usr << "You use [O] to carefully pry [inserted] out of [src]."
 			eject_disk(forced = 1)
 			return
 
-		if(istype(O,/obj/item/weapon/disk/file))
+		if(istype(O,/obj/item/disk/file))
 			if(inserted)
 				usr << "There's already a disk in [src]!"
 				return
@@ -159,7 +159,7 @@
 	removeable disk!
 */
 
-/obj/item/weapon/disk/file
+/obj/item/disk/file
 	//parent_type = /obj/item/part/computer/storage // todon't: do this
 	name = "Data Disk"
 	desc = "A device that can be inserted and removed into computers easily as a form of portable data storage. This one stores 1 Megabyte"

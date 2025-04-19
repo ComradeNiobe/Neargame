@@ -24,11 +24,11 @@
 		return
 
 
-	attackby(obj/item/weapon/aiModule/module as obj, mob/user as mob)
+	attackby(obj/item/aiModule/module as obj, mob/user as mob)
 		if (user.z > 6)
 			user << "\red <b>Unable to establish a connection</b>: \black You're too far away from the station!"
 			return
-		if(istype(module, /obj/item/weapon/aiModule))
+		if(istype(module, /obj/item/aiModule))
 			module.install(src)
 		else
 			return ..()
@@ -60,8 +60,8 @@
 	var/mob/living/silicon/robot/current = null
 
 
-	attackby(obj/item/weapon/aiModule/module as obj, mob/user as mob)
-		if(istype(module, /obj/item/weapon/aiModule))
+	attackby(obj/item/aiModule/module as obj, mob/user as mob)
+		if(istype(module, /obj/item/aiModule))
 			module.install(src)
 		else
 			return ..()

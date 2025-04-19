@@ -27,7 +27,7 @@
 		else if(screen == 1)
 			dat += "<HR>Chemical Implants<BR>"
 			var/turf/Tr = null
-			for(var/obj/item/weapon/implant/chem/C in world)
+			for(var/obj/item/implant/chem/C in world)
 				Tr = get_turf(C)
 				if((Tr) && (Tr.z != computer.z))	continue//Out of range
 				if(!C.implanted) continue
@@ -37,7 +37,7 @@
 				dat += "<A href='?src=\ref[src];inject10=\ref[C]'>(<font color=red>(10)</font>)</A><BR>"
 				dat += "********************************<BR>"
 			dat += "<HR>Tracking Implants<BR>"
-			for(var/obj/item/weapon/implant/tracking/T in world)
+			for(var/obj/item/implant/tracking/T in world)
 				Tr = get_turf(T)
 				if((Tr) && (Tr.z != computer.z))	continue//Out of range
 				if(!T.implanted) continue
@@ -72,17 +72,17 @@
 			return
 
 		if(href_list["inject1"])
-			var/obj/item/weapon/implant/I = locate(href_list["inject1"])
+			var/obj/item/implant/I = locate(href_list["inject1"])
 			if(istype(I))
 				I.activate(1)
 
 		else if(href_list["inject5"])
-			var/obj/item/weapon/implant/I = locate(href_list["inject5"])
+			var/obj/item/implant/I = locate(href_list["inject5"])
 			if(istype(I))
 				I.activate(5)
 
 		else if(href_list["inject10"])
-			var/obj/item/weapon/implant/I = locate(href_list["inject10"])
+			var/obj/item/implant/I = locate(href_list["inject10"])
 			if(istype(I))
 				I.activate(10)
 
@@ -92,7 +92,7 @@
 		else if(href_list["warn"])
 			var/warning = trim(copytext(sanitize(input(usr,"Message:","Enter your message here!","")),1,MAX_MESSAGE_LEN))
 			if(!warning) return
-			var/obj/item/weapon/implant/I = locate(href_list["warn"])
+			var/obj/item/implant/I = locate(href_list["warn"])
 			if( istype(I) && I.imp_in)
 				var/mob/living/carbon/R = I.imp_in
 				log_say("PrisonComputer3 message: [key_name(usr)]->[key_name(R)] : [warning]")

@@ -70,12 +70,12 @@
 	var/shieldload = between(500, max_stored_power - storedpower, power_draw)	//what we try to draw
 	shieldload = PN.draw_power(shieldload) //what we actually get
 	storedpower += shieldload
-	
+
 	//If we're still in the red, then there must not be enough available power to cover our load.
 	if(storedpower <= 0)
 		power = 0
 		return 0
-	
+
 	power = 1	// IVE GOT THE POWER!
 	return 1
 
@@ -158,7 +158,7 @@
 
 
 /obj/machinery/shieldwallgen/attackby(obj/item/W, mob/user)
-	if(istype(W, /obj/item/weapon/wrench))
+	if(istype(W, /obj/item/wrench))
 		if(active)
 			user << "Turn off the field generator first."
 			return
@@ -177,7 +177,7 @@
 			src.anchored = 0
 			return
 
-	if(istype(W, /obj/item/weapon/card/id)||istype(W, /obj/item/device/pda))
+	if(istype(W, /obj/item/card/id)||istype(W, /obj/item/device/pda))
 		if (src.allowed(user))
 			src.locked = !src.locked
 			user << "Controls are now [src.locked ? "locked." : "unlocked."]"

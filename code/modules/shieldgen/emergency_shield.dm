@@ -27,7 +27,7 @@
 	if(!height || air_group) return 0
 	else return ..()
 
-/obj/machinery/shield/attackby(obj/item/weapon/W as obj, mob/user as mob)
+/obj/machinery/shield/attackby(obj/item/W as obj, mob/user as mob)
 	if(!istype(W)) return
 
 	//Calculate damage
@@ -161,7 +161,7 @@
 	update_icon()
 
 	create_shields()
-	
+
 	idle_power_usage = 0
 	for(var/obj/machinery/shield/shield_tile in deployed_shields)
 		idle_power_usage += shield_tile.shield_idle_power
@@ -174,7 +174,7 @@
 	update_icon()
 
 	collapse_shields()
-	
+
 	update_use_power(0)
 
 /obj/machinery/shieldgen/proc/create_shields()
@@ -201,22 +201,22 @@
 /obj/machinery/shieldgen/process()
 	if (!active || (stat & NOPOWER))
 		return
-	
+
 	if(malfunction)
 		if(deployed_shields.len && prob(5))
 			del(pick(deployed_shields))
 	else
 		if (check_delay <= 0)
 			create_shields()
-			
+
 			var/new_power_usage = 0
 			for(var/obj/machinery/shield/shield_tile in deployed_shields)
 				new_power_usage += shield_tile.shield_idle_power
-			
+
 			if (new_power_usage != idle_power_usage)
 				idle_power_usage = new_power_usage
 				use_power(0)
-			
+
 			check_delay = 60
 		else
 			check_delay--
@@ -288,12 +288,12 @@
 			user << "The device must first be secured to the floor."
 	return
 
-/obj/machinery/shieldgen/attackby(obj/item/weapon/W as obj, mob/user as mob)
-	if(istype(W, /obj/item/weapon/card/emag))
+/obj/machinery/shieldgen/attackby(obj/item/W as obj, mob/user as mob)
+	if(istype(W, /obj/item/card/emag))
 		malfunction = 1
 		update_icon()
 
-	else if(istype(W, /obj/item/weapon/screwdriver))
+	else if(istype(W, /obj/item/screwdriver))
 		playsound(src.loc, 'sound/items/Screwdriver.ogg', 100, 1)
 		if(is_open)
 			user << "\blue You close the panel."
@@ -313,7 +313,7 @@
 				user << "<span class='notice'>You repair the [src]!</span>"
 				update_icon()
 
-	else if(istype(W, /obj/item/weapon/wrench))
+	else if(istype(W, /obj/item/wrench))
 		if(locked)
 			user << "The bolts are covered, unlocking this would retract the covers."
 			return
@@ -331,7 +331,7 @@
 			anchored = 1
 
 
-	else if(istype(W, /obj/item/weapon/card/id) || istype(W, /obj/item/device/pda))
+	else if(istype(W, /obj/item/card/id) || istype(W, /obj/item/device/pda))
 		if(src.allowed(user))
 			src.locked = !src.locked
 			user << "The controls are now [src.locked ? "locked." : "unlocked."]"

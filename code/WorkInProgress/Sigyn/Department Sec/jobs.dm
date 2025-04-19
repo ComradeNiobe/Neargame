@@ -49,8 +49,8 @@ proc/assign_sec_to_department(var/mob/living/carbon/human/H)
 							else
 								break
 					H << "<b>You have been assigned to [department]!</b>"
-					if(locate(/obj/item/weapon/card/id, H))
-						var/obj/item/weapon/card/id/I = locate(/obj/item/weapon/card/id, H)
+					if(locate(/obj/item/card/id, H))
+						var/obj/item/card/id/I = locate(/obj/item/card/id, H)
 						if(I)
 							I.access |= access
 
@@ -68,21 +68,21 @@ proc/assign_sec_to_department(var/mob/living/carbon/human/H)
 
 	equip(var/mob/living/carbon/human/H)
 		if(!H)	return 0
-		if(H.backbag == 2) H.equip_to_slot_or_del(new /obj/item/weapon/storage/backpack/security(H), slot_back)
-		if(H.backbag == 3) H.equip_to_slot_or_del(new /obj/item/weapon/storage/backpack/satchel_sec(H), slot_back)
+		if(H.backbag == 2) H.equip_to_slot_or_del(new /obj/item/storage/backpack/security(H), slot_back)
+		if(H.backbag == 3) H.equip_to_slot_or_del(new /obj/item/storage/backpack/satchel_sec(H), slot_back)
 		assign_sec_to_department(H)
 		H.equip_to_slot_or_del(new /obj/item/clothing/shoes/jackboots(H), slot_shoes)
 		H.equip_to_slot_or_del(new /obj/item/device/pda/security(H), slot_belt)
 		H.equip_to_slot_or_del(new /obj/item/clothing/suit/armor/vest(H), slot_wear_suit)
 		H.equip_to_slot_or_del(new /obj/item/clothing/head/helmet(H), slot_head)
-		H.equip_to_slot_or_del(new /obj/item/weapon/handcuffs(H), slot_s_store)
+		H.equip_to_slot_or_del(new /obj/item/handcuffs(H), slot_s_store)
 		H.equip_to_slot_or_del(new /obj/item/device/flash(H), slot_l_store)
 		if(H.backbag == 1)
-			H.equip_to_slot_or_del(new /obj/item/weapon/storage/box/survival(H), slot_r_hand)
-			H.equip_to_slot_or_del(new /obj/item/weapon/handcuffs(H), slot_l_hand)
+			H.equip_to_slot_or_del(new /obj/item/storage/box/survival(H), slot_r_hand)
+			H.equip_to_slot_or_del(new /obj/item/handcuffs(H), slot_l_hand)
 		else
-			H.equip_to_slot_or_del(new /obj/item/weapon/storage/box/survival(H.back), slot_in_backpack)
-			H.equip_to_slot_or_del(new /obj/item/weapon/handcuffs(H), slot_in_backpack)
+			H.equip_to_slot_or_del(new /obj/item/storage/box/survival(H.back), slot_in_backpack)
+			H.equip_to_slot_or_del(new /obj/item/handcuffs(H), slot_in_backpack)
 
 		implant_loyalty(H)
 

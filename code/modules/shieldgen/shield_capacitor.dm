@@ -29,15 +29,15 @@
 
 /obj/machinery/shield_capacitor/attackby(obj/item/W, mob/user)
 
-	if(istype(W, /obj/item/weapon/card/id))
-		var/obj/item/weapon/card/id/C = W
+	if(istype(W, /obj/item/card/id))
+		var/obj/item/card/id/C = W
 		if(access_captain in C.access || access_security in C.access || access_engine in C.access)
 			src.locked = !src.locked
 			user << "Controls are now [src.locked ? "locked." : "unlocked."]"
 			updateDialog()
 		else
 			user << "\red Access denied."
-	else if(istype(W, /obj/item/weapon/card/emag))
+	else if(istype(W, /obj/item/card/emag))
 		if(prob(75))
 			src.locked = !src.locked
 			user << "Controls are now [src.locked ? "locked." : "unlocked."]"
@@ -46,7 +46,7 @@
 		s.set_up(5, 1, src)
 		s.start()
 
-	else if(istype(W, /obj/item/weapon/wrench))
+	else if(istype(W, /obj/item/wrench))
 		src.anchored = !src.anchored
 		src.visible_message("\blue \icon[src] [src] has been [anchored ? "bolted to the floor" : "unbolted from the floor"] by [user].")
 
@@ -107,14 +107,14 @@
 /obj/machinery/shield_capacitor/process()
 	if (!anchored)
 		active = 0
-	
+
 	//see if we can connect to a power net.
 	var/datum/powernet/PN
 	var/turf/T = src.loc
 	var/obj/structure/cable/C = T.get_cable_node()
 	if (C)
 		PN = C.powernet
-	
+
 	if (PN)
 		var/power_draw = between(0, max_charge - stored_charge, charge_rate) //what we are trying to draw
 		power_draw = PN.draw_power(power_draw) //what we actually get
@@ -138,7 +138,7 @@
 		active = !active
 	if( href_list["charge_rate"] )
 		charge_rate = between(10000, charge_rate + text2num(href_list["charge_rate"]), max_charge_rate)
-	
+
 	updateDialog()
 
 /obj/machinery/shield_capacitor/power_change()

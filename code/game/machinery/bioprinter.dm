@@ -49,14 +49,14 @@
 	else
 		user << "There is not enough matter in the printer."
 
-/obj/machinery/bioprinter/attackby(obj/item/weapon/W, mob/user)
+/obj/machinery/bioprinter/attackby(obj/item/W, mob/user)
 
 	// DNA sample from syringe.
-	if(!prints_prosthetics && istype(W,/obj/item/weapon/reagent_containers/syringe))
+	if(!prints_prosthetics && istype(W,/obj/item/reagent_containers/syringe))
 		user << "You inject the blood sample into the bioprinter, but it isn't coded yet."
 		return
 	// Meat for biomass.
-	else if(!prints_prosthetics && istype(W, /obj/item/weapon/reagent_containers/food/snacks/meat))
+	else if(!prints_prosthetics && istype(W, /obj/item/reagent_containers/food/snacks/meat))
 		user << "\blue \The [src] processes \the [W]."
 		stored_matter += 50
 		user.drop_item()

@@ -70,7 +70,7 @@ datum
 			result_amount = 4
 			requires_heating = 1
 
-/obj/item/weapon/reagent_containers/glass/solution_tray
+/obj/item/reagent_containers/glass/solution_tray
 	name = "solution tray"
 	desc = "A small, open-topped glass container for delicate research samples. It sports a re-useable strip for labelling with a pen."
 	icon = 'icons/obj/device.dmi'
@@ -82,8 +82,8 @@ datum
 	volume = 2
 	flags = FPRINT | OPENCONTAINER
 
-obj/item/weapon/reagent_containers/glass/solution_tray/attackby(obj/item/weapon/W as obj, mob/living/user as mob)
-	if(istype(W, /obj/item/weapon/pen))
+obj/item/reagent_containers/glass/solution_tray/attackby(obj/item/W as obj, mob/living/user as mob)
+	if(istype(W, /obj/item/pen))
 		var/new_label = input("What should the new label be?","Label solution tray")
 		if(new_label)
 			name = "solution tray ([new_label])"
@@ -91,42 +91,42 @@ obj/item/weapon/reagent_containers/glass/solution_tray/attackby(obj/item/weapon/
 	else
 		..(W, user)
 
-/obj/item/weapon/storage/box/solution_trays
+/obj/item/storage/box/solution_trays
 	name = "solution tray box"
 	icon_state = "solution_trays"
 
 	New()
 		..()
-		new /obj/item/weapon/reagent_containers/glass/solution_tray( src )
-		new /obj/item/weapon/reagent_containers/glass/solution_tray( src )
-		new /obj/item/weapon/reagent_containers/glass/solution_tray( src )
-		new /obj/item/weapon/reagent_containers/glass/solution_tray( src )
-		new /obj/item/weapon/reagent_containers/glass/solution_tray( src )
-		new /obj/item/weapon/reagent_containers/glass/solution_tray( src )
-		new /obj/item/weapon/reagent_containers/glass/solution_tray( src )
+		new /obj/item/reagent_containers/glass/solution_tray( src )
+		new /obj/item/reagent_containers/glass/solution_tray( src )
+		new /obj/item/reagent_containers/glass/solution_tray( src )
+		new /obj/item/reagent_containers/glass/solution_tray( src )
+		new /obj/item/reagent_containers/glass/solution_tray( src )
+		new /obj/item/reagent_containers/glass/solution_tray( src )
+		new /obj/item/reagent_containers/glass/solution_tray( src )
 
-/obj/item/weapon/reagent_containers/glass/beaker/tungsten
+/obj/item/reagent_containers/glass/beaker/tungsten
 	name = "beaker 'tungsten'"
 	New()
 		..()
 		reagents.add_reagent("tungsten",50)
 		update_icon()
 
-/obj/item/weapon/reagent_containers/glass/beaker/oxygen
+/obj/item/reagent_containers/glass/beaker/oxygen
 	name = "beaker 'oxygen'"
 	New()
 		..()
 		reagents.add_reagent("oxygen",50)
 		update_icon()
 
-/obj/item/weapon/reagent_containers/glass/beaker/sodium
+/obj/item/reagent_containers/glass/beaker/sodium
 	name = "beaker 'sodium'"
 	New()
 		..()
 		reagents.add_reagent("sodium",50)
 		update_icon()
 
-/obj/item/weapon/reagent_containers/glass/beaker/lithium
+/obj/item/reagent_containers/glass/beaker/lithium
 	name = "beaker 'lithium'"
 
 	New()
@@ -134,7 +134,7 @@ obj/item/weapon/reagent_containers/glass/solution_tray/attackby(obj/item/weapon/
 		reagents.add_reagent("lithium",50)
 		update_icon()
 
-/obj/item/weapon/reagent_containers/glass/beaker/water
+/obj/item/reagent_containers/glass/beaker/water
 	name = "beaker 'water'"
 
 	New()
@@ -142,7 +142,7 @@ obj/item/weapon/reagent_containers/glass/solution_tray/attackby(obj/item/weapon/
 		reagents.add_reagent("water",50)
 		update_icon()
 
-/obj/item/weapon/reagent_containers/glass/beaker/water
+/obj/item/reagent_containers/glass/beaker/water
 	name = "beaker 'water'"
 
 	New()
@@ -150,7 +150,7 @@ obj/item/weapon/reagent_containers/glass/solution_tray/attackby(obj/item/weapon/
 		reagents.add_reagent("water",50)
 		update_icon()
 
-/obj/item/weapon/reagent_containers/glass/beaker/fuel
+/obj/item/reagent_containers/glass/beaker/fuel
 	name = "beaker 'fuel'"
 
 	New()

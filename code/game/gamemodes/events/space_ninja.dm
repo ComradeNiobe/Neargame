@@ -540,9 +540,9 @@ As such, it's hard-coded for now. No reason for it not to be, really.
 	equip_to_slot_or_del(new /obj/item/clothing/head/helmet/space/space_ninja(src), slot_head)
 	equip_to_slot_or_del(new /obj/item/clothing/mask/gas/voice/space_ninja(src), slot_wear_mask)
 	equip_to_slot_or_del(new /obj/item/device/flashlight(src), slot_belt)
-	equip_to_slot_or_del(new /obj/item/weapon/plastique(src), slot_r_store)
-	equip_to_slot_or_del(new /obj/item/weapon/plastique(src), slot_l_store)
-	equip_to_slot_or_del(new /obj/item/weapon/tank/oxygen(src), slot_s_store)
+	equip_to_slot_or_del(new /obj/item/plastique(src), slot_r_store)
+	equip_to_slot_or_del(new /obj/item/plastique(src), slot_l_store)
+	equip_to_slot_or_del(new /obj/item/tank/oxygen(src), slot_s_store)
 	return 1
 
 //=======//HELPER PROCS//=======//
@@ -565,7 +565,7 @@ As such, it's hard-coded for now. No reason for it not to be, really.
 		U:gloves.item_state = "s-ninjan"
 	else
 		if(U.mind.special_role!="Ninja")
-			U << "\red <B>fÄTaL ÈÈRRoR</B>: 382200-*#00CÖDE <B>RED</B>\nUNAU†HORIZED USÈ DETÈC†††eD\nCoMMÈNCING SUB-R0U†IN3 13...\nTÈRMInATING U-U-USÈR..."
+			U << "\red <B>fï¿½TaL ï¿½ï¿½RRoR</B>: 382200-*#00Cï¿½DE <B>RED</B>\nUNAUï¿½HORIZED USï¿½ DETï¿½Cï¿½ï¿½ï¿½eD\nCoMMï¿½NCING SUB-R0Uï¿½IN3 13...\nTï¿½RMInATING U-U-USï¿½R..."
 			U.gib()
 			return 0
 		if(!istype(U:head, /obj/item/clothing/head/helmet/space/space_ninja))
