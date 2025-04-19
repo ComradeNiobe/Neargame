@@ -200,7 +200,7 @@
 	sleep(150+rand(0,20))	// turning it off before it is deleted results in cleaner
 	smoke.opacity = 0		// lighting and view range updates
 	fadeOut(smoke)
-	smoke.delete()
+	qdel(smoke)
 
 //------------------------------------------
 // Fades out the smoke smoothly using it's alpha variable.
@@ -232,7 +232,7 @@
 						if(!(target in wallList))
 							wallList += target
 						continue
-				
+
 				if(target in pending)
 					continue
 				if(target in complete)
@@ -241,7 +241,7 @@
 					continue
 				if(current.c_airblock(target)) //this is needed to stop chemsmoke from passing through thin window walls
 					continue
-				if(target.c_airblock(current)) 
+				if(target.c_airblock(current))
 					continue
 				pending += target
 

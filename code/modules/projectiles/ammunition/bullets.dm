@@ -140,9 +140,9 @@
 
 	on_fired()
 		if(BB)
-			if(reagents && BB.reagents)
+			if(!QDELETED(reagents) && BB.reagents)
 				reagents.trans_to(BB, reagents.total_volume)
-				reagents.delete()
+				qdel(reagents)
 
 /obj/item/ammo_casing/shotgun/dartpreloaded
 	name = "shotgun dart"

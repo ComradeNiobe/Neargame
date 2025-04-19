@@ -17,9 +17,11 @@ var/const/INJECT = 3
 	var/list/datum/reagent/addiction_list = new/list()
 
 /datum/reagents/Destroy()
-	addiction_list.Cut()
-	reagent_list.Cut()
+	QDEL_LIST(addiction_list)
+	QDEL_LIST(reagent_list)
 	my_atom = null
+	if(my_atom)
+		my_atom.reagents = null
 	return ..()
 
 /datum/reagents/New(maximum=100)
@@ -557,12 +559,6 @@ var/const/INJECT = 3
 
 	return has_removed_reagent
 
-/datum/reagents/proc/delete()
-	for(var/datum/reagent/R in reagent_list)
-		R.holder = null
-	if(my_atom)
-		my_atom.reagents = null
-
 			//two helper functions to preserve data across reactions (needed for xenoarch)
 /datum/reagents/proc/get_data(var/reagent_id)
 	for(var/datum/reagent/D in reagent_list)
@@ -602,7 +598,7 @@ var/const/INJECT = 3
 // Convenience proc to create a reagents holder for an atom
 // Max vol is maximum volume of holder
 /atom/proc/create_reagents(var/max_vol)
-	if(reagents)
-		reagents.delete()
+	if(!QDELETED(reagents))
+		qdel(reagents)
 	reagents = new/datum/reagents(max_vol)
 	reagents.my_atom = src

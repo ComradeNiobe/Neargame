@@ -141,12 +141,12 @@
 	turn_on()
 
 /obj/structure/fireplace/off/New()
-	..()
+	. = ..()
 	turn_off()
 
 /obj/structure/fireplace/Destroy()
-	processing_objects.Remove(src)
-	..()
+	processing_objects -= src
+	return ..()
 
 /obj/structure/fireplace/process()
 	fire_left = max(0, fire_left-2 SECONDS)

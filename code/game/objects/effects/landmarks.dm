@@ -7,8 +7,7 @@
 	flammable = 0
 
 /obj/effect/landmark/New()
-
-	..()
+	. = ..()
 	tag = text("landmark*[]", name)
 	invisibility = 101
 
@@ -101,13 +100,14 @@
 			siegecamp += loc
 			qdel(src)
 
-	landmarks_list += src
+	landmarks_list |= src
 	return 1
 
 /obj/effect/landmark/Destroy()
 	. = ..()
 	landmarks_list -= src
 	loc = null
+	tag = null
 	qdel(reagents)
 
 
@@ -126,6 +126,7 @@
 
 /obj/effect/landmark/start/Destroy()
 	. = ..()
+	tag = null
 
 /obj/effect/landmark/mapinfo
 	name = "mapinfo"
@@ -135,7 +136,7 @@
 	var/mapname = "Default"
 
 /obj/effect/landmark/mapinfo/New()
-	..()
+	. = ..()
 
 //Costume spawner landmarks
 

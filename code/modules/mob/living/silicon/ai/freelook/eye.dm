@@ -73,7 +73,7 @@
 	eyeobj.ai = src
 	eyeobj.name = "[src.name] (AI Eye)" // Give it a name
 	spawn(5)
-		eyeobj.loc = src?.loc
+		eyeobj?.loc = src?.loc
 
 /atom/proc/move_camera_by_click()
 	if(istype(usr, /mob/living/silicon/ai))

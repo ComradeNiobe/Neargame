@@ -22,33 +22,28 @@ would spawn and follow the beaker, even if it is carried or thrown.
 	flags = TABLEPASS
 	mouse_opacity = 0
 
-/obj/effect/proc/delete()
+/obj/effect/Destroy()
+	. = ..()
 	loc = null
 	if(reagents)
-		reagents.delete()
-	return
-
+		qdel(reagents)
 
 /obj/effect/effect/water/New()
-	..()
+	. = ..()
 	//var/turf/T = src.loc
 	//if (istype(T, /turf))
 	//	T.firelevel = 0 //TODO: FIX
 
-	for(var/mob/living/carbon/human/H in loc.contents){
+	for(var/mob/living/carbon/human/H in loc.contents)
 		H.on_fire = 0
-	}
 	spawn(25)
-		delete()
-		return
-	return
+		qdel(src)
 
 /obj/effect/effect/water/Destroy()
 	//var/turf/T = src.loc
 	//if (istype(T, /turf))
 	//	T.firelevel = 0 //TODO: FIX
-	..()
-	return
+	return ..()
 
 /obj/effect/effect/water/Move(turf/newloc)
 	//var/turf/T = src.loc
@@ -56,20 +51,18 @@ would spawn and follow the beaker, even if it is carried or thrown.
 	//	T.firelevel = 0 //TODO: FIX
 	if (--src.life < 1)
 		//SN src = null
-		delete()
+		qdel(src)
 	if(newloc.density)
 		return 0
 
-	for(var/mob/living/carbon/human/H in newloc.contents){
+	for(var/mob/living/carbon/human/H in newloc.contents)
 		H.on_fire = 0
-	}
-	.=..()
+	. = ..()
 
 /obj/effect/effect/water/Bump(atom/A)
 	if(reagents)
 		reagents.reaction(A)
 	return ..()
-
 
 /datum/effect/effect/system
 	var/number = 3
@@ -138,7 +131,7 @@ steam.start() -- spawns the effect
 					sleep(5)
 					step(steam,direction)
 				spawn(20)
-					steam.delete()
+					qdel(steam)
 
 /////////////////////////////////////////////
 //SPARK SYSTEM (like steam system)
@@ -155,21 +148,20 @@ steam.start() -- spawns the effect
 	mouse_opacity = 0
 
 /obj/effect/effect/sparks/New()
-	..()
+	. = ..()
 	playsound(src.loc, "sparks", 100, 1)
 	var/turf/T = src.loc
 	if (istype(T, /turf))
 		T.hotspot_expose(1000,100)
 	spawn (100)
-		delete()
+		qdel(src)
 	return
 
 /obj/effect/effect/sparks/Destroy()
 	var/turf/T = src.loc
 	if (istype(T, /turf))
 		T.hotspot_expose(1000,100)
-	..()
-	return
+	return ..()
 
 /obj/effect/effect/sparks/Move()
 	..()
@@ -210,8 +202,8 @@ steam.start() -- spawns the effect
 					sleep(5)
 					step(sparks,direction)
 				spawn(20)
-					if(sparks)
-						sparks.delete()
+					if(!QDELETED(sparks))
+						qdel(sparks)
 					src.total_sparks--
 
 
@@ -239,9 +231,9 @@ steam.start() -- spawns the effect
 	pixel_y = -32
 
 /obj/effect/effect/smoke/New()
-	..()
+	. = ..()
 	spawn (time_to_live)
-		delete()
+		qdel(src)
 	return
 
 /obj/effect/effect/smoke/Crossed(mob/living/carbon/M as mob )
@@ -447,7 +439,8 @@ steam.start() -- spawns the effect
 				sleep(5)
 				step(smoke,direction)
 			spawn(smoke.time_to_live*0.75+rand(10,30))
-				if (smoke) smoke.delete()
+				if (!QDELETED(smoke))
+					qdel(smoke)
 				src.total_smoke--
 
 
@@ -571,7 +564,7 @@ steam.start() -- spawns the effect
 					sleep(10)
 					step(smoke,direction)
 				spawn(150+rand(10,30))
-					smoke.delete()
+					qdel(smoke)
 					src.total_smoke--
 
 /////////////////////////////////////////////
@@ -611,7 +604,7 @@ steam.start() -- spawns the effect
 						flick("ion_fade", I)
 						I.icon_state = "blank"
 						spawn( 20 )
-							I.delete()
+							qdel(I)
 					spawn(2)
 						if(src.on)
 							src.processing = 1
@@ -680,7 +673,8 @@ steam.start() -- spawns the effect
 //					I.icon_state = "blank"
 //					II.icon_state = "blank"
 					spawn(3)
-						if(I) I.delete()
+						if(!QDELETED(I))
+							qdel(I)
 //						if(II) II.delete()
 				spawn(2)
 					if(src.on)
@@ -720,7 +714,7 @@ steam.start() -- spawns the effect
 					src.oldposition = get_turf(holder)
 					I.dir = src.holder.dir
 					spawn(10)
-						I.delete()
+						qdel(I)
 						src.number--
 					spawn(2)
 						if(src.on)
@@ -774,7 +768,7 @@ steam.start() -- spawns the effect
 
 		flick("[icon_state]-disolve", src)
 		sleep(5)
-		delete()
+		qdel(src)
 	return
 
 // on delete, transfer any reagents to the floor
@@ -784,7 +778,7 @@ steam.start() -- spawns the effect
 			if(A == src)
 				continue
 			reagents.reaction(A, 1, 1)
-	..()
+	return ..()
 
 /obj/effect/effect/foam/process()
 	if(--amount < 0)
@@ -820,7 +814,7 @@ steam.start() -- spawns the effect
 		flick("[icon_state]-disolve", src)
 
 		spawn(5)
-			delete()
+			qdel(src)
 
 
 /obj/effect/effect/foam/Crossed(var/atom/movable/AM)

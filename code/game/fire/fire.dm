@@ -75,14 +75,12 @@
     ..()
 
 
-/obj/effect/effect/smoke/fire/delete()
+/obj/effect/effect/smoke/fire/Destroy()
+	. = ..()
     if(isturf(loc))
         var/turf/T = loc
 
         T.smokeAmount--
-
-    ..()
-
 
 /obj/effect/effect/smoke/fire/affect(mob/living/carbon/human/M as mob )
 	..()
