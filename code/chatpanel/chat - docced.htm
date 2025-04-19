@@ -1,0 +1,1037 @@
+<style type="text/css">
+  @font-face {
+    font-family: Gothic;
+    src: url(gothic.ttf);
+  }
+
+  @font-face {
+    font-family: Book;
+    src: url(book.ttf);
+  }
+
+  @font-face {
+    font-family: Hando;
+    src: url(hando.ttf);
+  }
+
+  @font-face {
+    font-family: Eris;
+    src: url(eris.otf);
+  }
+
+  @font-face {
+    font-family: Brandon;
+    src: url(brandon.otf);
+  }
+
+  @font-face {
+    font-family: VRN;
+    src: url(vrn.otf);
+  }
+
+  @font-face {
+    font-family: NEOM;
+    src: url(neom.otf);
+  }
+
+  @font-face {
+    font-family: PTSANS;
+    src: url(PTSANS.ttf);
+  }
+
+  @font-face {
+    font-family: Type;
+    src: url(type.ttf);
+  }
+
+  @font-face {
+    font-family: Enlightment;
+    src: url(enlightment.ttf);
+  }
+
+  @font-face {
+    font-family: Arabic;
+    src: url(arabic.ttf);
+  }
+
+  @font-face {
+    font-family: Digital;
+    src: url(digital.ttf);
+  }
+
+  @font-face {
+    font-family: Cond;
+    src: url(cond2.ttf);
+  }
+
+  @font-face {
+    font-family: Semi;
+    src: url(semi.ttf);
+  }
+
+  @font-face {
+    font-family: Droser;
+    src: url(Droser.ttf);
+  }
+
+  .goth {
+    font-family: Gothic, Verdana, sans-serif;
+  }
+
+  .book {
+    font-family: Book, serif;
+  }
+
+  .hando {
+    font-family: Hando, Verdana, sans-serif;
+  }
+
+  .typewriter {
+    font-family: Type, Verdana, sans-serif;
+  }
+
+  .arabic {
+    font-family: Arabic, serif;
+    font-size: 180%;
+  }
+
+  .droser {
+    font-family: Droser, Verdana, sans-serif;
+  }
+</style>
+
+<html>
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" charset="UTF-8" />
+    <style type="text/css">
+      body {
+        background-image: url("chatrsc/chatbg.png");
+        background-attachment: scroll;
+        overflow: hidden;
+        font-family: "PTSANS", sans-serif;
+        color: #909090;
+        cursor: url("chatrsc/pointer.cur"), auto;
+        word-wrap: break-word;
+        font-size: 90%;
+        margin: 0px;
+        margin: 0px;
+        border: 0px;
+        padding: 0px;
+      }
+
+      h1 {
+        margin-bottom: 5px;
+      }
+
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+        color: #744;
+        text-shadow: 0px 2px 3px rgba(0, 0, 0, 1);
+        display: block;
+        line-height: 35px;
+        margin: 0;
+        margin-top: 0;
+      }
+
+      .loud1 {
+        font-family: monospace;
+        color: #999;
+      }
+
+      .loud0 {
+        font-family: monospace;
+        color: #fff;
+      }
+
+      .container {
+        margin-top: 5px;
+        margin: 0;
+        left: 8px;
+        padding: 0;
+
+        position: relative;
+      }
+
+      .steplabel {
+        font-size: 11px;
+        width: 64px;
+        white-space: nowrap;
+        position: relative;
+        left: -28px;
+        top: 6px;
+        text-align: center;
+        background: rgba(0, 0, 0, 0.5);
+      }
+
+      .steps {
+        position: absolute;
+        top: -4px;
+        left: -3px;
+        display: flex;
+        justify-content: space-between;
+        width: 200px;
+      }
+
+      .step {
+        width: 5px;
+        background: #10100e;
+        height: 5px;
+        border: 2px solid #201f1a;
+        border-radius: 50%;
+      }
+
+      .step.selected {
+        border: 2px solid #aa7049;
+      }
+
+      .step.completed {
+        border: 2px solid #aa7049;
+        background: #aa7049;
+      }
+
+      .progress {
+        height: 50%;
+        width: 190px;
+        position: absolute;
+        left: 2px;
+        top: -1px;
+        border-bottom: 2px solid #000000;
+        z-index: -1;
+      }
+
+      .percent {
+        width: 0%;
+        position: absolute;
+        top: 0px;
+        left: 0px;
+
+        height: 100%;
+        border-bottom: 2px solid #aa7049;
+        z-index: 1;
+
+        transition: width 1s;
+      }
+
+      /*
+	a {text-decoration:none;outline: none;border: none;margin:-1px;}
+	a:focus{outline:none;}
+	a:hover {color:#0d0d0d;background:#505055;outline: none;border: none;}
+	a.active { text-decoration:none; color:#533333;}
+	a.inactive:hover {color:#0d0d0d;background:#bb0000}
+	a.active:hover {color:#bb0000;background:#0f0f0f}
+	a.inactive:hover { text-decoration:none; color:#0d0d0d; background:#bb0000}
+	fix2*/
+
+      a {
+        float: top;
+        font-family: "Cond";
+        text-shadow: 0px 0px 3px #a80404;
+        color: #ac3b49;
+        text-decoration: none;
+        outline: none;
+        border: none;
+        font-size: 90%;
+      }
+
+      a:hover {
+        color: #f662ff;
+        text-shadow: 0px 0px 3px #ae58be;
+        background: rgba(255, 0, 0, 0.2);
+        outline: none;
+        border: none;
+        font-weight: bold;
+      }
+
+      a.dim {
+        color: #707070;
+        text-shadow: 0px 0px 3px #707070;
+      }
+
+      /*fix1 */
+
+      slink {
+        float: top;
+        font-family: "Cond";
+        text-shadow: 0px 0px 3px #a8a804;
+        color: #acac49;
+        text-decoration: none;
+        outline: none;
+        border: none;
+        font-size: 90%;
+      }
+
+      slink:hover {
+        color: #f6ffff;
+        text-shadow: 0px 0px 5px #999;
+        outline: none;
+        border: none;
+        font-weight: bold;
+      }
+
+      slink.dim {
+        color: #707070;
+        text-shadow: 0px 0px 3px #707070;
+      }
+
+      .snamea {
+        color: #b9439f;
+        font-weight: bold;
+      }
+
+      .activefight2 {
+        color: #dc3bcb;
+      }
+
+      .sname {
+        opacity: 0.8;
+        font-weight: bold;
+      }
+
+      #ptable {
+        border: none;
+        border-collapse: collapse;
+      }
+
+      #ptable th {
+        width: 50%;
+        background-color: rgba(0, 0, 0, 0.4);
+        color: #fff;
+        font-weight: bold;
+      }
+
+      #ptable tr {
+        border: none;
+        border-colloapse: collapse;
+      }
+
+      #ptable tr td {
+        background-color: rgba(40, 20, 20, 0.25);
+      }
+
+      #ptable tr td:nth-child(2n) {
+        background-color: rgba(50, 50, 50, 0.25);
+      }
+
+      #ptable td + td {
+        border-left: 2px solid rgba(60, 60, 60, 0.5);
+      }
+
+      .termtab {
+        width: 90%;
+        border-collapse: collapse;
+      }
+
+      .termint {
+        padding: 5px;
+        background: rgba(255, 255, 0, 0.05);
+      }
+
+      .termint:nth-child(2n) {
+        background: rgba(150, 150, 150, 0.05);
+      }
+
+      h1 {
+        font-size: 175%;
+      }
+
+      h2 {
+        margin-bottom: 0px;
+        font-size: 115%;
+        color: #c75e67;
+      }
+
+      big IMG {
+        width: 32px;
+        height: 32px;
+      }
+
+      IMG {
+        width: 16px;
+        height: 16px;
+      }
+
+      .chatimg {
+        height: 24px;
+        width: 24px;
+        position: relative;
+        background-image: url("chatrsc/itembackground.png");
+        background-size: 100% auto;
+        top: 7px;
+        margin-top: -12px;
+        margin-left: -2px;
+        margin-right: -2px;
+      }
+
+      .chatimg:hover {
+        height: 32px;
+        width: 32px;
+        top: 8px;
+        margin-top: -8px;
+        margin-left: -3px;
+        margin-right: -3px;
+      }
+
+      .hiddenmessage {
+        color: #575757;
+        text-shadow: 0px 0px 0px #fff;
+      }
+
+      book {
+        color: #b1a667;
+        text-shadow: 0px 0px 2px #b1a667;
+        opacity: 0.6;
+      }
+
+      b {
+        text-shadow: 0px 0px 2px rgba(255, 0, 0, 0.4);
+      }
+
+      .admin {
+        color: rgba(140, 140, 140, 0.7);
+      }
+
+      .magentatext {
+        color: #ff00c0;
+      }
+
+      .customemote {
+        color: #898f5d;
+      }
+
+      .lowpain {
+        color: #85864e;
+      }
+
+      .say {
+        font-size: 95%;
+        margin: 3px;
+        color: #bfc2be;
+      }
+
+      .highlightredtext {
+        color: #f08e8e;
+        text-shadow: 0px 0px 3px rgba(255, 0, 0, 0.9);
+      }
+
+      .activefight {
+        color: #e755db;
+      }
+
+      .observefight {
+        color: #a72b2b;
+      }
+
+      .greentext {
+        color: #5bfd5b;
+      }
+
+      .nicebleak {
+        color: #936d53;
+      }
+
+      .nice {
+        color: #3bbb3b;
+      }
+
+      .redtext {
+        color: #fd5b5b;
+      }
+
+      .bluetext {
+        color: #635fcf;
+      }
+
+      .darkredtext {
+        color: #9d1b1b;
+      }
+
+      .ovr {
+        position: relative;
+        display: inline-block;
+      }
+
+      .ovr:hover .htxt {
+        visibility: visible;
+      }
+
+      @keyframes soap {
+        0% {
+          opacity: 0.5;
+        }
+
+        50% {
+          opacity: 1;
+        }
+
+        100% {
+          opacity: 0.5;
+        }
+      }
+
+      @keyframes shaker {
+        0% {
+          transform: skewX(-15deg);
+        }
+
+        25% {
+          transform: skewX(15deg);
+        }
+
+        50% {
+          transform: skewX(-15deg);
+        }
+
+        75% {
+          transform: skewX(15deg);
+        }
+
+        100% {
+          transform: skewX(0deg);
+        }
+      }
+
+      .hint {
+        width: 80%;
+        border: 1px solid #333;
+        padding: 5px;
+        position: absolute;
+        top: 0px;
+        opacity: 0.95;
+        right: 16px;
+        pointer-events: none;
+        color: #bbbbbb;
+        font-size: 95%;
+        z-index: 100;
+        background-color: #281210;
+        background-image: url("chatrsc/helpbg.png");
+        box-shadow: 3px 3px 10px #111;
+      }
+
+      .statustext {
+        color: #6e6e6e;
+      }
+
+      .shaketext {
+        color: #ffffff;
+        animation: 0.4s shaker infinite alternate;
+      }
+
+      .soapytext {
+        color: #ffbbff;
+      }
+
+      .name {
+        font-weight: bold;
+      }
+
+      .name.name1 {
+        color: #938532;
+      }
+
+      .name.name2 {
+        color: #a49e6f;
+      }
+
+      .name.name3 {
+        color: #918d6a;
+      }
+
+      .name.name4 {
+        color: #328e8f;
+      }
+
+      .name.name5 {
+        color: #3ba48d;
+      }
+
+      .name.name6 {
+        color: #007196;
+      }
+
+      .name.name7 {
+        color: #328e8f;
+      }
+
+      .name.name8 {
+        color: #c36d73;
+      }
+
+      .name.name9 {
+        color: #dd2424;
+      }
+
+      .name.name10 {
+        color: #696969;
+      }
+
+      .htxt {
+        visibility: hidden;
+        width: 120px;
+        pointer-events: none;
+        background-color: #281210;
+        background-image: url("chatrsc/helpbg.png");
+        opacity: 0.95;
+        color: #bbbbbb;
+        font-size: 75%;
+        text-align: center;
+        border-radius: 6px;
+        padding: 5px 0;
+        position: absolute;
+        z-index: 1;
+
+        margin-left: -60px;
+        box-shadow: 3px 3px 10px #111;
+      }
+
+      kbd {
+        display: inline-block;
+        border: 1px solid #413930;
+        border-radius: 4px;
+        padding: 0.1em 0.5em;
+        color: #000;
+        font-weight: bold;
+        margin: 0 0.2em;
+        box-shadow: 0 1px 0px rgba(0, 0, 0, 0.2), 0 0 0 2px #5e574f inset;
+        background-color: #777;
+      }
+
+      .htxr {
+        left: 50%;
+        bottom: 100%;
+      }
+
+      .htxl {
+        top: -5px;
+        right: 105%;
+      }
+
+      #shadow {
+        background-repeat: repeat-x;
+        z-index: -1;
+        background-image: url("chatrsc/chatshadow.png");
+        position: absolute;
+        height: 610px;
+        top: -10px;
+        left: -5px;
+        width: 1024px;
+      }
+
+      #scrollbar_container {
+        position: absolute;
+        left: 5px;
+        bottom: 15px;
+        width: 316px;
+        border-bottom: 1px solid black;
+      }
+
+      #scrollbar_track {
+        position: absolute;
+        top: 16px;
+        right: 0px;
+        height: 610px;
+        width: 16px;
+        background-image: url("chatrsc/chatscrollbar-bg.png");
+
+        cursor: move;
+      }
+
+      #scrollbar_handle {
+        width: 14px;
+        left: 1px;
+        overflow: auto;
+
+        background-image: url("chatrsc/chatscroller-m.png");
+        cursor: move;
+      }
+
+      #scrollbar_content {
+        overflow: hidden;
+        left: 10px;
+        bottom: 0px;
+        width: 300px;
+        height: 640px;
+      }
+
+      .infodiv {
+        padding: 10px;
+        padding-right: 10px;
+        margin-left: 20px;
+        width: 80%;
+        background-color: rgba(50, 50, 50, 0.3);
+        border: 1px solid rgba(50, 50, 50, 0.3);
+      }
+
+      .infodiv.mood {
+      }
+
+      hr {
+        color: #444;
+        border-color: #444;
+        width: 80%;
+      }
+
+      .scrollbart {
+        position: relative;
+        width: 14px;
+        height: 50%;
+        overflow: auto;
+        background-image: url("chatrsc/chatscroller-t.png");
+        background-repeat: no-repeat;
+        cursor: move;
+        border: 0px;
+        padding: 0px;
+        margin: 0px;
+      }
+
+      .scrollbarb {
+        position: relative;
+        width: 14px;
+        height: 50%;
+        overflow: auto;
+        background-image: url("chatrsc/chatscroller-b.png");
+        background-repeat: no-repeat;
+        background-position: left bottom;
+        cursor: move;
+        border: 0px;
+        padding: 0px;
+        margin: 0px;
+      }
+
+      #scrollbtnup {
+        width: 16px;
+        height: 16px;
+        position: absolute;
+        top: 1px;
+        right: 0px;
+        overflow: auto;
+        background-image: url("chatrsc/chatscrollbar-scrollup.png");
+      }
+
+      #scrollbtndown {
+        width: 16px;
+        height: 16px;
+        position: absolute;
+        bottom: 0px;
+        right: 0px;
+        overflow: hidden;
+        background-image: url("chatrsc/chatscrollbar-scrolldown.png");
+      }
+    </style>
+    <script type="text/javascript" src="chatrsc/prototype.js"></script>
+    <script type="text/javascript" src="chatrsc/scriptaculous.js"></script>
+    <script type="text/javascript" src="chatrsc/effects.js"></script>
+    <script type="text/javascript" src="chatrsc/controls.js"></script>
+    <script type="text/javascript" src="chatrsc/slider.js"></script>
+    <script type="text/javascript" src="chatrsc/livepipe.js"></script>
+    <script type="text/javascript" src="chatrsc/scrollbar.js"></script>
+  </head>
+
+  <body onload="redirect()">
+    <div id="scrollbar_container">
+      <div id="shadow"></div>
+      <div id="scrollbtnup"></div>
+      <div id="scrollbar_track">
+        <div id="scrollbar_handle">
+          <div id="scrollbart" class="scrollbart"></div>
+          <div id="scrollbarb" class="scrollbarb"></div>
+        </div>
+      </div>
+      <div id="scrollbar_content" onscroll="fixScrollbar();"></div>
+      <div id="scrollbtndown"></div>
+    </div>
+
+    <script type="text/javascript">
+      var scrollbar = new Control.ScrollBar(
+        "scrollbar_content",
+        "scrollbar_track",
+        "scrollbtnup",
+        "scrollbtndown"
+      );
+      var cureval = 0;
+      var scrollup = function () {
+        scrollbar.scrollBy(-24);
+      };
+      var scrolldown = function () {
+        scrollbar.scrollBy(24);
+      };
+
+      $("scrollbtndown").observe("mousedown", function (event) {
+        scrollbar.scrollBy(24);
+        if (cureval != 0) {
+          window.self.clearInterval(cureval);
+        }
+        cureval = window.self.setInterval(scrolldown, 250);
+        event.stop();
+      });
+
+      $("scrollbtndown").observe("mouseup", function (event) {
+        if (cureval != 0) {
+          window.self.clearInterval(cureval);
+        }
+        event.stop();
+      });
+
+      $("scrollbtnup").observe("mousedown", function (event) {
+        scrollbar.scrollBy(-24);
+        if (cureval != 0) {
+          window.self.clearInterval(cureval);
+        }
+        cureval = window.self.setInterval(scrollup, 250);
+        event.stop();
+      });
+
+      $("scrollbtnup").observe("mouseup", function (event) {
+        if (cureval != 0) {
+          window.self.clearInterval(cureval);
+        }
+        event.stop();
+      });
+
+      //called on document load
+      function redirect() {
+        location.href = "byond://?src=[0x5000007];cpload=1";
+        startLoop();
+      }
+
+      //Adds the hint icon?
+      function updateText(tmpdesc) {
+        var elem1 = document.getElementById("INFO");
+        var elem2 = document.getElementById("HINTHOLDER");
+        if (elem1 == null || elem2 == null) return;
+        elem1.innerHTML = tmpdesc;
+        if (tmpdesc.length > 2) {
+          elem2.style.visibility = "visible";
+        } else {
+          elem2.style.visibility = "hidden";
+        }
+      }
+
+      //Call for reloading element images?
+      function FI(e) {
+        e.onerror = null;
+        setTimeout(reloadImg, 300, e);
+      }
+
+      function reloadImg(e) {
+        var source = e.src;
+        var j = source.indexOf("?");
+        var k = source;
+        if (j > 0) k = source.substr(0, j);
+        k = k + "?t=" + new Date().getTime();
+        e.src = k;
+        e.alt = null;
+      }
+
+      function fixScrollbar() {
+        if (scrollbar.lastscrollTop != elem.scrollTop) {
+          scrollbar.scrollTo(elem.scrollTop, 0);
+        }
+      }
+      var theme = 0;
+
+      var elem = document.getElementById("scrollbar_content");
+      var elem_scrollbar = document.getElementById("scrollbar_track");
+      var E = document.getElementById("scrollbar_container");
+      document.onkeydown = function () {
+        switch (event.keyCode) {
+          case 116:
+            event.returnValue = false;
+            event.keyCode = 0;
+            return false;
+          case 82:
+            if (event.ctrlKey) {
+              event.returnValue = false;
+              event.keyCode = 0;
+              return false;
+            }
+        }
+      };
+
+      //swaps between OS13 and LFWB themes
+      function ChangeTheme(newtheme) {
+        if (theme == newtheme) return;
+
+        theme = newtheme;
+        if (theme == 1) {
+          document.body.setAttribute(
+            "style",
+            "color: #9b9bd5; text-shadow: 0px 0px 4px #6363ce; background-image: url('chatrsc/tchatbg.png')"
+          );
+          elem_scrollbar.style.backgroundImage =
+            "url('chatrsc/tchatscrollbar-bg.png')";
+          document.getElementById("shadow").style.backgroundImage =
+            "url('chatrsc/tchatshadow.png')";
+          document.getElementById("scrollbart").style.backgroundImage =
+            "url('chatrsc/tchatscroller-t.png')";
+          document.getElementById("scrollbar_handle").style.backgroundImage =
+            "url('chatrsc/tchatscroller-m.png')";
+          document.getElementById("scrollbarb").style.backgroundImage =
+            "url('chatrsc/tchatscroller-b.png')";
+          document.getElementById("scrollbtnup").style.backgroundImage =
+            "url('chatrsc/tst2.png')";
+          document.getElementById("scrollbtndown").style.backgroundImage =
+            "url('chatrsc/tst.png')";
+        } else {
+          document.body.setAttribute(
+            "style",
+            "color: #909090; text-shadow: 0px 0px 3px rgba(0,0,0, 1);background-image: url('chatrsc/chatbg.png')"
+          );
+          elem_scrollbar.style.backgroundImage =
+            "url('chatrsc/chatscrollbar-bg.png')";
+          document.getElementById("shadow").style.backgroundImage =
+            "url('chatrsc/chatshadow.png')";
+          document.getElementById("scrollbart").style.backgroundImage =
+            "url('chatrsc/chatscroller-t.png')";
+          document.getElementById("scrollbar_handle").style.backgroundImage =
+            "url('chatrsc/chatscroller-m.png')";
+          document.getElementById("scrollbarb").style.backgroundImage =
+            "url('chatrsc/chatscroller-b.png')";
+          document.getElementById("scrollbtnup").style.backgroundImage =
+            "url('chatrsc/chatscrollbar-scrollup.png')";
+          document.getElementById("scrollbtndown").style.backgroundImage =
+            "url('chatrsc/chatscrollbar-scrolldown.png')";
+        }
+      }
+      //window height
+      function SetSize(newheight) {
+        elem.style.height = newheight + "px";
+        elem_scrollbar.style.height = newheight - 30 + "px";
+        //scrollbar.recalculateLayout();
+      }
+      //Set window width
+      function SetWidth(newwidth) {
+        E.setAttribute("style", "width: " + newwidth + "px");
+        elem.style.width = newwidth - 16 + "px";
+        scrollbar.recalculateLayout();
+      }
+
+      //clears chat. Most likely called on refresh and knockouts.
+      function Purge() {
+        elem.innerHTML = "<BR>";
+        scrollbar.recalculateLayout();
+      }
+
+      //if we need to recalc the page
+      var needrecalc = 0;
+
+      //if the message is being added to the latest message, or if it'll be on a new line.
+      var needextra = 0;
+      //current message text
+      var curmsgtext = "";
+      //called by byond when a mesage is sent
+      function receiveMessage(msgtext, extra) {
+        curmsgtext += "&nbsp;" + msgtext + "<BR>";
+        if (extra) needextra = extra;
+        needrecalc = 1;
+        return 1;
+      }
+      //one second updates
+      var iFrequency = 100; // expressed in miliseconds
+      //current Interval before update
+      var myInterval = 0;
+
+      //removes a division. Most likely used to remove existing examine divs
+      //NOTE: You NEED to enter a   at the end of the infodiv why? Ask Randy.
+      function removediv(E, S) {
+        var finished = 0;
+        var found = 0;
+
+        while (finished == 0) {
+          var sstring = '<div class="' + S;
+          var n = E.indexOf(sstring);
+          if (n < 0) {
+            finished = 1;
+            break;
+          }
+          var lookfor = " ";
+          var n_end = E.indexOf(lookfor);
+
+          if (n_end <= 0) {
+            if (found == 0) {
+              E = E.substr(0, n);
+            }
+            finished = 1;
+            break;
+          }
+          found++;
+          E = E.substr(0, n) + E.substr(n_end + lookfor.length);
+        }
+        return E;
+      }
+      //main loop
+      function startLoop() {
+        if (myInterval > 0) clearInterval(myInterval); // stop
+        myInterval = setInterval("recalc()", iFrequency); // run
+      }
+
+      //sets text size. F11 command?
+      function TextSize(scale) {
+        elem.setAttribute("style", "font-size: " + scale + "%");
+      }
+
+      //maxchar before we subract old messages?
+      var maxchars = 14500;
+      //main work call
+      function recalc() {
+        if (elem == null) return;
+        //if we need to recalc
+        if (needrecalc == 1) {
+          //if we're adding on to lastest message
+          var extra = needextra;
+          //new message
+          var msgtext = curmsgtext;
+
+          //clear the used vars
+          curmsgtext = "";
+          needextra = 0;
+          var E = "";
+          if (extra == 1) {
+            //E = E - infodiv mood. Allows only one infodiv at a time.
+            E = removediv(elem.innerHTML, "infodiv mood");
+            //removes the newline and makes it appear on the most recent message line
+            msgtext = msgtext.substr(0, msgtext.length - 4);
+          } else {
+            E = elem.innerHTML;
+          }
+
+          //add the new message
+          elem.innerHTML = E + msgtext;
+          var oldScroll = scrollbar.slider.value;
+          //clear var
+          needrecalc = 0;
+
+          //uneeded?
+          var E = elem.innerHTML;
+
+          //if we're over the max length
+          if (E.length > maxchars) {
+            //clear
+            while (E.length > maxchars) {
+              var m = 0;
+              var i = 0;
+              for (; i < 50; i++) {
+                var n = E.indexOf("&nbsp;", 1);
+                if (n > 0) m = n;
+              }
+
+              E = E.substr(m);
+            }
+            elem.innerHTML = E;
+          }
+          //recalc scrollbar
+          scrollbar.recalculateLayout();
+          if (oldScroll == 1) {
+            window.self.setTimeout(function () {
+              scrollbar.slider.setValue(1);
+            }, 100);
+          }
+        }
+      }
+      scrollbar.slider.setValue(1);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,54 @@
+###############################################################################################
+# Words that will block in character chat messages from sending.                              #
+# Case is not important. Commented-out examples are listed below, just remove the "#".        #
+###############################################################################################
+lol
+kek
+omg
+tbh
+owo
+uwu
+idk
+cbt
+tfw
+mfw
+iirc
+lmao
+lmfao
+is12
+afaik
+afk
+ss13
+nanotrasen
+sindicato
+npc
+pwned
+doinb
+reddit
+syndicate
+syndicato
+femboulos
+javascript
+dream maker
+dm
+discord
+facebook
+youtube
+4chan
+fourchan
+xvideos
+redtube
+bruh
+pornhub
+fortnite
+uwu
+owo
+fortnite
+nigger
+hydrated12
+randysandy
+among drip
+amogus
+nigo
+niggo
+neggo
