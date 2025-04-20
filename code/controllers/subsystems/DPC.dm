@@ -8,7 +8,7 @@ SUBSYSTEM_DEF(dpc)
 	name = "Delayed Procedure Call"
 	wait = 1
 	//runlevels = RUNLEVELS_ALL
-	//priority = SS_PRIORITY_DPC
+	priority = 19
 	flags = SS_TICKER | SS_NO_INIT
 
 	var/list/queued_calls = list()

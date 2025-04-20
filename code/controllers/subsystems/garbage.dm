@@ -3,7 +3,7 @@
 //
 SUBSYSTEM_DEF(garbage)
 	name = "Garbage"
-	priority = 15
+	priority = 20
 	wait = 5
 	flags = SS_FIRE_IN_LOBBY|SS_POST_FIRE_TIMING|SS_BACKGROUND|SS_NO_INIT
 
