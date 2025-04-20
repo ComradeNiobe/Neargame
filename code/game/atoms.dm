@@ -889,3 +889,9 @@ var/list/fonts = list('code/chatpanel/browserassets/rsc/gothic.ttf', 'code/chatp
 	overlays += imagem
 	playsound(src.loc, pick('sound/webbers/acid1.ogg', 'sound/webbers/acid2.ogg', 'sound/webbers/acid3.ogg'), 100, 0)
 	return
+
+/atom/proc/get_overhead_text_x_offset()
+	return 0
+
+/atom/proc/get_overhead_text_y_offset()
+	return 0

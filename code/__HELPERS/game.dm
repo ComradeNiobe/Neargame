@@ -351,14 +351,6 @@ datum/projectile_data
 
 	return new /datum/projectile_data(src_x, src_y, time, distance, power_x, power_y, dest_x, dest_y)
 
-
-/proc/flick_overlay(image/I, list/show_to, duration)
-	for(var/client/C in show_to)
-		C.images += I
-	sleep(duration)
-	for(var/client/C in show_to)
-		C.images -= I
-
 /proc/getviewsize(view)
 	var/viewX
 	var/viewY

@@ -119,10 +119,11 @@ var/list/department_radio_keys = list(
 		return
 
 	if(ishuman(src))
-		if(src:province == "Salar" || src:h_style == "Forelock")
+		var/mob/living/carbon/human/H = src
+		if(H.province == "Salar" || H.h_style == "Forelock")
 			message = salarTalk(message)
 
-		if(src:province == "Wei-Ji Burrows" || src:voicetype == "gink")
+		if(H.province == "Wei-Ji Burrows" || H.voicetype == "gink")
 			message = ginkTalk(message)
 
 	var/turf/T = get_turf(src)
@@ -171,14 +172,16 @@ var/list/department_radio_keys = list(
 			if(M.stat == DEAD && M.client && (M.client.prefs.toggles & CHAT_GHOSTEARS))
 				listening |= M
 				continue
-			if(M.loc && M.locs[1] in hearturfs)
+			if((M.loc && M.locs[1]) in hearturfs)
 				listening |= M
 
+	// TODO: refactor this with animate_speech_bubble
 	var/speech_bubble_test = say_test(message)
 	var/image/speech_bubble = image('icons/mob/talk.dmi',src,"h[speech_bubble_test]")
 	if(was_exclaiming)
 		speech_bubble = image('icons/mob/talk.dmi',src,"h2")
-	spawn(30) qdel(speech_bubble)
+	spawn(30)
+		qdel(speech_bubble)
 
 	if(copytext_char(message,1,8) == "Poison*" || copytext_char(message,1,8) == "poison*")
 		verb = "<span class='poison'>poisons</span>"
@@ -223,14 +226,20 @@ var/list/department_radio_keys = list(
 	if(!stuttering && !slurring && ending=="!") //This is an awful way of handling this I know. But at least it works. Unlike the other ways of handling it.
 		message = "<span class='saybold'>[message]</span>"
 
+	var/list/speech_bubble_recipients = list()
 	for(var/mob/M in listening)
-		M << speech_bubble
-		M.hear_say(message, verb, speaking, alt_name, italics, src, speech_sound, sound_vol)
+		if(M)
+			to_target(M, speech_bubble)
+			M.hear_say(message, verb, speaking, alt_name, italics, src, speech_sound, sound_vol)
+			if(M.client)
+				speech_bubble_recipients += M.client
 
 	for(var/obj/O in listening_obj)
 		spawn(0)
 			if(O) //It's possible that it could be deleted in the meantime.
 				O.hear_talk(src, message, verb, speaking)
+
+	INVOKE_ASYNC(src, TYPE_PROC_REF(/atom/movable, animate_chat), message, speaking, italics, speech_bubble_recipients)
 
 	last_said = message
 	return 1

@@ -274,8 +274,12 @@
 	var/follow_mouse = FALSE // Makes the humans direction turn towards the mouse
 	var/left_hand_intent = I_HELP
 	var/right_hand_intent = I_HELP
-	
-	var/left_hand_zone = "chest" 
+
+	var/left_hand_zone = "chest"
 	var/right_hand_zone = "chest"
-	var/wrong_hand_used = FALSE	
+	var/wrong_hand_used = FALSE
 	var/list/default_buttons = list()
+
+	// Offset the overhead text if necessary.
+	var/offset_overhead_text_x = 0
+	var/offset_overhead_text_y = 0

@@ -1233,3 +1233,9 @@ note dizziness decrements automatically in the mob's Life() proc.
 	//	var/obj/item/clothing/C = get_equipped_item(slot)
 	//	if(istype(C))
 	//		. = min(., C.volume_multiplier)
+
+/mob/get_overhead_text_x_offset()
+	return offset_overhead_text_x
+
+/mob/get_overhead_text_y_offset()
+	return offset_overhead_text_y
