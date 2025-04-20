@@ -1,7 +1,7 @@
 //This file was auto-corrected by findeclaration.exe on 25.5.2012 20:42:33
 
-var/list/preferences_datums = list()
-var/list/VicesList = vice_names
+var/global/list/preferences_datums = list()
+var/global/list/VicesList = vice_names
 var/global/list/special_roles = list( //keep synced with the defines BE_* in setup.dm --rastaf
 //some autodetection here.
 	"traitor" = IS_MODE_COMPILED("traitor"),             // 0
@@ -963,7 +963,7 @@ var/global/list/special_roles = list( //keep synced with the defines BE_* in set
 					if("fatness")
 						fat = !fat
 					*/
-			
+
 					if("domhand")
 						if(dom_hand == RIGHT_HAND)
 							dom_hand = LEFT_HAND
@@ -1043,7 +1043,7 @@ var/global/list/special_roles = list( //keep synced with the defines BE_* in set
 						if(bodyguardtype)
 							BodyguardPref = bodyguardtype
 							to_chat(user, "<b><span class ='passivebold'>[BodyguardPref]</span></b>")
-							
+
 					if("baron")
 						//var/inquisidor_tipos = input(user, "Escolha o seu tipo de Inquisidor.") as null|anything in list("Velhos Tempos", "| O Fanatico |", "o Conhecedor o", "() Lobo Solitario ()", "- Respeitado -", "Ω \[Beberrao] Ω", "* Perspicaz *", " / Informado \\ ", "@ Espadachim @", "→ Investigador ←", "§ Lider §", "○ Corrupto ○")
 						var/baron_tipos = input(user, "Choose a motive for the tyrant you'll become. It's an answer for the question \"why do the people hate you?\" with no mechanical effect.") as null|anything in list("Paranoia","Sadism","Greed", "Stability", "Idealism", "Self-Indulgence (None)")
