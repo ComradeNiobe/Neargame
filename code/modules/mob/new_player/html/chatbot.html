@@ -15,43 +15,43 @@
 
     <style type="text/css">
         body {
-            font-family: PTSANS;
+            font-family: 'PTSansWebRegular';
             cursor: url('https://lfwb.ru/Icons/pointer.cur'), auto;
         }
-        
+
         a {
             text-decoration: none;
             outline: none;
             border: none;
             margin: -1px;
         }
-        
+
         a:focus {
             outline: none;
         }
-        
+
         a:hover {
             color: #0d0d0d;
             background: #505055;
             outline: none;
             border: none;
         }
-        
+
         a.active {
             text-decoration: none;
             color: #533333;
         }
-        
+
         a.inactive:hover {
             color: #0d0d0d;
             background: #bb0000
         }
-        
+
         a.active:hover {
             color: #694b4b;
             background: #0f0f0f
         }
-        
+
         a.inactive:hover {
             text-decoration: none;
             color: #0d0d0d;
@@ -73,12 +73,12 @@
                 background-image: url('bg2.png');
                 background-repeat: repeat-x;
             }
-            
+
             table {
                 width: 100%;
                 background: #322;
             }
-            
+
             table,
             tr,
             td {
@@ -86,14 +86,14 @@
                 border-collapse: collapse;
                 padding: 3px;
             }
-            
+
             .rank {
                 color: #bbb;
                 width: 30%;
                 text-align: right;
                 padding-right: 10px;
             }
-            
+
             tr:nth-child(even) {
                 background: #422;
             }
@@ -127,7 +127,7 @@
         if(!playerIndex && playerIndex != 0){
             return
         }
-        
+
         playerArr[playerIndex[0]]["key"].splice(playerIndex[1], playerIndex[1] + 1)
         return 1
     }

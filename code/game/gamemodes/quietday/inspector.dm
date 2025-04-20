@@ -58,8 +58,8 @@
 var/list/CandidatesForInspector = list() //max = 4
 
 /client/Topic(href, href_list, hsrc)
-	var/datum/game_mode/inspector/I
 	..()
+	var/datum/game_mode/inspector/I
 	switch(href_list["acao"])
 		if("joininspectree")
 			if(LAZYLEN(CandidatesForInspector) >= 4) return

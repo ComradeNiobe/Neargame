@@ -13,7 +13,7 @@ var/global/list/medal_nominated = list()
 /obj/structure/stool/bed/chair/ThroneMid/proc/baron_ui(var/mob/user as mob)
 	var/dat = {"<META http-equiv='X-UA-Compatible' content='IE=edge' charset='UTF-8'><TITLE>The Dragon Throne</TITLE></META>
 <style type='text/css'>
-body {font-family: PTSANS; cursor: url('pointer.cur'), auto;padding:20px;
+body {font-family: 'PTSansWebRegular'; cursor: url('pointer.cur'), auto;padding:20px;
 background-color: #060606;overflow:hidden;
 }
 
@@ -55,7 +55,7 @@ background-color: #0e0e0e;
 	@font-face {font-family: Brandon;src: url(brandon.otf);}
 	@font-face {font-family: VRN;src: url(vrn.otf);}
 	@font-face {font-family: NEOM;src: url(neom.otf);}
-	@font-face {font-family: PTSANS;src: url(PTSANS.ttf);}
+	@font-face {font-family: 'PTSansWebRegular';src: url(PTSANS.woff2) format('woff2');}
 	@font-face {font-family: Type;src: url(type.ttf);}
 	@font-face {font-family: Enlightment;src: url(enlightment.ttf);}
 	@font-face {font-family: Arabic;src: url(arabic.ttf);}
@@ -193,9 +193,9 @@ var/list/riot_essential = list("Baron", "Court Bodyguard", "Charybdis", "Squire"
 									world << sound('sound/AI/bell_toll.ogg')
 									to_chat(world, "<br>")
 									to_chat(world, "<span class='decree'>New [H.job]'s decree!</span>")
-									to_chat(world, "<br>")																	
+									to_chat(world, "<br>")
 							else
-								return		
+								return
 					else to_chat(usr, "<span class='combat'>What am I doing? It's too soon to end the labours.</span>")
 				if("gathermeeting")
 					if(!isMeeting)

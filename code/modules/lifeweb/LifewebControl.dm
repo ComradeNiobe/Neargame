@@ -156,7 +156,7 @@ var/stateSuck = NENHUM
 
 		var/client/C = user.client
 		C << browse_rsc('code/modules/lifeweb/html/background.png', "background.png")
-		C << browse_rsc('code/modules/lifeweb/html/PTSANS.ttf', "PTSANS.ttf")
+		C << browse_rsc('code/modules/lifeweb/html/PTSANS.woff2', "PTSANS.woff2")
 
 		sleep(5)
 		winshow(usr, "lifeweb_terminal", 1)
