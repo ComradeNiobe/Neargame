@@ -1,373 +1,373 @@
 macro "macro"
-	elem 
+	elem
 		name = "Tab"
 		command = "setfocus 1\n.winset \"saybox.focus=true?mapwindow.map.focus=true:saybox.focus=true\""
-	elem 
+	elem
 		name = "Center+REP"
 		command = ".center"
-	elem 
+	elem
 		name = "CTRL+Return"
 		command = ".togglefullscreen"
-	elem 
+	elem
 		name = "Northeast"
 		command = ".northeast"
-	elem 
+	elem
 		name = "Southeast"
 		command = ".southeast"
-	elem 
+	elem
 		name = "Southwest"
 		command = ".southwest"
-	elem 
+	elem
 		name = "Northwest"
 		command = ".northwest"
-	elem 
+	elem
 		name = "CTRL+West"
 		command = "westface"
-	elem 
+	elem
 		name = "West+REP"
 		command = ".west"
-	elem 
+	elem
 		name = "CTRL+North"
 		command = "northface"
-	elem 
+	elem
 		name = "North+REP"
 		command = ".north"
-	elem 
+	elem
 		name = "CTRL+East"
 		command = "eastface"
-	elem 
+	elem
 		name = "East+REP"
 		command = ".east"
-	elem 
+	elem
 		name = "CTRL+South"
 		command = "southface"
-	elem 
+	elem
 		name = "South+REP"
 		command = ".south"
-	elem 
+	elem
 		name = "Insert"
 		command = "a-intent right"
-	elem 
+	elem
 		name = "Delete"
 		command = "delete-key-pressed"
-	elem 
+	elem
 		name = "CTRL+1"
 		command = "a-intent help"
-	elem 
+	elem
 		name = "CTRL+2"
 		command = "a-intent disarm"
-	elem 
+	elem
 		name = "CTRL+3"
 		command = "a-intent grab"
-	elem 
+	elem
 		name = "CTRL+4"
 		command = "a-intent hurt"
-	elem 
+	elem
 		name = "CTRL+H"
 		command = "holster"
-	elem 
+	elem
 		name = "V"
 		command = "rest"
-	elem 
+	elem
 		name = "F1"
 		command = ".praiselord"
-	elem 
+	elem
 		name = "CTRL+F1"
 		command = ".options"
-	elem 
+	elem
 		name = "CTRL+SHIFT+F1+REP"
 		command = ".options"
-	elem 
+	elem
 		name = "F2"
 		command = "ooc"
-	elem 
+	elem
 		name = "F2+REP"
 		command = ".screenshot auto"
-	elem 
+	elem
 		name = "SHIFT+F2+REP"
 		command = ".screenshot"
-	elem 
+	elem
 		name = "F3"
 		command = ".say"
-	elem 
+	elem
 		name = "F4"
 		command = ".me"
-	elem 
+	elem
 		name = "F5"
 		command = "asay"
-	elem 
+	elem
 		name = "F6"
 		command = "Player-Panel-New"
-	elem 
+	elem
 		name = "F7"
 		command = "Admin-PM"
-	elem 
+	elem
 		name = "F8"
 		command = "Invisimin"
-	elem 
+	elem
 		name = "F9"
 		command = "msay"
-	elem 
+	elem
 		name = "F11"
 		command = "command-prompt"
-	elem 
+	elem
 		name = "F12"
 		command = "F12"
 
 macro "hotkeymode"
-	elem 
+	elem
 		name = "Tab"
 		command = "setfocus 1\n.winset \"saybox.focus=true?mapwindow.map.focus=true:saybox.focus=true\""
-	elem 
+	elem
 		name = "Center+REP"
 		command = ".center"
-	elem 
+	elem
 		name = "CTRL+Return"
 		command = ".togglefullscreen"
-	elem 
+	elem
 		name = "Space"
 		command = ".swap_hand"
-	elem 
+	elem
 		name = "SHIFT+x"
 		command = ".wield"
-	elem 
+	elem
 		name = "Northeast"
 		command = ".northeast"
-	elem 
+	elem
 		name = "Southeast"
 		command = ".southeast"
-	elem 
+	elem
 		name = "Southwest"
 		command = ".southwest"
-	elem 
+	elem
 		name = "Northwest"
 		command = ".northwest"
-	elem 
+	elem
 		name = "West"
 		command = "MoveKey 8 1"
-	elem 
+	elem
 		name = "CTRL+West"
 		command = "westface"
-	elem 
+	elem
 		name = "West+UP"
 		command = "MoveKey 8 0"
-	elem 
+	elem
 		name = "North"
 		command = "MoveKey 1 1"
-	elem 
+	elem
 		name = "CTRL+North"
 		command = "northface"
-	elem 
+	elem
 		name = "North+UP"
 		command = "MoveKey 1 0"
-	elem 
+	elem
 		name = "East"
 		command = "MoveKey 4 1"
-	elem 
+	elem
 		name = "CTRL+East"
 		command = "eastface"
-	elem 
+	elem
 		name = "East+UP"
 		command = "MoveKey 4 0"
-	elem 
+	elem
 		name = "South"
 		command = "MoveKey 2 1"
-	elem 
+	elem
 		name = "CTRL+South"
 		command = "southface"
-	elem 
+	elem
 		name = "South+UP"
 		command = "MoveKey 2 0"
-	elem 
+	elem
 		name = "Insert"
 		command = "a-intent right"
-	elem 
+	elem
 		name = "Delete"
 		command = "delete-key-pressed"
-	elem 
+	elem
 		name = "1"
 		command = "a-intent hurt"
-	elem 
+	elem
 		name = "CTRL+1"
 		command = "a-intent hurt"
-	elem 
+	elem
 		name = "2"
 		command = "a-intent disarm"
-	elem 
+	elem
 		name = "CTRL+2"
 		command = "a-intent disarm"
-	elem 
+	elem
 		name = "3"
 		command = "a-intent grab"
-	elem 
+	elem
 		name = "CTRL+3"
 		command = "a-intent grab"
-	elem 
+	elem
 		name = "4"
 		command = "a-intent help"
-	elem 
+	elem
 		name = "CTRL+4"
 		command = "a-intent help"
-	elem 
+	elem
 		name = "5"
 		command = "me"
-	elem 
+	elem
 		name = "A"
 		command = "MoveKey 8 1"
-	elem 
+	elem
 		name = "ALT+A"
 		command = "westfaceperm"
-	elem 
+	elem
 		name = "CTRL+A"
 		command = "westface"
-	elem 
+	elem
 		name = "A+UP"
 		command = "MoveKey 8 0"
-	elem 
+	elem
 		name = "C"
 		command = "CombatModeToggle"
-	elem 
+	elem
 		name = "D"
 		command = "MoveKey 4 1"
-	elem 
+	elem
 		name = "ALT+D"
 		command = "eastfaceperm"
-	elem 
+	elem
 		name = "CTRL+D"
 		command = "eastface"
-	elem 
+	elem
 		name = "D+UP"
 		command = "MoveKey 4 0"
-	elem 
+	elem
 		name = "E"
 		command = "quick-equip"
-	elem 
+	elem
 		name = "F"
 		command = ".fixeye"
-	elem 
+	elem
 		name = "CTRL+F"
 		command = "a-intent left"
-	elem 
+	elem
 		name = "G"
 		command = ".fixeye"
-	elem 
+	elem
 		name = "CTRL+G"
 		command = "a-intent right"
-	elem 
+	elem
 		name = "SHIFT+G"
 		command = ".mousefixeye"
-	elem 
+	elem
 		name = "H"
 		command = "holster"
-	elem 
+	elem
 		name = "CTRL+H"
 		command = "holster"
-	elem 
+	elem
 		name = "J"
 		command = "toggle-gun-mode"
-	elem 
+	elem
 		name = "CTRL+J"
 		command = "toggle-gun-mode"
-	elem 
+	elem
 		name = "K"
 		command = "glind"
-	elem 
+	elem
 		name = "M"
 		command = ".me"
-	elem 
+	elem
 		name = "P"
 		command = ".asktostop"
-	elem 
+	elem
 		name = "Q"
 		command = ".northwest"
-	elem 
+	elem
 		name = "CTRL+Q"
 		command = ".northwest"
-	elem 
+	elem
 		name = "R"
 		command = ".southwest"
-	elem 
+	elem
 		name = "S"
 		command = "MoveKey 2 1"
-	elem 
+	elem
 		name = "ALT+S"
 		command = "southfaceperm"
-	elem 
+	elem
 		name = "CTRL+S"
 		command = "southface"
-	elem 
+	elem
 		name = "S+UP"
 		command = "MoveKey 2 0"
-	elem 
+	elem
 		name = "T"
 		command = "focussay"
-	elem 
+	elem
 		name = "U"
 		command = "pray"
-	elem 
+	elem
 		name = "V"
 		command = "rest"
-	elem 
+	elem
 		name = "W"
 		command = "MoveKey 1 1"
-	elem 
+	elem
 		name = "ALT+W"
 		command = "northfaceperm"
-	elem 
+	elem
 		name = "CTRL+W"
 		command = "northface"
-	elem 
+	elem
 		name = "W+UP"
 		command = "MoveKey 1 0"
-	elem 
+	elem
 		name = "X"
 		command = ".swap_hand"
-	elem 
+	elem
 		name = "CTRL+X"
 		command = ".northeast"
-	elem 
+	elem
 		name = "Y"
 		command = "pray""
-	elem 
+	elem
 		name = "Z"
 		command = "Activate-Held-Object"
-	elem 
+	elem
 		name = "F1"
 		command = ".praiselord"
-	elem 
+	elem
 		name = "CTRL+F1"
 		command = ".options"
-	elem 
+	elem
 		name = "CTRL+SHIFT+F1+REP"
 		command = ".options"
-	elem 
+	elem
 		name = "F2+REP"
 		command = ".screenshot auto"
-	elem 
+	elem
 		name = "SHIFT+F2+REP"
 		command = ".screenshot"
-	elem 
+	elem
 		name = "F3"
 		command = ".say"
-	elem 
+	elem
 		name = "F4"
 		command = "whisper"
-	elem 
+	elem
 		name = "F5"
 		command = "asay"
-	elem 
+	elem
 		name = "F6"
 		command = "ooc"
-	elem 
+	elem
 		name = "F7"
 		command = "Player-Panel-New"
-	elem 
+	elem
 		name = "F8"
 		command = "Invisimin"
-	elem 
+	elem
 		name = "F11"
 		command = "command-prompt"
-	elem 
+	elem
 		name = "F12"
 		command = ".helpmenu"
 
@@ -402,6 +402,14 @@ window "mainwindow"
 		right = "rpane"
 		is-vert = true
 		splitter = 75
+	elem "asset_cache_browser"
+		type = BROWSER
+		pos = 0,0
+		size = 200x200
+		anchor1 = none
+		anchor2 = none
+		is-visible = false
+		saved-params = ""
 
 window "outputwindow"
 	elem "outputwindow"

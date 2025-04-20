@@ -26,22 +26,15 @@ You can set verify to TRUE if you want send() to sleep until the client has the 
 //This proc sends the asset to the client, but only if it needs it.
 //This proc blocks(sleeps) unless verify is set to false
 /proc/send_asset(var/client/client, var/asset_name, var/verify = TRUE, var/check_cache = TRUE)
-	if(!istype(client))
-		if(ismob(client))
-			var/mob/M = client
-			if(M.client)
-				client = M.client
-
-			else
-				return 0
-
-		else
-			return 0
+	client = client?.get_client()
+	if(!client)
+		return FALSE
 
 	if(check_cache && (client.cache.Find(asset_name) || client.sending.Find(asset_name)))
 		return 0
 
-	client << browse_rsc(asset_cache.cache[asset_name], asset_name)
+	var/decl/asset_cache/asset_cache = GET_DECL(/decl/asset_cache)
+	send_rsc(client, asset_cache.cache[asset_name], asset_name)
 	if(!verify || !winexists(client, "asset_cache_browser")) // Can't access the asset cache browser, rip.
 		if (client)
 			client.cache += asset_name
@@ -52,11 +45,7 @@ You can set verify to TRUE if you want send() to sleep until the client has the 
 	client.sending |= asset_name
 	var/job = ++client.last_asset_job
 
-	client << browse({"
-	<script>
-		window.location.href="?asset_cache_confirm_arrival=[job]"
-	</script>
-	"}, "window=asset_cache_browser")
+	show_browser(client, "<script>window.location.href='byond://?asset_cache_confirm_arrival=[job]'</script>", "window=asset_cache_browser")
 
 	var/t = 0
 	var/timeout_time = (ASSET_CACHE_SEND_TIMEOUT * client.sending.len) + ASSET_CACHE_SEND_TIMEOUT
@@ -73,24 +62,19 @@ You can set verify to TRUE if you want send() to sleep until the client has the 
 
 //This proc blocks(sleeps) unless verify is set to false
 /proc/send_asset_list(var/client/client, var/list/asset_list, var/verify = TRUE)
-	if(!istype(client))
-		if(ismob(client))
-			var/mob/M = client
-			if(M.client)
-				client = M.client
-
-			else
-				return 0
-
-		else
-			return 0
+	client = client?.get_client()
+	if(!client)
+		return FALSE
 
 	var/list/unreceived = asset_list - (client.cache + client.sending)
 	if(!unreceived || !unreceived.len)
 		return 0
+	if (unreceived.len >= ASSET_CACHE_TELL_CLIENT_AMOUNT)
+		to_chat(client, "Sending resources...")
+	var/decl/asset_cache/asset_cache = GET_DECL(/decl/asset_cache)
 	for(var/asset in unreceived)
 		if (asset in asset_cache.cache)
-			client << browse_rsc(asset_cache.cache[asset], asset)
+			send_rsc(client, asset_cache.cache[asset], asset)
 
 	if(!verify || !winexists(client, "asset_cache_browser")) // Can't access the asset cache browser, rip.
 		if (client)
@@ -101,11 +85,7 @@ You can set verify to TRUE if you want send() to sleep until the client has the 
 	client.sending |= unreceived
 	var/job = ++client.last_asset_job
 
-	client << browse({"
-	<script>
-		window.location.href="?asset_cache_confirm_arrival=[job]"
-	</script>
-	"}, "window=asset_cache_browser")
+	show_browser(client, "<script>window.location.href='byond://?asset_cache_confirm_arrival=[job]'</script>", "window=asset_cache_browser")
 
 	var/t = 0
 	var/timeout_time = ASSET_CACHE_SEND_TIMEOUT * client.sending.len
@@ -134,20 +114,15 @@ You can set verify to TRUE if you want send() to sleep until the client has the 
 //This proc "registers" an asset, it adds it to the cache for further use, you cannot touch it from this point on or you'll fuck things up.
 //if it's an icon or something be careful, you'll have to copy it before further use.
 /proc/register_asset(var/asset_name, var/asset)
+	var/decl/asset_cache/asset_cache = GET_DECL(/decl/asset_cache)
 	asset_cache.cache[asset_name] = asset
-
-//Generated names do not include file extention.
-//Used mainly for code that deals with assets in a generic way
-//The same asset will always lead to the same asset name
-/proc/generate_asset_name(var/file)
-	return "asset.[md5(fcopy_rsc(file))]"
 
 //These datums are used to populate the asset cache, the proc "register()" does this.
 
 //all of our asset datums, used for referring to these later
-/var/global/list/asset_datums = list()
+var/global/list/asset_datums = list()
 
-//get a assetdatum or make a new one
+//get an assetdatum or make a new one
 /proc/get_asset_datum(var/type)
 	if (!(type in asset_datums))
 		return new type()
@@ -170,12 +145,13 @@ You can set verify to TRUE if you want send() to sleep until the client has the 
 /datum/asset/simple/register()
 	for(var/asset_name in assets)
 		register_asset(asset_name, assets[asset_name])
+
 /datum/asset/simple/send(client)
 	send_asset_list(client,assets,verify)
 
 
 //DEFINITIONS FOR ASSET DATUMS START HERE.
-
+var/global/template_file_name = "all_templates.json"
 
 /datum/asset/nanoui
 	var/list/common = list()
@@ -188,9 +164,10 @@ You can set verify to TRUE if you want send() to sleep until the client has the 
 		"nano/js/"
 	)
 	var/list/uncommon_dirs = list(
-		"nano/templates/",
 		"news_articles/images/"
 	)
+	var/template_dir = "nano/templates/"
+	var/template_temp_dir = "data/"
 
 /datum/asset/nanoui/register()
 	// Crawl the directories to find files.
@@ -208,7 +185,30 @@ You can set verify to TRUE if you want send() to sleep until the client has the 
 				if(fexists(path + filename))
 					register_asset(filename, fcopy_rsc(path + filename))
 
+	merge_and_register_all_templates()
 
+/datum/asset/nanoui/proc/merge_and_register_all_templates()
+	. = merge_templates(template_dir)
+	register_templates(.)
+
+/datum/asset/nanoui/proc/register_templates(templates)
+	var/full_file_name = template_temp_dir + global.template_file_name
+	if(fexists(full_file_name))
+		fdel(file(full_file_name))
+	var/template_file = file(full_file_name)
+	to_file(template_file, json_encode(templates))
+	register_asset(global.template_file_name, fcopy_rsc(template_file))
+
+/// Handles adding a directory's templates to the compiled templates list.
+/datum/asset/nanoui/proc/merge_templates(use_dir)
+	PRIVATE_PROC(TRUE)
+	var/list/templates = flist(use_dir)
+	for(var/filename in templates)
+		if(copytext(filename, length(filename)) != "/")
+			templates[filename] = replacetext(replacetext(file2text(use_dir + filename), "\n", ""), "\t", "")
+		else
+			templates -= filename
+	return templates
 
 /datum/asset/nanoui/send(client, uncommon)
 	if(!islist(uncommon))
@@ -216,6 +216,46 @@ You can set verify to TRUE if you want send() to sleep until the client has the 
 
 	send_asset_list(client, uncommon, FALSE)
 	send_asset_list(client, common, TRUE)
+	send_asset(client, global.template_file_name)
+
+// Note: this is intended for dev work, and is unsafe. Do not use outside of that.
+/datum/asset/nanoui/proc/recompute_and_resend_templates()
+	merge_and_register_all_templates()
+	for(var/client/C in clients)
+		spawn() // there are sleeps here, potentially
+			if(C)
+				send_asset(C, global.template_file_name, FALSE, FALSE)
+				to_chat(C, SPAN_WARNING("Nanoui templates have been updated. Please close and reopen any browser windows."))
+
+/client/proc/resend_nanoui_templates()
+	set category = "Debug"
+	set name = "Resend Nanoui Templates"
+	if(!check_rights(R_DEBUG))
+		return
+	var/datum/asset/nanoui/nano_asset = get_asset_datum(/datum/asset/nanoui)
+	if(nano_asset)
+		nano_asset.recompute_and_resend_templates()
+
+/**
+ * Fonts loader
+ * Fonts for the ui, browser, and nanoui.
+ * Since the rsc compiler tends to be finnicky.
+ */
+/datum/asset/fonts
+	var/fonts_path = "fonts/"
+	var/list/font_files = list()
+
+/datum/asset/fonts/register()
+	var/list/filenames = flist(fonts_path)
+	for(var/filename in filenames)
+		//#TODO: Maybe send only .ttf and .woff files? Not sure if including licenses/readmes is needed for caching?
+		if(copytext(filename, length(filename)) != "/")
+			if(fexists(fonts_path + filename))
+				font_files[filename] = fcopy_rsc(fonts_path + filename)
+				register_asset(filename, font_files[filename])
+
+/datum/asset/fonts/send(client)
+	send_asset_list(client, font_files, FALSE)
 
 /datum/asset/chatpanel
 	var/list/common = list()
@@ -223,7 +263,6 @@ You can set verify to TRUE if you want send() to sleep until the client has the 
 		"code/chatpanel/browserassets/js/",
 		"code/chatpanel/browserassets/html/",
 		"code/chatpanel/browserassets/rsc/",
-
 	)
 
 /datum/asset/chatpanel/register()
@@ -238,7 +277,6 @@ You can set verify to TRUE if you want send() to sleep until the client has the 
 
 /datum/asset/chatpanel/send(client)
 	send_asset_list(client, common, TRUE)
-	return TRUE
 
 /datum/asset/pig
 	var/list/common = list()
@@ -261,27 +299,20 @@ You can set verify to TRUE if you want send() to sleep until the client has the 
 
 /datum/asset/pig/send(client)
 	send_asset_list(client, common, TRUE)
-	return TRUE
+
 /*
 	Asset cache
 */
-var/decl/asset_cache/asset_cache = new()
-
 /decl/asset_cache
-	var/list/cache
+	var/list/cache = list()
 
-/decl/asset_cache/New()
-	..()
-	cache = new
-
-/hook/roundstart/proc/send_assets()
-	for(var/type in typesof(/datum/asset) - list(/datum/asset, /datum/asset/simple))
+/decl/asset_cache/proc/load()
+	for(var/type in subtypesof(/datum/asset) - /datum/asset/simple)
 		var/datum/asset/A = new type()
 		A.register()
+		CHECK_TICK
 
-	for(var/client/C in clients)
+	for(var/client/C in global.clients) // This is also called in client/New, but as we haven't initialized the cache until now, and it's possible the client is already connected, we risk doing it twice.
 		// Doing this to a client too soon after they've connected can cause issues, also the proc we call sleeps.
 		spawn(10)
-			getFilesSlow(C, asset_cache.cache, FALSE)
-
-	return TRUE
+			getFilesSlow(C, cache, FALSE)

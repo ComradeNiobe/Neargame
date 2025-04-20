@@ -1,5 +1,10 @@
 var/regex/is_http_protocol = new(regex("^https?://"))
 
+/// Generate a filename for this asset
+/// The same asset will always lead to the same asset name
+/// (Generated names do not include file extention.)
+/proc/generate_asset_name(file)
+	return "asset.[md5(fcopy_rsc(file))]"
 
 //Converts an icon to base64. Operates by putting the icon in the iconCache savefile,
 // exporting it as text, and then parsing the base64 from that.
@@ -12,7 +17,7 @@ var/regex/is_http_protocol = new(regex("^https?://"))
 	var/list/partial = splittext(iconData, "{")
 	return replacetext(copytext(partial[2], 3, -5), "\n", "")
 
-/proc/icon2html(thing, target, icon_state, dir, frame = 1, moving = FALSE, realsize = FALSE, class = null)
+/proc/icon2html(thing, target, icon_state, dir, frame = 1, moving = FALSE)
 	if (!thing)
 		return
 
@@ -21,7 +26,7 @@ var/regex/is_http_protocol = new(regex("^https?://"))
 	if (!target)
 		return
 	if (target == world)
-		target = clients
+		target = global.clients
 
 	var/list/targets
 	if (!islist(target))
@@ -32,11 +37,13 @@ var/regex/is_http_protocol = new(regex("^https?://"))
 			return
 	if (!isicon(I))
 		if (isfile(thing)) //special snowflake
-			var/name = "[generate_asset_name(thing)].png"
+			var/name = sanitize_filename("[generate_asset_name(thing)].png")
 			register_asset(name, thing)
-			for (var/thing2 in targets)
-				send_asset(thing2, key, FALSE)
-			return "<img class='icon icon-misc [class]' src=\"[url_encode(name)]\">"
+			for (var/mob/thing2 in targets)
+				if(!istype(thing2) || !thing2.client)
+					continue
+				send_asset(thing2?.client, key)
+			return "<img class='icon icon-misc' src=\"[url_encode(name)]\">"
 		var/atom/A = thing
 		if (isnull(dir))
 			dir = A.dir
@@ -58,15 +65,12 @@ var/regex/is_http_protocol = new(regex("^https?://"))
 
 	key = "[generate_asset_name(I)].png"
 	register_asset(key, I)
-	for (var/thing2 in targets)
-		send_asset(thing2, key, FALSE)
+	for (var/mob/thing2 in targets)
+		if(!istype(thing2) || !thing2.client)
+			continue
+		send_asset(thing2?.client, key)
 
-	if(realsize)
-		return "<img class='icon icon-[icon_state] [class]' style='width:[I.Width()]px;height:[I.Height()]px;min-height:[I.Height()]px' src=\"[url_encode(key)]\">"
-
-
-	return "<img class='icon icon-[icon_state] [class]' style='width:25px;height:25px;min-height:25px' src=\"[url_encode(key)]\">"
-
+	return "<img class='icon icon-[icon_state]' src='[url_encode(key)]'>"
 
 /proc/icon2base64html(thing)
 	if (!thing)

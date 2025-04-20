@@ -32,9 +32,16 @@ var/global/max_players = 100
 		return
 	next_allowed_topic_time = world.time + TOPIC_SPAM_DELAY
 
+	// asset_cache
+	if(href_list["asset_cache_confirm_arrival"])
+//		to_chat(src, "ASSET JOB [href_list["asset_cache_confirm_arrival"]] ARRIVED.")
+		var/job = text2num(href_list["asset_cache_confirm_arrival"])
+		completed_asset_jobs += job
+		return
+
 	//search the href for script injection
 	if( findtext(href,"<script",1,0) )
-		world.log << "Attempted use of scripts within a topic call, by [src]"
+		to_world_log("Attempted use of scripts within a topic call, by [src]")
 		message_admins("Attempted use of scripts within a topic call, by [src]")
 		//qdel(usr)
 		return
@@ -155,12 +162,7 @@ var/global/max_players = 100
 	///////////////////////
 	//DETECTOR DE GRINGOS//
 	///////////////////////
-#ifdef NEARWEB_LIVE
-	if(!IsGuestKey(key))
-		var/list/locinfo = get_loc_info()
-		if(!Country_Code)
-			Country_Code = locinfo["country_code"]
-
+	#ifdef NEARWEB_LIVE
 	if(ckey in bans)
 		src << link("https://wiki.nearweb.org/images/0/06/Lifeweb_completed.png")
 		qdel(src)
@@ -170,6 +172,7 @@ var/global/max_players = 100
 		src << link("https://wiki.nearweb.org/images/0/00/Pool_overpop.png")
 		qdel(src)
 		return
+	/*
 	if(!JoinDate)
 		var/list/http[] = world.Export("http://www.byond.com/members/[src.ckey]?format=text")
 		var/Joined = 0000-00-00
@@ -178,43 +181,42 @@ var/global/max_players = 100
 			var/JoinPos = findtext(String, "joined")+10
 			Joined = copytext(String, JoinPos, JoinPos+10)
 			src.JoinDate = Joined
-
+	*/
 	switch(private_party)
 		if(TRUE)
 			if((!ckeywhitelistweb.Find(src.ckey)))
 				notInvited()
 				return
 		if(FALSE)
-			if(!ckeywhitelistweb.Find(src.ckey) && text2num(copytext(src.JoinDate, 1, 5)) >= 2020)
+			if(!ckeywhitelistweb.Find(src.ckey) && text2num(copytext(src.JoinDate, 1, 5)) >= 2024)
 				notInvited()
 				return
 
 	// Change the way they should download resources.
 	//src.preload_rsc = "https://www.dropbox.com/s/kfe9yimm9oi2ooj/MACACHKA.zip?dl=1"
-#endif
+	#endif
+
 	statpanel_loaded = FALSE
 	chatOutput = new /datum/chatOutput(src)
 	to_chat(src, "<span class='highlighttext'> If your screen is dark and you can't interact with the menu, just wait. You must be downloading resources..</span>")
 	to_chat(src, "<span class='highlighttext'>\n If the stat panel fails to load, press F5 while your mouse is over it.</span>")
-	clients += src
-	directory[ckey] = src
-	src << browse({"<meta http-equiv="X-UA-Compatible" content="IE=edge"><script>function post(url, data) {if(!url) return;var http = new XMLHttpRequest;http.open('POST', url);http.setRequestHeader('Content-Type', 'application/json');http.send(data);}</script>"}, "window=http_post_browser")
-	winshow(src, "http_post_browser", FALSE)
+	global.clients += src
+	global.directory[ckey] = src
 	if(src.key in lord)
 		src.verbs += /client/proc/toggle_hand
 
 	//Admin Authorisation
-	holder = admin_datums[ckey]
+	holder = global.admin_datums[ckey]
 	if(holder)
-		admins += src
+		global.admins += src
 		holder.owner = src
 
 	//preferences datum - also holds some persistant data for the client (because we may as well keep these datums to a minimum)
-	prefs = preferences_datums[ckey]
-	fps = 67
+	prefs = global.preferences_datums[ckey]
+	fps = 60
 	if(!prefs)
 		prefs = new /datum/preferences(src)
-		preferences_datums[ckey] = prefs
+		global.preferences_datums[ckey] = prefs
 	prefs.last_ip = address				//these are gonna be used for banning
 	prefs.last_id = computer_id			//these are gonna be used for banning
 	if(prefs.rsc_fix)
@@ -223,12 +225,12 @@ var/global/max_players = 100
 		src.preload_rsc = 1
 	winset(src, "mapwindow.map", "zoom=[prefs.zoom_level];")
 
-#ifdef NEARWEB_LIVE
+	#ifdef NEARWEB_LIVE
 	info = dbdatums[ckey]
 	if(!info)
 		info = new /datum/dbinfo(src)
 		dbdatums[ckey] = info
-#endif
+	#endif
 
 
 	. = ..()	//calls mob.Login()
@@ -241,19 +243,29 @@ var/global/max_players = 100
 		add_admin_verbs()
 		admin_memo_show()
 
+	// Forcibly enable hardware-accelerated graphics, as we need them for the lighting overlays.
+	// (but turn them off first, since sometimes BYOND doesn't turn them on properly otherwise)
+	spawn(5) // And wait a half-second, since it sounds like you can do this too fast.
+		if(src)
+			winset(src, null, "command=\".configure graphics-hwmode off\"")
+			sleep(2) // wait a bit more, possibly fixes hardware mode not re-activating right
+			winset(src, null, "command=\".configure graphics-hwmode on\"")
+
 	send_resources()
+
+	if(!winexists(src, "asset_cache_browser")) // The client is using a custom skin, tell them.
+		to_chat(src, "<span class='warning'>Unable to access asset cache browser, if you are using a custom skin file, please allow DS to download the updated version, if you are not, then make a bug report. This is not a critical issue but can cause issues with resource downloading, as it is impossible to know when extra resources arrived to you.</span>")
 
 	if(prefs.lastchangelog != changelog_hash) //bolds the changelog button on the interface so we know there are updates.
 		winset(src, "rpane.changelog", "background-color=#eaeaea;font-style=bold")
 	fit_viewport()
-	winshow(src, "http_post_browser", FALSE)
 
-#ifdef NEARWEB_LIVE
+	#ifdef NEARWEB_LIVE
 	if(authenticated)
 		chatOutput.start()
-#else
+	#else
 	chatOutput.start()
-#endif
+	#endif
 	ambience_playing = FALSE
 
 	//////////////
@@ -262,9 +274,9 @@ var/global/max_players = 100
 /client/Del()
 	if(holder)
 		holder.owner = null
-		admins -= src
-	directory -= ckey
-	clients -= src
+		global.admins -= src
+	global.directory -= ckey
+	global.clients -= src
 	authenticated = FALSE
 	return ..()
 
@@ -272,7 +284,9 @@ var/global/max_players = 100
 	..()
 	return QDEL_HINT_HARDDEL_NOW
 
-/client/var/toggle_hand
+/client
+	var/toggle_hand
+
 /client/proc/toggle_hand()
 	set hidden = 0
 	set category = "Lord"
@@ -309,9 +323,6 @@ var/global/max_players = 100
 
 //send resources to the client. It's here in its own proc so we can move it around easiliy if need be
 /client/proc/send_resources()
-	// Send NanoUI resources to this client
-	nanomanager.send_resources(src)
-
 	getFiles(
 		'html/painew.png',
 		'html/loading.gif',
@@ -333,6 +344,11 @@ var/global/max_players = 100
 		'sound/fortress_suspense/suspense_thanati.ogg',
 		'sound/fortress_suspense/suspense_xom.ogg'
 		)
+
+	var/decl/asset_cache/asset_cache = GET_DECL(/decl/asset_cache)
+	spawn (10) //removing this spawn causes all clients to not get verbs.
+		//Precache the client with all other assets slowly, so as to not block other browse() calls
+		getFilesSlow(src, asset_cache.cache, register_asset = FALSE)
 
 /client/proc/GetHighJob()
 	if(master_mode == "minimig" || master_mode == "miniwar")
@@ -765,9 +781,9 @@ var/global/max_players = 100
 // So we slow this down a little.
 // See: http://www.byond.com/docs/ref/info.html#/client/proc/Stat
 /client/Stat()
+	if(!usr)
+		return
+	// Add always-visible stat panel calls here, to define a consistent display order.
+	statpanel("Status")
+
 	. = ..()
-	if (holder)
-		sleep(1)
-	else
-		sleep(5)
-		stoplag()
