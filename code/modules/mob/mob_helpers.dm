@@ -182,71 +182,83 @@ proc/hasorgans(A)
 
 	return zone
 
-
-/proc/stars(n, pr)
-	if (pr == null)
-		pr = 25
-	if (pr <= 0)
+//Replaces some of the characters with *, used in whispers. pr = probability of no star.
+//Will try to preserve HTML formatting. re_encode controls whether the returned text is HTML encoded outside tags.
+/proc/stars(n, pr = 25, re_encode = 1)
+	if (pr < 0)
 		return null
-	else
-		if (pr >= 100)
-			return n
-	var/te = n
-	var/t = ""
-	n = length(n)
-	var/p = null
-	p = 1
-	while(p <= n)
-		if ((copytext(te, p, p + 1) == " " || prob(pr)))
-			t = text("[][]", t, copytext(te, p, p + 1))
+	else if (pr >= 100)
+		return n
+
+	var/intag = 0
+	var/block = list()
+	. = list()
+	for(var/i = 1, i <= length_char(n), i++)
+		var/char = copytext_char(n, i, i+1)
+		if(!intag && (char == "<"))
+			intag = 1
+			. += stars_no_html(JOINTEXT(block), pr, re_encode) //stars added here
+			block = list()
+		block += char
+		if(intag && (char == ">"))
+			intag = 0
+			. += block //We don't mess up html tags with stars
+			block = list()
+	. += (intag ? block : stars_no_html(JOINTEXT(block), pr, re_encode))
+	. = JOINTEXT(.)
+
+//Ingnores the possibility of breaking tags.
+/proc/stars_no_html(text, pr, re_encode)
+	text = html_decode(text) //We don't want to screw up escaped characters
+	. = list()
+	for(var/i = 1, i <= length_char(text), i++)
+		var/char = copytext_char(text, i, i+1)
+		if(char == " " || prob(pr))
+			. += char
 		else
-			t = text("[]*", t)
-		p++
-	return t
+			. += "*"
+	. = JOINTEXT(.)
+	if(re_encode)
+		. = html_encode(.)
 
-// For drunken speak, etc
-proc/slur(phrase)
+/proc/slur(phrase)
 	phrase = html_decode(phrase)
-	var/index = findtext(phrase, "&#255;")
-	while(index)
-		phrase = copytext(phrase, 1, index) + "�" + copytext(phrase, index+1)
-		index = findtext(phrase, "&#255;")
-	var/leng = length(phrase)
-	var/counter = length(phrase)
-	var/newphrase = ""
-	var/newletter = ""
-
+	var/leng=length_char(phrase)
+	var/counter=length_char(phrase)
+	var/newphrase=""
+	var/newletter=""
 	while(counter>=1)
-		newletter=copytext(phrase,(leng-counter)+1,(leng-counter)+2)
-		if(prob(33))
-			if(lowerrustext(newletter)=="î")	newletter="ó"
-			if(lowerrustext(newletter)=="û")	newletter="i"
-			if(lowerrustext(newletter)=="ð")	newletter="r"
-			if(lowerrustext(newletter)=="ë")	newletter="ëü"
-			if(lowerrustext(newletter)=="ç")	newletter="ñ"
-			if(lowerrustext(newletter)=="â")	newletter="ô"
-			if(lowerrustext(newletter)=="á")	newletter="ï"
-			if(lowerrustext(newletter)=="ã")	newletter="õ"
-			if(lowerrustext(newletter)=="ä")	newletter="ò"
-			if(lowerrustext(newletter)=="ë")	newletter="ëü"
-		if(rand(1,20)==20)
-			if(newletter==" ")	newletter="...[pick("ýýýààà", "õûûûûõõ", "ãõûûûûû", "ãûûûû")]..."
-			if(newletter==".")	newletter=" *BURP*."
+		newletter=copytext_char(phrase,(leng-counter)+1,(leng-counter)+2)
+		if(rand(1,3)==3)
+			if(lowertext(newletter)=="o")	newletter="u"
+			if(lowertext(newletter)=="s")	newletter="ch"
+			if(lowertext(newletter)=="a")	newletter="ah"
+			if(lowertext(newletter)=="c")	newletter="k"
 		switch(rand(1,15))
-			if(1,3,5,8)	newletter="[lowerrustext(newletter)]"
-			if(2,4,6,15)	newletter="[upperrustext(newletter)]"
-			if(7)	newletter+="'"
-			if(9,10)	newletter="<span class='saybold'>[newletter]</span>"
-			if(11,12)	newletter="<span class='saybigger'>[newletter]</span>"
-			if(13)	newletter="<span class='saysmaller'>[newletter]</span>"
-		newphrase+="[newletter]"
-		counter-=1
-	index = findtext(newphrase, "ÿ")
-	while(index)
-		newphrase = copytext(newphrase, 1, index) + "&#255;" + copytext(newphrase, index+1)
-		index = findtext(newphrase, "ÿ")
+			if(1 to 4)	newletter="[lowertext(newletter)]"
+			if(5 to 8)	newletter="[uppertext(newletter)]"
+			if(9)	newletter+="'"
+			else	newletter = newletter
+		newphrase+="[newletter]";counter-=1
 	return newphrase
 
+/// t is the inputted message, and any value higher than 70 for p will cause letters to be replaced instead of added
+/proc/Gibberish(t, p)
+	/* Turn text into complete gibberish! */
+	var/returntext = ""
+	for(var/i = 1, i <= length_char(t), i++)
+
+		var/letter = copytext_char(t, i, i+1)
+		if(prob(50))
+			if(p >= 70)
+				letter = ""
+
+			for(var/j = 1, j <= rand(0, 2), j++)
+				letter += pick("#","@","*","&","%","$","/", "<", ">", ";","*","*","*","*","*","*","*")
+
+		returntext += letter
+
+	return returntext
 
 /proc/stutter(phrase)
 	phrase = rhtml_decode(phrase)
@@ -284,24 +296,6 @@ proc/slur(phrase)
 		split_phrase[index] = word
 
 	return sanitize(dd_list2text(split_phrase," "))
-
-
-proc/Gibberish(t, p)//t is the inputted message, and any value higher than 70 for p will cause letters to be replaced instead of added
-	/* Turn text into complete gibberish! */
-	var/returntext = ""
-	for(var/i = 1, i <= length(t), i++)
-
-		var/letter = copytext(t, i, i+1)
-		if(prob(50))
-			if(p >= 70)
-				letter = ""
-
-			for(var/j = 1, j <= rand(0, 2), j++)
-				letter += pick("#","@","*","&","%","$","/", "<", ">", ";","*","*","*","*","*","*","*")
-
-		returntext += letter
-
-	return returntext
 
 proc/NoChords(t, p)
 	var/returntext = ""

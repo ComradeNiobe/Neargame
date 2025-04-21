@@ -19,6 +19,9 @@
 	throw_range = 3
 	w_class = 5.0
 
+	/// If the grab acts like cuffs and prevents action from the victim.
+	var/restrains = 0
+
 /obj/item/grab/wrench
 	name = "wrench"
 	icon_state = "wrench"
@@ -649,3 +652,6 @@
 		if(H.headwrenched)
 			death_door()
 
+/obj/item/grab/proc/restrains()
+	if(state >= GRAB_NECK)
+		return TRUE

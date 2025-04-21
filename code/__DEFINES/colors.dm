@@ -1,3 +1,8 @@
+#define HEX_RED(COLOR)   hex2num(copytext(COLOR,2,4))
+#define HEX_GREEN(COLOR) hex2num(copytext(COLOR,4,6))
+#define HEX_BLUE(COLOR)  hex2num(copytext(COLOR,6,8))
+#define HEX_ALPHA(COLOR) hex2num(copytext(COLOR,8,10))
+
 // BYOND lower-cases color values, and thus we do so as well to ensure atom.color == COLOR_X will work correctly
 #define COLOR_BLACK            "#000000"
 #define COLOR_NAVY_BLUE        "#000080"

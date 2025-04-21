@@ -146,3 +146,12 @@ proc/ageAndGender2Desc(age, gender)//Used for the radio
 			if(25 to 60)		return "Man"
 			if(60 to INFINITY)	return "Old Man"
 			else				return "Unknown"
+
+/proc/get_effective_view(var/client/C)
+	var/val = C ? C.view : world.view
+	if(isnum(val))
+		return val
+	if(istext(val))
+		var/list/vals = splittext(val, "x")
+		return floor(max(text2num(vals[1]), text2num(vals[2]))/2)
+	return 0

@@ -170,8 +170,8 @@
 
 	var/datum/hud/hud_used = null
 
-	var/list/grabbed_by = list(  )
-	var/list/requests = list(  )
+	var/list/grabbed_by = list()
+	var/list/requests = list()
 
 	var/list/mapobjs = list()
 
@@ -283,3 +283,8 @@
 	// Offset the overhead text if necessary.
 	var/offset_overhead_text_x = 0
 	var/offset_overhead_text_y = 0
+
+	/// Whether or not the mob is handcuffed
+	var/obj/item/handcuffed = null
+	/// Same as handcuffs but for legs. Bear traps use this.
+	var/obj/item/legcuffed = null

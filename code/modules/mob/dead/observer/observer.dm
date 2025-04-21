@@ -545,3 +545,9 @@ var/list/usedremig = list()
 	if(istype(mover, /mob/dead/observer))
 		return 1
 	. = ..()
+
+/mob/proc/can_admin_interact()
+	return 0
+
+/mob/observer/ghost/can_admin_interact()
+	return check_rights(R_ADMIN, 0, src)

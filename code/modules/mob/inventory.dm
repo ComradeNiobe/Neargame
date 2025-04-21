@@ -453,3 +453,28 @@
 			qdel(W)
 	return equipped
 
+//Returns the thing in our active hand
+/mob/proc/get_active_held_item()
+	RETURN_TYPE(/obj/item)
+	return null
+
+/mob/proc/get_active_held_item_slot()
+	return
+
+//Returns the thing in our inactive hand
+/mob/proc/get_inactive_held_items()
+	RETURN_TYPE(/list)
+	return null
+
+/mob/proc/get_held_items()
+	for(var/obj/item/thing in get_inactive_held_items())
+		LAZYADD(., thing)
+	var/obj/item/thing = get_active_held_item()
+	if(istype(thing))
+		LAZYADD(., thing)
+
+/mob/proc/get_empty_hand_slot()
+	return
+
+/mob/proc/get_empty_hand_slots()
+	return

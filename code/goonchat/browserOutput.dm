@@ -162,10 +162,6 @@ GLOBAL_DATUM_INIT(iconCache, /savefile, new("data/iconCache.sav")) //Cache of ic
 /datum/chatOutput/proc/ping()
 	return "pong"
 
-/proc/log_world(text)
-	to_world_log(text) //this comes before the config check because it can't possibly runtime
-	game_log("DD_OUTPUT", text)
-
 //Called by js client on js error
 /datum/chatOutput/proc/debug(error)
 	log_world("\[[time2text(world.realtime, "YYYY-MM-DD hh:mm:ss")]\] Client: [(src.owner.key ? src.owner.key : src.owner)] triggered JS error: [error]")

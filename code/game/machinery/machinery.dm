@@ -115,6 +115,9 @@ Class Procs:
 	var/unsecuring_tool = /obj/item/wrench
 	var/last_notice = 0
 
+	/// Can the machine be interacted with while de-powered.
+	var/interact_offline = FALSE
+
 /obj/machinery/New()
 	. = ..()
 	machines += src
@@ -182,79 +185,103 @@ Class Procs:
 		use_power(active_power_usage,power_channel)
 	return 1
 
-/obj/machinery/Topic(href, href_list)
+/obj/machinery/CanUseTopic(var/mob/user)
+	if(stat & BROKEN)
+		return STATUS_CLOSE
+
+	if(!interact_offline && (stat & NOPOWER))
+		return STATUS_CLOSE
+
+	if(user.direct_machine_interface(src))
+		return ..()
+
+	if(stat & NOSCREEN)
+		return STATUS_CLOSE
+
+	if(stat & NOINPUT)
+		return min(..(), STATUS_UPDATE)
+	return ..()
+
+/mob/proc/direct_machine_interface(obj/machinery/machine)
+	return FALSE
+
+/mob/living/silicon/direct_machine_interface(obj/machinery/machine)
+	return TRUE
+
+/mob/observer/ghost/direct_machine_interface(obj/machinery/machine)
+	return TRUE
+
+/obj/machinery/CanUseTopicPhysical(var/mob/user)
+	if((stat & BROKEN)) // && (reason_broken & MACHINE_BROKEN_GENERIC))
+		return STATUS_CLOSE
+
+	return global.physical_topic_state.can_use_topic(nano_host(), user)
+
+/obj/machinery/CouldUseTopic(var/mob/user)
 	..()
-	if(stat & (NOPOWER|BROKEN))
-		return 1
-	if(usr.restrained() || usr.lying || usr.stat)
-		return 1
-	if ( ! (istype(usr, /mob/living/carbon/human) || \
-			istype(usr, /mob/living/silicon) || \
-			istype(usr, /mob/living/carbon/monkey) && ticker && ticker.mode.name == "monkey") )
-		usr << "\red You don't have the dexterity to do this!"
-		return 1
+	user.set_machine(src)
+	//if(clicksound && isliving(user))
+	//	playsound(src, clicksound, clickvol)
 
-	var/norange = 0
-	if(istype(usr, /mob/living/carbon/human))
-		var/mob/living/carbon/human/H = usr
-		if(istype(H.l_hand, /obj/item/tk_grab))
-			norange = 1
-		else if(istype(H.r_hand, /obj/item/tk_grab))
-			norange = 1
+/obj/machinery/CouldNotUseTopic(var/mob/user)
+	user.unset_machine()
 
-	if(!norange)
-		if ((!in_range(src, usr) || !istype(src.loc, /turf)) && !istype(usr, /mob/living/silicon))
-			return 1
+/obj/machinery/Topic(href, href_list, datum/topic_state/state)
+	. = ..()
+	if(. == TOPIC_REFRESH)
+		updateUsrDialog() // Update legacy UIs to the extent possible.
+		nanomanager.update_uis(src) // And our modern NanoUI ones, too.
+		update_icon() // A lot of machines like to do icon updates on refresh, so we'll handle it for them here.
+	else if(. == TOPIC_CLOSE)
+		usr.unset_machine()
+		var/datum/nanoui/open_ui = nanomanager.get_open_ui(usr, src, "main")
+		if(open_ui)
+			open_ui.close()
 
-	src.add_fingerprint(usr)
 
-	var/area/A = get_area(src)
-	A.master.powerupdate = 1
+/obj/machinery/attack_ai(mob/living/silicon/ai/user)
+	if(CanUseTopic(user, DefaultTopicState()) > STATUS_CLOSE)
+		return interface_interact(user)
 
-	return 0
+/obj/machinery/attack_robot(mob/user)
+	if((. = attack_hand(user))) // This will make a physical proximity check, and allow them to deal with components and such.
+		return
+	if(CanUseTopic(user, DefaultTopicState()) > STATUS_CLOSE)
+		return interface_interact(user) // This may still work even if the physical checks fail.
 
-/obj/machinery/attack_ai(mob/user as mob)
-	if(isrobot(user))
-		// For some reason attack_robot doesn't work
-		// This is to stop robots from using cameras to remotely control machines.
-		if(user.client && user.client.eye == user)
-			return src.attack_hand(user)
-	else
-		return src.attack_hand(user)
+// After a recent rework this should mostly be safe.
+/obj/machinery/attack_ghost(mob/user)
+	interface_interact(user)
 
-/obj/machinery/attack_paw(mob/user as mob)
-	return src.attack_hand(user)
+// If you don't call parent in this proc, you must make all appropriate checks yourself.
+// If you do, you must respect the return value.
+/obj/machinery/attack_hand(mob/user)
+	if((. = ..())) // Buckling, climbers; unlikely to return true.
+		return
+	if(!CanPhysicallyInteract(user))
+		return FALSE // The interactions below all assume physical access to the machine. If this is not the case, we let the machine take further action.
+	//if(!user.check_dexterity(required_interaction_dexterity))
+	//	return TRUE
+	//if((. = component_attack_hand(user)))
+	//	return
+	//if(wires && (. = wires.Interact(user)))
+	//	return
+	if((. = physical_attack_hand(user)))
+		return
+	if(CanUseTopic(user, DefaultTopicState()) > STATUS_CLOSE)
+		return interface_interact(user)
 
-/obj/machinery/attack_hand(mob/user as mob)
-	if(stat & (NOPOWER|BROKEN|MAINT))
-		return 1
-	if(user.lying || user.stat)
-		return 1
-	if ( ! (istype(usr, /mob/living/carbon/human) || \
-			istype(usr, /mob/living/silicon) || \
-			istype(usr, /mob/living/carbon/monkey) && ticker && ticker.mode.name == "monkey") )
-		usr << "\red You don't have the dexterity to do this!"
-		return 1
-/*
-	//distance checks are made by atom/proc/DblClick
-	if ((get_dist(src, user) > 1 || !istype(src.loc, /turf)) && !istype(user, /mob/living/silicon))
-		return 1
-*/
-	if (ishuman(user))
-		var/mob/living/carbon/human/H = user
-		if(H.getBrainLoss() >= 60)
-			visible_message("\red [H] stares cluelessly at [src] and drools.")
-			return 1
-		else if(prob(H.getBrainLoss()))
-			user << "\red You momentarily forget how to use [src]."
-			return 1
+// If you want to have interface interactions handled for you conveniently, use this.
+// Return TRUE for handled.
+// If you perform direct interactions in here, you are responsible for ensuring that full interactivity checks have been made (i.e CanInteract).
+// The checks leading in to here only guarantee that the user should be able to view a UI.
+/obj/machinery/proc/interface_interact(user)
+	return FALSE
 
-	src.add_fingerprint(user)
-
-	var/area/A = get_area(src)
-	A.master.powerupdate = 1
-
-	return 0
+// If you want a physical interaction which happens after all relevant checks but preempts the UI interactions, do it here.
+// Return TRUE for handled.
+/obj/machinery/proc/physical_attack_hand(user)
+	return FALSE
 
 /obj/machinery/proc/RefreshParts() //Placeholder proc for machines that are built using frames.
 	return
@@ -418,3 +445,17 @@ Class Procs:
 	last_notice = world.time
 	return
 
+/obj/machinery/CanUseTopicPhysical(var/mob/user)
+	if((stat & BROKEN)) //&& (reason_broken & MACHINE_BROKEN_GENERIC))
+		return STATUS_CLOSE
+
+	return global.physical_topic_state.can_use_topic(nano_host(), user)
+
+/obj/machinery/CouldUseTopic(var/mob/user)
+	..()
+	user.set_machine(src)
+	//if(clicksound && isliving(user))
+	//	playsound(src, clicksound, clickvol)
+
+/obj/machinery/CouldNotUseTopic(var/mob/user)
+	user.unset_machine()

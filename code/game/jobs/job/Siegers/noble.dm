@@ -216,24 +216,31 @@
 	set category = "gpc"
 	set name = "Recruit"
 	set desc="Recruit to Siege Troops"
+
 	if(!(src.siegesoldier) || ticker.mode.config_tag != "siege")
 		return
+
 	var/datum/game_mode/siege/S = ticker.mode
+
 	var/recruit_text = sanitize(input(src, "What you would to say?", "Siege Recruit", "") as text|null)
 	if(!recruit_text || !length(recruit_text))
 		return
 	say(recruit_text)
-	var/list/to_recruit = get_mobs_in_view(world.view,src)
+
+	var/turf/T = get_turf(src)
+	var/list/to_recruit = list()
+	get_listeners_in_range(T, world.view, to_recruit)
 	to_recruit -= S.siegerslist
+
 	for(var/mob/living/carbon/human/H in to_recruit)
 		switch(alert("Would you like to join the Siege side?","Joining the Siege","Yes","No"))
 			if("Yes")
-				if(!(src in get_mobs_in_view(world.view, H)))
+				if(!(src in view(world.view, H)))
 					return
-				for(var/mob/O in get_mobs_in_view(world.view, H))
-					O.show_message("<span class='examinebold'>[H]</span> <span class='examine'>kneels to</span> <span class='examinebold'>[src]!</span>",1)
+
+				H.show_message("<span class='examinebold'>[H]</span> <span class='examine'>kneels to</span> <span class='examinebold'>[src]!</span>",1)
 				H.siegesoldier = TRUE
-				S.siegerslist += H
+				S.siegerslist |= H
 				H.update_all_siege_icons()
 				S.max_losses++
 				log_game("[H.real_name]/[H.key] joins the Siege side!")

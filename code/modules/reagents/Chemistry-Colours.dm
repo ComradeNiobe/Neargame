@@ -29,15 +29,15 @@
 		bluecolor[i]=hex2num(copytext(hue,6,8))
 
 	//mix all the colors
-	var/red = mixOneColor(weight,redcolor)
-	var/green = mixOneColor(weight,greencolor)
-	var/blue = mixOneColor(weight,bluecolor)
+	var/red = mixOneColor_depreciated(weight,redcolor)
+	var/green = mixOneColor_depreciated(weight,greencolor)
+	var/blue = mixOneColor_depreciated(weight,bluecolor)
 
 	//assemble all the pieces
 	var/finalcolor = "#[red][green][blue]"
 	return finalcolor
 
-/proc/mixOneColor(var/list/weight, var/list/color)
+/proc/mixOneColor_depreciated(var/list/weight, var/list/color)
 	if (!weight || !color || length(weight)!=length(color))
 		return 0
 

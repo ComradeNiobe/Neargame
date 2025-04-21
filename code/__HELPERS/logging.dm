@@ -14,7 +14,7 @@ var/runtime_diary = null
 		subsystem = "UNKNOWN"
 	var/msg = "[subsystem]: [text]"
 	game_log("SS", msg)
-	if (log_world)
+	if (config.log_world)
 		to_world_log("SS[subsystem]: [text]")
 
 #define WARNING(MSG) warning("[MSG] in [__FILE__] at line [__LINE__] src: [src] usr: [usr].")
@@ -29,17 +29,17 @@ var/runtime_diary = null
 /proc/game_log(category, text)
 	to_file(diary, "\[[time_stamp()]] [story_id] [category]: [text][log_end]")
 
-/proc/log_to_dd(text)
-	to_chat(text) //this comes before the config check because it can't possibly runtime
-	game_log("DD_OUTPUT", text)
+//This replaces world.log so it displays both in DD and the file
+/proc/log_world(text)
+	to_world_log(text) //this comes before the config check because it can't possibly runtime
+	if(config.log_world)
+		game_log("DD_OUTPUT", text)
 
 /proc/log_admin(text)
 	global.admin_log.Add(text)
-	//if (get_config_value(/decl/config/toggle/log_admin))
 	game_log("ADMIN", text)
 
 /proc/log_debug(text)
-	//if (get_config_value(/decl/config/toggle/log_debug))
 	game_log("DEBUG", text)
 	to_debug_listeners(text)
 
@@ -57,49 +57,54 @@ var/runtime_diary = null
 
 /proc/log_game(text)
 	if (config.log_game)
-		diary << "\[[time_stamp()]]GAME: [text]"
+		game_log("GAME", text)
 
 /proc/log_vote(text)
 	if (config.log_vote)
-		diary << "\[[time_stamp()]]VOTE: [text]"
+		game_log("VOTE", text)
 
 /proc/log_access(text)
 	if (config.log_access)
-		diary << "\[[time_stamp()]]ACCESS: [text]"
+		game_log("ACCESS", text)
 
 /proc/log_say(text)
 	if (config.log_say)
-		diary << "\[[time_stamp()]]SAY: [text]"
+		game_log("SAY", text)
 
 /proc/log_ooc(text)
 	if (config.log_ooc)
-		diary << "\[[time_stamp()]]OOC: [text]"
+		game_log("OOC", text)
 
 /proc/log_whisper(text)
 	if (config.log_whisper)
-		diary << "\[[time_stamp()]]WHISPER: [text]"
+		game_log("WHISPER", text)
 
 /proc/log_emote(text)
-	return
+	if (config.log_emote)
+		game_log("EMOTE", text)
 
 /proc/log_attack(text)
 	if (config.log_attack)
-		diary << "\[[time_stamp()]]ATTACK: [text]" //Seperate attack logs? Why?
+		game_log("ATTACK", text)
 
 /proc/log_adminsay(text)
+	global.admin_log.Add(text)
 	if (config.log_adminchat)
-		diary << "\[[time_stamp()]]ADMINSAY: [text]"
+		game_log("ADMINSAY", text)
 
 /proc/log_adminwarn(text)
 	if (config.log_adminwarn)
-		diary << "\[[time_stamp()]]ADMINWARN: [text]"
-
-/proc/log_pda(text)
-	if (config.log_pda)
-		diary << "\[[time_stamp()]]PDA: [text]"
+		game_log("ADMINWARN", text)
 
 /proc/log_misc(text)
 	game_log("MISC", text)
+
+//proc/log_unit_test(text)
+//	to_world_log("## UNIT_TEST ##: [text]")
+//	log_debug(text)
+
+//proc/log_qdel(text)
+//	to_file(global.world_qdel_log, "\[[time_stamp()]]QDEL: [text]")
 
 //more or less a logging utility
 /proc/key_name(var/whom, var/include_link = null, var/include_name = 1, var/highlight_special_characters = 1)

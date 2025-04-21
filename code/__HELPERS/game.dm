@@ -29,9 +29,6 @@
 
 	return heard
 
-
-
-
 //Magic constants obtained by using linear regression on right-angled triangles of sides 0<x<1, 0<y<1
 //They should approximate pythagoras theorem well enough for our needs.
 #define k1 0.934
@@ -74,7 +71,7 @@
 	//turfs += centerturf
 	return atoms
 
-/proc/get_dist_euclidian(atom/Loc1 as turf|mob|obj,atom/Loc2 as turf|mob|obj)
+/proc/get_dist_euclidian(atom/Loc1, atom/Loc2)
 	var/dx = Loc1.x - Loc2.x
 	var/dy = Loc1.y - Loc2.y
 
@@ -82,20 +79,24 @@
 
 	return dist
 
-/proc/circlerangeturfs(center=usr,radius=3)
+/proc/get_dist_bounds(var/target, var/source) // Alternative to get_dist for multi-turf objects
+	return ceil(bounds_dist(target, source)/world.icon_size) + 1
 
+/proc/circlerangeturfs(center=usr,radius=3)
 	var/turf/centerturf = get_turf(center)
-	var/list/turfs = new/list()
+	. = list()
+	if(!centerturf)
+		return
+
 	var/rsq = radius * (radius+0.5)
 
 	for(var/turf/T in range(radius, centerturf))
 		var/dx = T.x - centerturf.x
 		var/dy = T.y - centerturf.y
 		if(dx*dx + dy*dy <= rsq)
-			turfs += T
-	return turfs
+			. += T
 
-/proc/circleviewturfs(center=usr,radius=3)		//Is there even a diffrence between this proc and circlerangeturfs()?
+/proc/circleviewturfs(center=usr,radius=3)
 
 	var/turf/centerturf = get_turf(center)
 	var/list/turfs = new/list()
@@ -116,37 +117,34 @@
 // It will keep doing this until it checks every content possible. This will fix any problems with mobs, that are inside objects,
 // being unable to hear people due to being in a box within a bag.
 
-/proc/recursive_mob_check(var/atom/O,  var/list/L = list(), var/recursion_limit = 3, var/client_check = 1, var/sight_check = 1, var/include_radio = 1)
+/proc/recursive_content_check(var/atom/O,  var/list/L = list(), var/recursion_limit = 3, var/client_check = 1, var/sight_check = 1, var/include_mobs = 1, var/include_objects = 1)
 
-	//debug_mob += O.contents.len
 	if(!recursion_limit)
 		return L
-	for(var/atom/A in O.contents)
 
-		if(ismob(A))
-			var/mob/M = A
-			if(client_check && !M.client)
-				L |= recursive_mob_check(A, L, recursion_limit - 1, client_check, sight_check, include_radio)
-				continue
-			if(sight_check && !isInSight(A, O))
-				continue
-			L |= M
-			//world.log << "[recursion_limit] = [M] - [get_turf(M)] - ([M.x], [M.y], [M.z])"
+	for(var/I in O.contents)
 
-		else if(include_radio && istype(A, /obj/item/device/radio))
-			if(sight_check && !isInSight(A, O))
-				continue
-			L |= A
+		if(ismob(I))
+			if(!sight_check || isInSight(I, O))
+				L |= recursive_content_check(I, L, recursion_limit - 1, client_check, sight_check, include_mobs, include_objects)
+				if(include_mobs)
+					if(client_check)
+						var/mob/M = I
+						if(M.client)
+							L |= M
+					else
+						L |= I
 
-		if(isobj(A) || ismob(A))
-			L |= recursive_mob_check(A, L, recursion_limit - 1, client_check, sight_check, include_radio)
+		else if(istype(I,/obj/))
+			if(!sight_check || isInSight(I, O))
+				L |= recursive_content_check(I, L, recursion_limit - 1, client_check, sight_check, include_mobs, include_objects)
+				if(include_objects)
+					L |= I
+
 	return L
 
-// The old system would loop through lists for a total of 5000 per function call, in an empty server.
-// This new system will loop at around 1000 in an empty server.
-
-/proc/get_mobs_in_view(var/R, var/atom/source)
-	// Returns a list of mobs in range of R from source. Used in radio and say code.
+// Returns a list of mobs and/or objects in range of get_range from source. Used in radio and say code.
+/proc/get_mobs_or_objects_in_view(var/get_range, var/atom/source, var/include_mobs = 1, var/include_objects = 1)
 
 	var/turf/T = get_turf(source)
 	var/list/hear = list()
@@ -154,23 +152,134 @@
 	if(!T)
 		return hear
 
-	var/list/range = hear(R, T)
-
-	for(var/atom/A in range)
-		if(ismob(A))
-			var/mob/M = A
-			if(M.client)
-				hear += M
-			//world.log << "Start = [M] - [get_turf(M)] - ([M.x], [M.y], [M.z])"
-		else if(istype(A, /obj/item/device/radio))
-			hear += A
-
-		if(isobj(A) || ismob(A))
-			hear |= recursive_mob_check(A, hear, 3, 1, 0, 1)
-
+	var/list/range = hear(get_range, T)
+	for(var/I in range)
+		if(ismob(I))
+			hear |= recursive_content_check(I, hear, 3, 1, 0, include_mobs, include_objects)
+			if(include_mobs)
+				var/mob/M = I
+				if(M.client)
+					hear += M
+		else if(istype(I,/obj/))
+			hear |= recursive_content_check(I, hear, 3, 1, 0, include_mobs, include_objects)
+			if(include_objects)
+				hear += I
 	return hear
 
+// Alternative to get_mobs_or_objects_in_view which only considers mobs and "listening" objects.
+/proc/get_listeners_in_range(turf/center, range, list/mobs, list/objs, check_ghosts=FALSE)
+	var/list/hearturfs = list()
+	FOR_DVIEW(var/turf/T, range, center, INVISIBILITY_MAXIMUM)
+		hearturfs[T] = TRUE
+		for(var/mob/M in T)
+			mobs += M
+	END_FOR_DVIEW
 
+	for(var/mob/M in global.player_list)
+		if(check_ghosts && M.stat == DEAD)
+			mobs |= M
+		else if(hearturfs[get_turf(M)])
+			mobs |= M
+
+	for(var/obj/O in global.listening_objects)
+		if(hearturfs[get_turf(O)])
+			objs += O
+
+/proc/inLineOfSight(X1,Y1,X2,Y2,Z=1,PX1=16.5,PY1=16.5,PX2=16.5,PY2=16.5)
+	var/turf/T
+	if(X1==X2)
+		if(Y1==Y2)
+			return 1 //Light cannot be blocked on same tile
+		else
+			var/s = SIGN(Y2-Y1)
+			Y1+=s
+			while(Y1!=Y2)
+				T=locate(X1,Y1,Z)
+				if(T.opacity)
+					return 0
+				Y1+=s
+	else
+		var/m=(32*(Y2-Y1)+(PY2-PY1))/(32*(X2-X1)+(PX2-PX1))
+		var/b=(Y1+PY1/32-0.015625)-m*(X1+PX1/32-0.015625) //In tiles
+		var/signX = SIGN(X2-X1)
+		var/signY = SIGN(Y2-Y1)
+		if(X1<X2)
+			b+=m
+		while(X1!=X2 || Y1!=Y2)
+			if(round(m*X1+b-Y1))
+				Y1+=signY //Line exits tile vertically
+			else
+				X1+=signX //Line exits tile horizontally
+			T=locate(X1,Y1,Z)
+			if(T.opacity)
+				return 0
+	return 1
+
+/proc/isInSight(var/atom/A, var/atom/B)
+	var/turf/Aturf = get_turf(A)
+	var/turf/Bturf = get_turf(B)
+
+	if(!Aturf || !Bturf)
+		return 0
+
+	if(inLineOfSight(Aturf.x,Aturf.y, Bturf.x,Bturf.y,Aturf.z))
+		return 1
+
+	else
+		return 0
+
+
+/proc/MixColors(const/list/colors)
+	switch(length(colors))
+		if(1)
+			return colors[1]
+		if(2)
+			return BlendHSV(colors[1], colors[2], 0.5)
+	var/list/reds = list()
+	var/list/blues = list()
+	var/list/greens = list()
+	var/list/weights = list()
+
+	for (var/i = 0, ++i <= colors.len)
+		reds.Add(HEX_RED(colors[i]))
+		blues.Add(HEX_BLUE(colors[i]))
+		greens.Add(HEX_GREEN(colors[i]))
+		weights.Add(1)
+
+	var/r = mixOneColor(weights, reds)
+	var/g = mixOneColor(weights, greens)
+	var/b = mixOneColor(weights, blues)
+	return rgb(r,g,b)
+
+/proc/mixOneColor(var/list/weight, var/list/color)
+	if (!weight || !color || length(weight)!=length(color))
+		return 0
+
+	var/contents = length(weight)
+	var/i
+
+	//normalize weights
+	var/listsum = 0
+	for(i=1; i<=contents; i++)
+		listsum += weight[i]
+	for(i=1; i<=contents; i++)
+		weight[i] /= listsum
+
+	//mix them
+	var/mixedcolor = 0
+	for(i=1; i<=contents; i++)
+		mixedcolor += weight[i]*color[i]
+	mixedcolor = round(mixedcolor)
+
+	//until someone writes a formal proof for this algorithm, let's keep this in
+//	if(mixedcolor<0x00 || mixedcolor>0xFF)
+//		return 0
+	//that's not the kind of operation we are running here, nerd
+	mixedcolor=min(max(mixedcolor,0),255)
+
+	return mixedcolor
+
+/// ! THIS FUNCTION IS DEPRECIATED. IT IS ONLY USED IN ONE PLACE. DON'T USE IT ANYMORE>
 /proc/get_mobs_in_radio_ranges(var/list/obj/item/device/radio/radios)
 
 	set background = 1
@@ -197,53 +306,6 @@
 				if(speaker_coverage[ear] || (istype(M, /mob/dead/observer) && (M.client) && (M.client.prefs.toggles & CHAT_GHOSTRADIO)))
 					. |= M		// Since we're already looping through mobs, why bother using |= ? This only slows things down.
 	return .
-
-#define SIGN(X) ((X<0)?-1:1)
-
-proc
-	inLineOfSight(X1,Y1,X2,Y2,Z=1,PX1=16.5,PY1=16.5,PX2=16.5,PY2=16.5)
-		var/turf/T
-		if(X1==X2)
-			if(Y1==Y2)
-				return 1 //Light cannot be blocked on same tile
-			else
-				var/s = SIGN(Y2-Y1)
-				Y1+=s
-				while(Y1!=Y2)
-					T=locate(X1,Y1,Z)
-					if(T.opacity)
-						return 0
-					Y1+=s
-		else
-			var/m=(32*(Y2-Y1)+(PY2-PY1))/(32*(X2-X1)+(PX2-PX1))
-			var/b=(Y1+PY1/32-0.015625)-m*(X1+PX1/32-0.015625) //In tiles
-			var/signX = SIGN(X2-X1)
-			var/signY = SIGN(Y2-Y1)
-			if(X1<X2)
-				b+=m
-			while(X1!=X2 || Y1!=Y2)
-				if(round(m*X1+b-Y1))
-					Y1+=signY //Line exits tile vertically
-				else
-					X1+=signX //Line exits tile horizontally
-				T=locate(X1,Y1,Z)
-				if(T.opacity)
-					return 0
-		return 1
-#undef SIGN
-
-proc/isInSight(var/atom/A, var/atom/B)
-	var/turf/Aturf = get_turf(A)
-	var/turf/Bturf = get_turf(B)
-
-	if(!Aturf || !Bturf)
-		return 0
-
-	if(inLineOfSight(Aturf.x,Aturf.y, Bturf.x,Bturf.y,Aturf.z))
-		return 1
-
-	else
-		return 0
 
 /proc/get_cardinal_step_away(atom/start, atom/finish) //returns the position of a step from start away from finish, in one of the cardinal directions
 	//returns only NORTH, SOUTH, EAST, or WEST

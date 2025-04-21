@@ -214,14 +214,33 @@
 
 /mob/proc/get_item_by_slot(slot_id)
 	switch(slot_id)
+		if(slot_back)
+			return back
+		if(slot_wear_mask)
+			return wear_mask
+		if(slot_handcuffed)
+			return handcuffed
+		if(slot_legcuffed)
+			return legcuffed
 		if(slot_l_hand)
 			return l_hand
 		if(slot_r_hand)
 			return r_hand
 	return null
 
+/mob/proc/grab_restrained()
+	for (var/obj/item/grab/grab as anything in grabbed_by)
+		if(grab.restrains())
+			return TRUE
+
 /mob/proc/restrained()
-	return
+	if(get_item_by_slot(slot_handcuffed))
+		return TRUE
+	if(grab_restrained())
+		return TRUE
+	if (istype(get_item_by_slot(slot_wear_suit), /obj/item/clothing/suit/straight_jacket))
+		return TRUE
+	return FALSE
 
 //This proc is called whenever someone clicks an inventory ui slot.
 /mob/proc/attack_ui(slot)
@@ -1239,3 +1258,67 @@ note dizziness decrements automatically in the mob's Life() proc.
 
 /mob/get_overhead_text_y_offset()
 	return offset_overhead_text_y
+
+/mob/proc/handle_reading_literacy(var/mob/user, var/text_content, var/skip_delays, var/digital = FALSE)
+	if(!skip_delays)
+		to_chat(src, SPAN_WARNING("You can't make heads or tails of the words."))
+	. = stars(text_content, 5)
+
+/mob/proc/handle_writing_literacy(var/mob/user, var/text_content, var/skip_delays)
+	if(!skip_delays)
+		to_chat(src, SPAN_WARNING("You scrawl down some meaningless lines."))
+	. = stars(text_content, 5)
+
+
+#define UNBUCKLED 0
+#define PARTIALLY_BUCKLED 1
+#define FULLY_BUCKLED 2
+/mob/proc/buckled()
+	// Preliminary work for a future buckle rewrite,
+	// where one might be fully restrained (like an elecrical chair), or merely secured (shuttle chair, keeping you safe but not otherwise restrained from acting)
+	if(!buckled)
+		return UNBUCKLED
+	return restrained() ? FULLY_BUCKLED : PARTIALLY_BUCKLED
+
+///mob/proc/is_blind()
+//	return (has_genetic_condition(GENE_COND_BLINDED) || incapacitated(INCAPACITATION_KNOCKOUT) || HAS_STATUS(src, STAT_BLIND))
+
+///mob/proc/is_deaf()
+//	return (has_genetic_condition(GENE_COND_DEAFENED) || incapacitated(INCAPACITATION_KNOCKOUT) || HAS_STATUS(src, STAT_DEAF))
+
+/mob/proc/is_physically_disabled()
+	return incapacitated(INCAPACITATION_DISABLED)
+
+/mob/proc/cannot_stand()
+	return incapacitated(INCAPACITATION_KNOCKDOWN)
+
+/mob/living/incapacitated(var/incapacitation_flags = INCAPACITATION_DEFAULT)
+	. = ..()
+	if(!.)
+		if((incapacitation_flags & INCAPACITATION_STUNNED)    && stunned)
+			return TRUE
+		if((incapacitation_flags & INCAPACITATION_FORCELYING) && weakened)
+			return TRUE
+		if((incapacitation_flags & INCAPACITATION_KNOCKOUT)   && (paralysis || sleeping))
+			return TRUE
+		if((incapacitation_flags & INCAPACITATION_WEAKENED)   && weakened)
+			return TRUE
+
+/mob/proc/incapacitated(var/incapacitation_flags = INCAPACITATION_DEFAULT)
+	if((incapacitation_flags & INCAPACITATION_FORCELYING) && LAZYLEN(pinned))
+		return TRUE
+	if((incapacitation_flags & INCAPACITATION_RESTRAINED) && restrained())
+		return TRUE
+	if((incapacitation_flags & INCAPACITATION_KNOCKOUT) && (stat || (status_flags & FAKEDEATH)))
+		return TRUE
+	if((incapacitation_flags & (INCAPACITATION_BUCKLED_PARTIALLY|INCAPACITATION_BUCKLED_FULLY)))
+		var/buckling = buckled()
+		if(buckling >= PARTIALLY_BUCKLED && (incapacitation_flags & INCAPACITATION_BUCKLED_PARTIALLY))
+			return TRUE
+		if(buckling == FULLY_BUCKLED && (incapacitation_flags & INCAPACITATION_BUCKLED_FULLY))
+			return TRUE
+	return FALSE
+
+#undef UNBUCKLED
+#undef PARTIALLY_BUCKLED
+#undef FULLY_BUCKLED

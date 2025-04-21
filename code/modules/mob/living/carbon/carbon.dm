@@ -530,20 +530,7 @@ var/const/GALOSHES_DONT_HELP = 8
     loc.handle_fall(src, forced)//it's loc so it doesn't call the mob's handle_fall which does nothing
 
 /mob/living/carbon/get_item_by_slot(slot_id)
-	switch(slot_id)
-		if(slot_back)
-			return back
-		if(slot_wear_mask)
-			return wear_mask
-		if(slot_handcuffed)
-			return handcuffed
-		if(slot_legcuffed)
-			return legcuffed
-		if(slot_l_hand)
-			return l_hand
-		if(slot_r_hand)
-			return r_hand
-	return null
+	. = ..()
 
 /mob/living/carbon/proc/update_handedness()
 	if(dom_hand == AMBIDEXTROUS)//Don't bother checking the rest of this shit if we're ambidextrous.

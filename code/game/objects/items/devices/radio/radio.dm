@@ -657,7 +657,7 @@ var/GLOBAL_RADIO_TYPE = 1 // radio type to use
 
 	var/range = receive_range(freq, level)
 	if(range > -1)
-		return get_mobs_in_view(canhear_range, src)
+		return get_mobs_or_objects_in_view(canhear_range, src, include_mobs = TRUE, include_objects = FALSE)
 
 
 /obj/item/device/radio/examine()

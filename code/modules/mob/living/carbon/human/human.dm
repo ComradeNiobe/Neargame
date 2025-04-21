@@ -1760,3 +1760,31 @@ mob/living/carbon/human/Destroy()
 	if(src.vice?.name == name)
 		return 1
 	return 0
+
+/mob/living/carbon/human/handle_reading_literacy(var/mob/user, var/text_content, var/skip_delays, var/digital = FALSE)
+	if(!check_perk(/datum/perk/illiterate) && my_stats.get_stat(STAT_IN) >= 8)
+		. = text_content
+	else
+		if(!skip_delays)
+			to_chat(src, SPAN_NOTICE("You scan the writing..."))
+			if(user != src)
+				to_chat(user, SPAN_NOTICE("\The [src] scans the writing..."))
+		if(my_stats.get_stat(STAT_IN) >= 8)
+			if(skip_delays || do_mob(user, src, 1 SECOND))
+				. = stars(text_content, 85)
+		else if(skip_delays || do_mob(user, src, 3 SECONDS))
+			. = ..()
+
+/mob/living/carbon/human/handle_writing_literacy(var/mob/user, var/text_content, var/skip_delays)
+	if(!check_perk(/datum/perk/illiterate) && my_stats.get_stat(STAT_IN) >= 8)
+		. = text_content
+	else
+		if(!skip_delays)
+			to_chat(src, SPAN_NOTICE("You write laboriously..."))
+			if(user != src)
+				to_chat(user, SPAN_NOTICE("\The [src] writes laboriously..."))
+		if(my_stats.get_stat(STAT_IN) >= 8)
+			if(skip_delays || do_after(src, 3 SECONDS, user))
+				. = stars(text_content, 85)
+		else if(skip_delays || do_after(src, 5 SECONDS, user))
+			. = ..()

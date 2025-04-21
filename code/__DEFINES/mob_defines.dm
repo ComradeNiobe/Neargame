@@ -3,17 +3,16 @@
 #define UNCONSCIOUS 1
 #define DEAD        2
 
-// Bitflags defining which status effects could be or are inflicted on a mob.
-#define CANSTUN     0x1
-#define CANWEAKEN   0x2
-#define CANPARALYSE 0x4
-#define CANPUSH     0x8
-#define LEAPING     0x10
-#define PASSEMOTES  0x32    // Mob has a cortical borer or holders inside of it that need to see emotes.
-#define GODMODE     0x1000
-#define FAKEDEATH   0x2000  // Replaces stuff like changeling.changeling_fakedeath.
-#define NO_ANTAG    0x4000  // Players are restricted from gaining antag roles when occupying this mob
-#define XENO_HOST   0x8000  // Tracks whether we're gonna be a baby alien's mummy.
+// Bitflags defining which status conditions could be or are inflicted on a mob.
+#define CANSTUN      BITFLAG(0)
+#define CANWEAKEN    BITFLAG(1)
+#define CANPARALYSE  BITFLAG(2)
+#define CANPUSH      BITFLAG(3)
+#define PASSEMOTES   BITFLAG(4) // Mob has a holder inside of it that need to see emotes.
+#define GODMODE      BITFLAG(5)
+#define FAKEDEATH    BITFLAG(6)
+#define NO_ANTAG     BITFLAG(7) // Players are restricted from gaining antag roles when occupying this mob
+#define XENO_HOST	 BITFLAG(8)
 
 // Grab levels.
 #define GRAB_PASSIVE    1
@@ -25,10 +24,10 @@
 #define GRAB_STRANGLE       "strangle"
 #define GRAB_WRENCH         "wrench"
 
-#define BORGMESON 0x1
-#define BORGTHERM 0x2
-#define BORGXRAY  0x4
-#define BORGMATERIAL  8
+#define BORGMESON    BITFLAG(0)
+#define BORGTHERM    BITFLAG(1)
+#define BORGXRAY     BITFLAG(2)
+#define BORGMATERIAL BITFLAG(3)
 
 #define HOSTILE_STANCE_IDLE      1
 #define HOSTILE_STANCE_ALERT     2
@@ -140,18 +139,21 @@
 #define DRONE_SPAWN_DELAY  round(config.respawn_delay / 3)
 
 // Incapacitation flags, used by the mob/proc/incapacitated() proc
-#define INCAPACITATION_NONE 0
-#define INCAPACITATION_RESTRAINED 1
-#define INCAPACITATION_BUCKLED_PARTIALLY 2
-#define INCAPACITATION_BUCKLED_FULLY 4
-#define INCAPACITATION_STUNNED 8
-#define INCAPACITATION_FORCELYING 16 //needs a better name - represents being knocked down BUT still conscious.
-#define INCAPACITATION_KNOCKOUT 32
+#define INCAPACITATION_NONE              0
+#define INCAPACITATION_RESTRAINED        BITFLAG(0)
+#define INCAPACITATION_BUCKLED_PARTIALLY BITFLAG(1)
+#define INCAPACITATION_BUCKLED_FULLY     BITFLAG(2)
+#define INCAPACITATION_STUNNED           BITFLAG(3)
+#define INCAPACITATION_FORCELYING        BITFLAG(4) //needs a better name - represents being knocked down BUT still conscious.
+#define INCAPACITATION_KNOCKOUT          BITFLAG(5)
+#define INCAPACITATION_WEAKENED          BITFLAG(6)
 
-#define INCAPACITATION_KNOCKDOWN (INCAPACITATION_KNOCKOUT|INCAPACITATION_FORCELYING)
-#define INCAPACITATION_DISABLED (INCAPACITATION_KNOCKDOWN|INCAPACITATION_STUNNED)
-#define INCAPACITATION_DEFAULT (INCAPACITATION_RESTRAINED|INCAPACITATION_BUCKLED_FULLY|INCAPACITATION_DISABLED)
-#define INCAPACITATION_ALL (~INCAPACITATION_NONE)
+#define INCAPACITATION_UNRESISTING (INCAPACITATION_KNOCKOUT|INCAPACITATION_STUNNED)
+#define INCAPACITATION_DISRUPTED   (INCAPACITATION_UNRESISTING|INCAPACITATION_WEAKENED)
+#define INCAPACITATION_KNOCKDOWN   (INCAPACITATION_KNOCKOUT|INCAPACITATION_FORCELYING)
+#define INCAPACITATION_DISABLED    (INCAPACITATION_KNOCKDOWN|INCAPACITATION_STUNNED)
+#define INCAPACITATION_DEFAULT     (INCAPACITATION_RESTRAINED|INCAPACITATION_BUCKLED_FULLY|INCAPACITATION_DISABLED)
+#define INCAPACITATION_ALL         (~INCAPACITATION_NONE)
 
 // Organs.
 #define BP_MOUTH    "mouth"

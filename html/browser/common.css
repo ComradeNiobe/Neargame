@@ -162,7 +162,7 @@ h4 {
   background: #000000;
   color: #c79d9b;
   font-size: 16px;
-  font-family: PTSansWebRegularWebRegular, Verdana, Geneva, sans-serif;
+  font-family: PTSansWebRegularWeb, Verdana, Geneva, sans-serif;
 }
 
 .uiTitleWrapper {
@@ -182,7 +182,7 @@ h4 {
 .uiContent {
   clear: both;
   padding: 8px;
-  font-family: PTSansWebRegularWebRegular, Verdana, Geneva, sans-serif;
+  font-family: PTSansWebRegularWeb, Verdana, Geneva, sans-serif;
 }
 
 .good {

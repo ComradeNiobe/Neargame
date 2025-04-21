@@ -393,13 +393,6 @@ var/MAX_EXPLOSION_RANGE = 14
 #define ENVIRON	3
 #define TOTAL	4	//for total power used only
 
-// bitflags for machine stat variable
-#define BROKEN		1
-#define NOPOWER		2
-#define POWEROFF	4		// tbd
-#define MAINT		8			// under maintaince
-#define EMPED		16		// temporary broken by EMP pulse
-
 //bitflags for door switches.
 #define OPEN	1
 #define IDSCAN	2
