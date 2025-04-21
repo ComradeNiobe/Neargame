@@ -200,7 +200,7 @@ function run_code_tests {
     run_test_fail "maps contain no layer adjustments" "rg 'layer = ' maps/nearweb/*.dmm"
     run_test_fail "maps contain no plane adjustments" "rg 'plane = ' maps/nearweb/*.dmm"
     run_test_fail "ensure nanoui templates unique" "find nano/templates/ -type f -exec md5sum {} + | sort | uniq -D -w 32 | rg nano"
-    run_test_fail "no invalid spans" "rg -En \"<\s*span\s+class\s*=\s*('[^'>]+|[^'>]+')\s*>\" **/*.dm"
+    run_test_fail "no invalid spans" "rg --auto-hybrid-regex -n \"<\s*span\s+class\s*=\s*('[^'>]+|[^'>]+')\s*>\" **/*.dm"
     run_test "code quality checks" "test/check-paths.sh"
     run_test "indentation check" "awk -f tools/indentation.awk **/*.dm"
     run_test "check changelog example unchanged" "md5sum -c - <<< '683a3e0d21b90581ae6e4c95052d461e *html/changelogs/example.yml'"
