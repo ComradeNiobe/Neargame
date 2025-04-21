@@ -842,8 +842,8 @@
 			var/damage = 10
 			visible_message("<span class='crithit'>CRITICAL FAILURE!</span> <span class='hitbold'><b>[H]</b></span><span class='hit'> fails to climb the table!</span>")
 			H.apply_damage(damage + rand(-3,15), BRUTE, "head")
-			H.apply_damage(damage + rand(-3,15), BRUTE, "r_chest")
-			H:weakened = max(H:weakened,4)
+			H.apply_damage(damage + rand(-3,15), BRUTE, "chest")
+			H.AdjustWeakened(4)
 			recoil(H)
 			H.adjustStaminaLoss(rand(10,20))
 			playsound(H.loc, 'sound/weapons/bite.ogg', 70, 0)
@@ -853,7 +853,7 @@
 				H.apply_effect(5, PARALYZE)
 				visible_message("<span class='combatglow'><b>[H]</b>< has been knocked unconscious!</span>")
 				H.ear_damage += rand(0, 3)
-				H.ear_deaf = max(H.ear_deaf,6)
+				H.ear_deaf = clamp(H.ear_deaf, 0, 6)
 			H.CU()
 			return
 		else

@@ -200,8 +200,8 @@
 					return
 			var/damage = 8
 			H.apply_damage(damage + rand(-5,5), BRUTE, "head")
-			H.apply_damage(damage + rand(-5,5), BRUTE, "r_chest")
-			H:weakened = max(H:weakened,4)
+			H.apply_damage(damage + rand(-5,5), BRUTE, "chest")
+			H.AdjustWeakened(4)
 			recoil(H)
 			H.adjustStaminaLoss(rand(2,5))
 			playsound(H.loc, 'sound/weapons/bite.ogg', 70, 0)
@@ -212,7 +212,7 @@
 			if(prob(80))
 				H.apply_effect(5, PARALYZE)
 				visible_message("<span class='combatglow'><b>[H]</b> has been knocked unconscious!</span>")
-				H.ear_deaf = max(H.ear_deaf,6)
+				H.ear_deaf = clamp(H.ear_deaf, 0, 6)
 				H.CU()
 //Appearance
 
