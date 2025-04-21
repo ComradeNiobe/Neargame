@@ -60,7 +60,6 @@
 			break
 
 	return input
-
 /**
  * Strip out the special beyond characters for \proper and \improper
  * from text that will be sent to the browser.
@@ -84,7 +83,7 @@ var/global/regex/starts_lowercase_regex = regex(@"^[a-z]")
 
 //Used for preprocessing entered text
 //Added in an additional check to alert players if input is too long
-/proc/sanitize(input, max_length = MAX_MESSAGE_LEN, encode = FALSE, trim = TRUE, extra = TRUE, ascii_only = FALSE)
+/proc/sanitize(input, max_length = MAX_MESSAGE_LEN, encode = TRUE, trim = TRUE, extra = TRUE, ascii_only = FALSE)
 	if(!input)
 		return
 
@@ -112,6 +111,14 @@ var/global/regex/starts_lowercase_regex = regex(@"^[a-z]")
 		//            https://en.wikipedia.org/wiki/Whitespace_character#Unicode
 		var/static/regex/unicode_control_chars = regex(@"[\u0001-\u0009\u000B\u000C\u000E-\u001F\u007F\u0080-\u009F\u00A0\u1680\u180E\u2000-\u200D\u2028\u2029\u202F\u205F\u2060\u3000\uFEFF]", "g")
 		input = unicode_control_chars.Replace(input, "")
+		// Allows at most one Unicode combining diacritical mark in a row
+		// Codes acquired from https://en.wikipedia.org/wiki/Combining_Diacritical_Marks
+		//                     https://en.wikipedia.org/wiki/Combining_Diacritical_Marks_Extended
+		//                     https://en.wikipedia.org/wiki/Combining_Diacritical_Marks_Supplement
+		//                     https://en.wikipedia.org/wiki/Combining_Diacritical_Marks_for_Symbols
+		//                     https://en.wikipedia.org/wiki/Combining_Half_Marks
+		var/static/regex/unicode_diacritical_marks = regex(@"([\u0300-\u036F\u1AB0-\u1ACE\u1DC0-\u1DFF\u20D0-\u20F0\uFE20-\uFE2F]){2,}", "g")
+		input = unicode_diacritical_marks.Replace(input, "$1")
 
 	if(encode)
 		// In addition to processing html, html_encode removes byond formatting codes like "\red", "\i" and other.
@@ -130,7 +137,7 @@ var/global/regex/starts_lowercase_regex = regex(@"^[a-z]")
 
 //Run sanitize(), but remove <, >, " first to prevent displaying them as &gt; &lt; &34; in some places after html_encode().
 //Best used for sanitize object names, window titles.
-//If you have a problem with sanitize() in chat, when quotes and >, < are displayed as html entites -
+//If you have a problem with sanitize() in chat, when quotes and >, < are displayed as html entities -
 //this is a problem of double-encode(when & becomes &amp;), use sanitize() with encode=0, but not the sanitize_safe()!
 /proc/sanitize_safe(input, max_length = MAX_MESSAGE_LEN, encode = TRUE, trim = TRUE, extra = TRUE, ascii_only = FALSE)
 	return sanitize(replace_characters(input, list(">"=" ","<"=" ", "\""="'")), max_length, encode, trim, extra, ascii_only)

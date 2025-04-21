@@ -1,6 +1,3 @@
-var/regex/is_http_protocol = new(regex("^https?://"))
-
-
 //Converts an icon to base64. Operates by putting the icon in the iconCache savefile,
 // exporting it as text, and then parsing the base64 from that.
 // (This relies on byond automatically storing icons in savefiles as base64)

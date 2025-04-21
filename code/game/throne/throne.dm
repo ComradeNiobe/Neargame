@@ -1,6 +1,6 @@
 var/global/energyInvestimento = 0
 /// Associated list. K: nominee -> V: nominator
-var/global/list/global.medal_nominated = list()
+var/global/list/medal_nominated = list()
 
 /obj/structure/stool/bed/chair/ThroneMid
 	name = "Baron's Throne"
@@ -47,11 +47,11 @@ var/global/list/global.medal_nominated = list()
 
 var/global/isEmergency = 0
 var/global/isMeeting = 0
-var/list/riot_essential = list("Baron", "Court Bodyguard", "Charybdis", "Squire", "Kraken", "Triton", "Hand", "Heir", "Successor", "Baroness", "Guest", "Meister", "Treasurer", "Praetor", "Vicar", "Sniffer", "Sheriff")
+var/global/list/riot_essential = list("Baron", "Court Bodyguard", "Charybdis", "Squire", "Kraken", "Triton", "Hand", "Heir", "Successor", "Baroness", "Guest", "Meister", "Treasurer", "Praetor", "Vicar", "Sniffer", "Sheriff")
 
 /obj/structure/stool/bed/chair/ThroneMid/OnTopic(mob/living/carbon/human/user, list/href_list)
 	if(user != src.buckled_mob)
-		return
+		return TOPIC_HANDLED
 
 	var/obj/item/clothing/head/caphat/crown = user.get_item_by_slot(slot_head)
 	var/list/allowedjobs = list("Baron","Hand","Count","Baroness","Heir","Successor")
@@ -60,14 +60,14 @@ var/list/riot_essential = list("Baron", "Court Bodyguard", "Charybdis", "Squire"
 			if("decree")
 				var/input = sanitize(input(usr, "Type your decree.", "Enoch's Gate Decree", "") as message|null)
 				if(!input)
-					return
-				if(is_http_protocol.Find(input))
+					return TOPIC_NOACTION
+				if(global.is_http_protocol.Find(input))
 					message_admins("[key_name(user)] attempted to send a decree with a URL in their decree.")
-					return
+					return TOPIC_NOACTION
 				if(get_dist(src, user) > 1)
-					return
+					return TOPIC_NOACTION
 				if(user.stat)
-					return
+					return TOPIC_NOACTION
 				to_chat(world, "<span class='ravenheartfortress'>Enoch's Gate Hold</span>")
 				to_chat(world, "<span class='excomm'>New Baron's decree!</span>")
 				sound_to(world, sound('sound/AI/bell_toll.ogg'))
@@ -116,13 +116,13 @@ var/list/riot_essential = list("Baron", "Court Bodyguard", "Charybdis", "Squire"
 	if(allowedjobs.Find(user.job) && user.head && crown)
 		switch(href_list["usecrown"])
 			if("declareemergency")
-				if(!isEmergency)
+				if(!global.isEmergency)
 					to_chat(world, "<span class='ravenheartfortress'>Enoch's Gate Hold</span>")
 					to_chat(world, "<span class='excomm'>New [user.job]'s decree!</span>")
 					world << sound('sound/AI/bell_toll.ogg')
 					to_chat(world, "<span class='decree'>Our glorious [user.job] declares state of EMERGENCY!</span>")
 					to_chat(world, "<br>")
-					isEmergency = 1
+					global.isEmergency = 1
 					for(var/obj/machinery/emergency_room/E in emergency_rooms)
 						if(!E.activearea.alarm_toggled)
 							E.icon_state = E.active_state
@@ -137,7 +137,7 @@ var/list/riot_essential = list("Baron", "Court Bodyguard", "Charybdis", "Squire"
 					world << sound('sound/AI/bell_toll.ogg')
 					to_chat(world, "<span class='decree'>Our glorious [user.job] undeclares state of emergency!</span>")
 					to_chat(world, "<br>")
-					isEmergency = 0
+					global.isEmergency = 0
 					for(var/obj/machinery/emergency_room/E in emergency_rooms)
 						if(E.activearea.alarm_toggled)
 							E.icon_state = initial(E.icon_state)
@@ -178,13 +178,13 @@ var/list/riot_essential = list("Baron", "Court Bodyguard", "Charybdis", "Squire"
 					to_chat(user, "<span class='combat'>What am I doing? It's too soon to end the labours.</span>")
 					return TOPIC_HANDLED
 			if("gathermeeting")
-				if(!isMeeting)
+				if(!global.isMeeting)
 					to_chat(world, "<span class='ravenheartfortress'>Enoch's Gate Hold</span>")
 					to_chat(world, "<span class='excomm'>New [user.job]'s decree!</span>")
 					world << sound('sound/AI/bell_toll.ogg')
 					to_chat(world, "<span class='decree'>Our glorious [user.job] calls for a MEETING IN THE THRONE ROOM!</span>")
 					to_chat(world, "<br>")
-					isMeeting = 1
+					global.isMeeting = 1
 				else
 					to_chat(world, "<span class='ravenheartfortress'>Enoch's Gate Hold</span>")
 					to_chat(world, "<span class='excomm'>New [user.job]'s decree!</span>")
@@ -192,19 +192,20 @@ var/list/riot_essential = list("Baron", "Court Bodyguard", "Charybdis", "Squire"
 					to_chat(world, "<span class='decree'>Our glorious [user.job] finishes the meeting!</span>")
 					to_chat(world, "<span class='decree'>Go away!</span>")
 					to_chat(world, "<br>")
-					isMeeting = 0
+					global.isMeeting = 0
 				return TOPIC_HANDLED
 
 			if("decree")
 				var/input = sanitize(input(user, "Type your decree.", "Enoch's Gate Decree", "") as message|null)
 				if(!input)
 					return
-				if(findtext(input, "http"))
-					return
+				if(global.is_http_protocol.Find(input))
+					message_admins("[key_name(user)] attempted to send a decree with a URL in their decree.")
+					return TOPIC_NOACTION
 				if(get_dist(src, user) > 1)
-					return
+					return TOPIC_NOACTION
 				if(user.stat)
-					return
+					return TOPIC_NOACTION
 				to_chat(world, "<span class='ravenheartfortress'>Enoch's Gate Hold</span>")
 				to_chat(world, "<span class='excomm'>New [user.job]'s decree!</span>")
 				world << sound('sound/AI/bell_toll.ogg')
@@ -219,9 +220,10 @@ var/list/riot_essential = list("Baron", "Court Bodyguard", "Charybdis", "Squire"
 			if("capture")
 				var/input = sanitize(input(usr, "Type your capture.", "Enoch's Gate Decree", "") as message|null)
 				if(!input)
-					return
-				if(findtext(input, "http"))
-					return
+					return TOPIC_NOACTION
+				if(global.is_http_protocol.Find(input))
+					message_admins("[key_name(user)] attempted to send a decree with a URL in their decree.")
+					return TOPIC_NOACTION
 				to_chat(world, "<span class='ravenheartfortress'>Enoch's Gate Hold</span>")
 				to_chat(world, "<span class='excomm'>New [user.job]'s decree!</span>")
 				world << sound('sound/AI/bell_toll.ogg')
@@ -232,9 +234,10 @@ var/list/riot_essential = list("Baron", "Court Bodyguard", "Charybdis", "Squire"
 			if("execute")
 				var/input = sanitize(input(usr, "Type your execution.", "Enoch's Gate Decree", "") as message|null)
 				if(!input)
-					return
-				if(findtext(input, "http"))
-					return
+					return TOPIC_NOACTION
+				if(global.is_http_protocol.Find(input))
+					message_admins("[key_name(user)] attempted to send a decree with a URL in their decree.")
+					return TOPIC_NOACTION
 				to_chat(world, "<span class='ravenheartfortress'>Enoch's Gate Hold</span>")
 				to_chat(world, "<span class='excomm'>New [user.job]'s decree!</span>")
 				world << sound('sound/AI/bell_toll.ogg')
@@ -272,7 +275,7 @@ var/list/riot_essential = list("Baron", "Court Bodyguard", "Charybdis", "Squire"
 				var/mob/living/carbon/human/G = input
 				to_chat(usr, "[G]")
 				if(!input)
-					return TOPIC_HANDLED
+					return TOPIC_NOACTION
 				G.job = "Hand"
 				fortHand = G.name
 				if(G.wear_id)
@@ -283,7 +286,7 @@ var/list/riot_essential = list("Baron", "Court Bodyguard", "Charybdis", "Squire"
 					R.access = list(meistery,smith,treasury,esculap,sanctuary,innkeep,merchant,garrison,keep,baronquarter,hump,courtroom,soilery,lifeweb,geschef, marduk, hand_access)
 					R.name = "[R.registered_name]'s Ring"
 				if(!fortHand)
-					return TOPIC_HANDLED
+					return TOPIC_NOACTION
 				to_chat(world, "<span class='ravenheartfortress'>Enoch's Gate Hold</span>")
 				to_chat(world, "<span class='excomm'>New [src.buckled_mob.job]'s decree!</span>")
 				world << sound('sound/AI/bell_toll.ogg')
@@ -404,7 +407,7 @@ var/list/riot_essential = list("Baron", "Court Bodyguard", "Charybdis", "Squire"
 										R.access = list(church, access_morgue, access_chapel_office, access_maint_tunnels, meistery,smith,treasury,esculap,sanctuary,innkeep,merchant,garrison,keep,baronquarter,hump,courtroom,soilery,lifeweb,geschef, marduk, hand_access)
 
 						else
-							return TOPIC_HANDLED
+							return TOPIC_NOACTION
 				return TOPIC_HANDLED
 
 			if("reassign")
@@ -465,7 +468,8 @@ var/list/riot_essential = list("Baron", "Court Bodyguard", "Charybdis", "Squire"
 
 			if("playsong")
 				var/song = input("What song?", "Dragon Throne") in list("Unknown (1)", "Unknown (2)", "Unknown (3)")
-				if(!song) return
+				if(!song)
+					return TOPIC_NOACTION
 				if(song == "Unknown (1)")
 					chosenSong = 'sound/music/csrio.ogg'
 				else if(song == "Unknown (2)")
@@ -511,10 +515,10 @@ var/list/riot_essential = list("Baron", "Court Bodyguard", "Charybdis", "Squire"
 
 				var/input = sanitize(input(user, "Choose someone to recieve the medal.", "Enoch's Gate Decree", "") as text|null)
 				if(!input)
-					return
+					return TOPIC_NOACTION
 				if(user.real_name == input)
 					to_chat(user, "<span class='combat'>I feel stupid...</span>")
-					return
+					return TOPIC_HANDLED
 				if(length(global.medal_nominated))
 					for(var/mob/living/carbon/human/HU in global.medal_nominated)
 						if(HU.real_name == input)
@@ -528,7 +532,7 @@ var/list/riot_essential = list("Baron", "Court Bodyguard", "Charybdis", "Squire"
 					to_chat(world, "<span class='decree'>[user.job] don't want any medal for [input]!</span>")
 					to_chat(world, "<br>")
 					global.medal_nominated.Remove(already_nominated)
-					return
+					return TOPIC_HANDLED
 
 				to_chat(world, "<span class='decree'>[input] has been rewarded! The smiths shall craft a medal for them!</span>")
 				to_chat(world, "<br>")
@@ -661,7 +665,8 @@ var/roundendready = FALSE
 	var/input = sanitize(input(usr, "Type your decree.", "Enoch's Gate Decree", "") as message|null, list("\t"="#","ÿ"="&#255;"))
 	if(!input)
 		return
-	if(findtext(input, "http"))
+	if(global.is_http_protocol.Find(input))
+		message_admins("[key_name(usr)] attempted to send a decree with a URL in their decree.")
 		return
 	to_chat(world, "<span class='ravenheartfortress'>Enoch's Gate Hold</span>")
 	to_chat(world, "<span class='excomm'>New [src.job]'s decree!</span>")

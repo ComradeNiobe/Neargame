@@ -339,6 +339,7 @@
 #include "code\__HELPERS\sorts\InsertSort.dm"
 #include "code\__HELPERS\sorts\MergeSort.dm"
 #include "code\__HELPERS\sorts\TimSort.dm"
+#include "code\_global_vars\regexes.dm"
 #include "code\_global_vars\lists\objects.dm"
 #include "code\_maps\_everlast.dm"
 #include "code\_maps\decentCharon.dm"

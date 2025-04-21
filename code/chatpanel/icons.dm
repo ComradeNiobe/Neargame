@@ -1,5 +1,3 @@
-var/regex/is_http_protocol = new(regex("^https?://"))
-
 /// Generate a filename for this asset
 /// The same asset will always lead to the same asset name
 /// (Generated names do not include file extention.)
