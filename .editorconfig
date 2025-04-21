@@ -20,3 +20,5 @@ indent_size = 4
 indent_style = space
 indent_size = 2
 
+[*.sh]
+end_of_line = lf
