@@ -75,7 +75,7 @@
 
 /obj/machinery/key_card/g/magma/attack_hand(mob/user)
 	user.setClickCooldown(DEFAULT_SLOW_COOLDOWN)
-	for(var/obj/machinery/door/airlock/orbital/gates/magma/trap_door/gate/B in range(20, src))
+	for(var/obj/machinery/door/airlock/orbital/gates/magma/trap_door/gate/B as anything in global.gate_trap_doors)
 		if(B.airlock_tag == src.airlock_tag)
 			if(B.fechado)
 				icon_state = "lever1"

@@ -1,4 +1,13 @@
+var/global/list/keep_trap_doors = list()
+var/global/list/gate_trap_doors = list()
+
 /obj/machinery/door/airlock/orbital/gates/magma/trap_door
+	name = "trap door"
+	desc = "WATCHA WATCHA WATCHA OOOOOOOOOO!!"
+	icon = 'icons/life/autodoor.dmi'
+	plane = 0
+
+/obj/machinery/door/airlock/orbital/gates/magma/trap_door/keep
 	name = "trap door"
 	desc = "WATCHA WATCHA WATCHA OOOOOOOOOO!!"
 	icon = 'icons/life/autodoor.dmi'
@@ -85,3 +94,11 @@
 	layer = 2
 	icon_state = "door_closed"
 	close()
+
+/obj/machinery/door/airlock/orbital/gates/magma/trap_door/keep/New()
+	. = ..()
+	global.keep_trap_doors |= src
+
+/obj/machinery/door/airlock/orbital/gates/magma/trap_door/gate/New()
+	. = ..()
+	global.gate_trap_doors |= src
