@@ -1,0 +1,8 @@
+html {
+  overflow: auto;
+}
+
+body {
+  font-family: PTSansWebRegular;
+  cursor: url("pointer.cur"), auto;
+}

@@ -37,7 +37,6 @@ var/interquote = pick("I hate this place and I would do anything to get out of h
 		for(var/mob/new_player/N in mob_list)
 			to_chat(N, "⠀<span class='passivebold'>A new player has joined the game</span>")
 	message_admins("<span class='notice'>Login: [key], id:[computer_id], ip:[client.address]</span>")
-	var/list/locinfo = client?.get_loc_info()
 	update_Login_details()	//handles setting lastKnownIP and computer_id for use by the ban systems as well as checking for multikeying
 	winset(src, null, "mainwindow.title='Nearweb'")//Making it so window is named what it's named.
 	if(join_motd)
@@ -55,7 +54,6 @@ var/interquote = pick("I hate this place and I would do anything to get out of h
 			to_chat(src, "Welcome, <span class='graytextbold'>[capitalize(usr.ckey)]</span>! Your reliability level: <span class='graytextbold'>Pig</span>")
 		//to_chat(src, "Press <a href='byond://?src=\ref[src];action=f12'>F12</a> find your death!")
 		to_chat(src, "Map of the week:</span> <span class='bname'><i>[currentmaprotation]</i></span>")
-		to_chat(src, "Country: <span class='bname'>[capitalize(locinfo["country"])]</span>")
 		to_chat(src, "<span class='lobby'>Nearweb</span>   <span class='lobbyy'>Story #[story_id]</span>")
 		to_chat(src, "<span class='bname'><b>Interzone:</span></b> <i>\"[interquote]\"</i>")
 	if(ticker && ticker.current_state == GAME_STATE_PLAYING && master_mode == "inspector")

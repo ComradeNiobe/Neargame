@@ -45,27 +45,30 @@ generally it would be used like so:
 
 proc/admin_proc()
 	if(!check_rights(R_ADMIN)) return
-	world << "you have enough rights!"
+	to_chat(usr, "you have enough rights!")
 
-NOTE: it checks usr! not src! So if you're checking somebody's rank in a proc which they did not call
-you will have to do something like if(client.holder.rights & R_ADMIN) yourself.
+NOTE: It checks usr by default. Supply the "user" argument if you wish to check for a specific mob.
 */
-/proc/check_rights(rights_required, show_msg=1)
-	if(usr && usr.client)
-		if(rights_required)
-			if(usr.client.holder)
-				if(rights_required & usr.client.holder.rights)
-					return 1
-				else
-					if(show_msg)
-						usr << "<font color='red'>Error: You do not have sufficient rights to do that. You require one of the following flags:[rights2text(rights_required," ")].</font>"
+/proc/check_rights(rights_required, show_msg=1, var/client/C = usr)
+	if(ismob(C))
+		var/mob/M = C
+		C = M.client
+	if(!C)
+		return FALSE
+	if(!C.holder)
+		if(show_msg)
+			to_chat(C, "<span class='warning'>Error: You are not an admin.</span>")
+		return FALSE
+
+	if(rights_required)
+		if(rights_required & C.holder.rights)
+			return TRUE
 		else
-			if(usr.client.holder)
-				return 1
-			else
-				if(show_msg)
-					usr << "<font color='red'>Error: You are not an admin.</font>"
-	return 0
+			if(show_msg)
+				to_chat(C, "<span class='warning'>Error: You do not have sufficient rights to do that. You require one of the following flags:[rights2text(rights_required," ")].</span>")
+			return FALSE
+	else
+		return TRUE
 
 //probably a bit iffy - will hopefully figure out a better solution
 /proc/check_if_greater_rights_than(client/other)

@@ -66,6 +66,7 @@ var/list/admin_verbs_admin = list(
 	/client/proc/TogglePrivateParty,
 	/client/proc/ReloadKeys,
 	/client/proc/fyutha,
+	/client/proc/who,
 )
 
 var/list/admin_verbs_ban = list(
@@ -839,3 +840,58 @@ var/list/admin_verbs_mod = list(
 		shell("node nodejs/discordhookiz1close.js")
 	spawn(30)
 		shutdown()
+
+/client/proc/who()
+	set category = "Admin"
+	set name = "Who"
+	set desc = "Admin Who"
+	if(!check_rights(R_ADMIN))
+		return
+
+	var/no_country = "https://cdn.imgchest.com/files/y8xcnwppa64.png"
+	var/mills = world.time // 1/10 of a second, not real milliseconds but whatever
+	//var/secs = ((mills % 36000) % 600) / 10 //Not really needed, but I'll leave it here for refrence.. or something
+	var/mins = (mills % 36000) / 600
+	var/hours = mills / 36000
+
+	var/list/dat = list()
+
+	dat += "<body><table width=800 border = 1>"
+	dat += "<tr class = 'D3'>"
+	dat += "<th><B>Addict</B> </th>"
+	dat += "<th><B>Registered</B></th>"
+	dat += "<th><B>BYOND Version</B></th>"
+	dat += "<th><B>Achievements</B></th>"
+	dat += "<th><B>Rounds Played</B></th>"
+	dat += "</tr>"
+
+	for(var/client/C in clients)
+		dat += "<tr class = 'D2'>"
+		if(C.ckey in global.guardianlist)
+			C.relevancy_color = "#0a041f"
+			dat += "<td>\t<font color='[C.relevancy_color]'><img src='[no_country]' width='20' height='20'><b>[C.key]</b></font></td>"
+		if((C.ckey in global.access_comrade) || (C.ckey in global.access_villain))
+			C.relevancy_color = "#107710"
+			dat += "<td>\t<font color='[C.relevancy_color]'><img src='[no_country]' width='20' height='20'>[C.key]</font></td>"
+		if(C.ckey in global.access_pigplus)
+			C.relevancy_color = "#bbbbbb"
+			dat += "<td><b>\t<font color='[C.relevancy_color]'><img src='[no_country]' width='20' height='20'>[C.key]</font></b></td>"
+
+		if(!C.relevancy_color)
+			C.relevancy_color = "#bbbbbb"
+			dat += "<td>\t<font color='[C.relevancy_color]'><img src='[no_country]' width='20' height='20'><small>[C.key]</small></font></td>"
+
+		C.InvitedBy ? (dat += "<td>\t[C.InvitedBy]</td>") : (dat += "<td>\t[C.JoinDate]</td>")
+
+		dat += "<td>\t[C.byond_version]/[C.byond_build]</td>"
+		dat += "<td>\t<a href='byond://?src=\ref[src];achievements=\ref[C]'>Check</a></td>"
+		dat += "<td>\t[C.prefs?.roundsplayed]</td>"
+		dat += "</tr>"
+	dat += "</table>"
+	dat += "<BR><b>[length(clients)] players online.</b>"
+	dat += "<BR><b>Round Duration: [round(hours)]h [round(mins)]m</b>"
+
+	var/datum/browser/popup = new(usr, "adminwhoscreen", "WHO+", 850, 520)
+	popup.set_content(JOINTEXT(dat))
+	popup.add_stylesheet("who", 'html/browser/who.css')
+	popup.open()
