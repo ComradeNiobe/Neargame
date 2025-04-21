@@ -32,7 +32,7 @@
 @font-face {
   font-family: 'PTSansWebRegular';
   font-size: 126%;
-  src: url(PTSANS.woff2) format("woff2");
+  src: url('./PTSANS.woff2') format("woff2");
 }
 
 @font-face {
@@ -68,7 +68,7 @@ body {
   color: #909090;
   cursor: url("https://lfwb.ru/Icons/pointer.cur"), auto;
   word-wrap: break-word;
-  font-family: PTSANS, sans-serif;
+  font-family: PTSansWebRegular, sans-serif;
 }
 
 * {
@@ -80,7 +80,7 @@ body {
   background: url("chatshadow.png") 0px 0px repeat-x, url("chatbg.png");
   background-attachment: fixed;
   overflow: hidden;
-  font-family: PTSANS, sans-serif;
+  font-family: PTSansWebRegular, sans-serif;
   height: 96%;
   position: relative;
   overflow: hidden;
