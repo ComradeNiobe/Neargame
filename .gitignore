@@ -1,8 +1,66 @@
+# ignore misc BYOND files
 *.log
 *.int
 *.rsc
 *.dmb
 *.lk
+*.backup
+*.before
+data/
+dmdoc/
+cfg/
+build_log.txt
+use_map
+stopserver
+reboot_called
+atupdate
+
+# ignore config, but not subdirs
+!config/*/
+config/*
+sql/test_db
+
+# misc OS garbage
+Thumbs.db
+Thumbs.db:encryptable
+.DS_Store
+
+# vscode
+.vscode/*
+*.code-workspace
+.history
+
+# git/kdiff4
+*.orig
+
+# swap
+[._]*.s[a-v][a-z]
+[._]*.sw[a-p]
+[._]s[a-v][a-z]
+[._]sw[a-p]
+
+# session
+Session.vim
+
+# temporary
+.netrwhist
+*~
+
+# auto-generated tag files
+tags
+
+# ignore built libs
+lib/*.dll
+lib/*.so
+/prof.dll
+
+# python
+*.pyc
+__pycache__
+
+# Running OpenDream locally
+nebula.json
+
 teste.bat
 info.json
 /config/moderators.txt

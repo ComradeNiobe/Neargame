@@ -70,7 +70,6 @@ FAILED=0
 FAILED_BYNAME=()
 # Global counter of passed tests
 PASSED=0
-MAP_PATH='maps/nearweb/highwater.dmm'
 
 function msg {
     echo -e "\t\e[34mtest\e[0m: $*"
@@ -216,23 +215,32 @@ function run_code_tests {
 }
 
 function run_byond_tests {
-    msg "*** running byond tests ***"
+    msg "*** running map tests ***"
     find_byond_deps
     if [[ -z "${MAP_PATH+x}" ]]
     then exit 1
     else msg "configured map is '$MAP_PATH'"
     fi
-    cp config/example/* config/
-    cp data/secrets/example/* data/secrets/
+    cp -r config/example/* config/
+    cp -r data/secrets/example/* data/secrets/
     if [[ "$CI" == "true" ]]; then
         msg "installing BYOND"
         ./install-byond.sh || exit 1
         source $HOME/BYOND-${BYOND_MAJOR}.${BYOND_MINOR}/byond/bin/byondsetup
     fi
-    run_test "build map" "scripts/dm.sh -M$MAP_PATH nearweb.dme"
+    run_test "build map unit tests" "scripts/dm.sh -DUNIT_TEST -M$MAP_PATH nearweb.dme"
+    run_test "check no warnings in build" "grep ', 0 warnings' build_log.txt"
+    run_test "run unit tests" "DreamDaemon nearweb.dmb -invisible -trusted -core 2>&1 | tee log.txt"
+    run_test "check tests passed" "grep 'All Unit Tests Passed' log.txt"
+    run_test "check no runtimes" "grep 'Caught 0 Runtimes' log.txt"
+    run_test_fail "check no runtimes 2" "grep 'runtime error:' log.txt"
+    run_test_fail "check no scheduler failures" "grep 'Process scheduler caught exception processing' log.txt"
+    run_test_fail "check no warnings" "grep 'WARNING:' log.txt"
+    run_test_fail "check no errors" "grep 'ERROR:' log.txt"
 }
 
 function run_all_tests {
+    run_code_tests
     run_byond_tests
 }
 
@@ -250,7 +258,7 @@ function run_configured_tests {
             run_byond_tests
             ;;
         "CODE")
-            run_byond_tests
+            run_code_tests
             ;;
         *)
             fail "invalid option for \$TEST: '$TEST'"

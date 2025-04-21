@@ -59,6 +59,7 @@ var/list/mob_phone_sounds = list('sound/effects/mob0.ogg','sound/effects/mob1.og
 
 	QDEL_NULL(rimcard)
 
+// TODO: Replace this slop with a repeating timer
 /obj/item/device/cellphone/proc/CheckCallRing()
 	ringagain
 	if(ringing && !src.rimcard.in_call)
