@@ -1,4 +1,4 @@
-/datum/hud/proc/human_hud_luna(var/ui_style='icons/mob/screen1_Midnight.dmi', var/ui_color = "#ffffff", var/ui_alpha = 255)
+/datum/hud/proc/human_hud_luna(var/ui_style='icons/mob/screen1_White.dmi', var/ui_color = "#ffffff", var/ui_alpha = 255)
 
 	src.adding = list()
 	src.other = list()
