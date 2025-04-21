@@ -157,7 +157,7 @@ function exec_test {
 }
 
 function find_code_deps {
-    need_cmd grep
+    need_cmd rg
     need_cmd awk
     need_cmd md5sum
 }
@@ -195,12 +195,12 @@ function run_code_tests {
     setup_python3
     shopt -s globstar
     run_test "check test workflow contains all maps" "scripts/validateTestingContainsAllMaps.sh"
-    run_test_fail "maps contain no step_[xy]" "grep 'step_[xy]' maps/nearweb/*.dmm"
-    run_test_fail "maps contain no cable dir setting" "grep 'd[12] = ' maps/nearweb/*.dmm"
-    run_test_fail "maps contain no layer adjustments" "grep 'layer = ' maps/nearweb/*.dmm"
-    run_test_fail "maps contain no plane adjustments" "grep 'plane = ' maps/nearweb/*.dmm"
-    run_test_fail "ensure nanoui templates unique" "find nano/templates/ -type f -exec md5sum {} + | sort | uniq -D -w 32 | grep nano"
-    run_test_fail "no invalid spans" "grep -En \"<\s*span\s+class\s*=\s*('[^'>]+|[^'>]+')\s*>\" **/*.dm"
+    run_test_fail "maps contain no step_[xy]" "rg 'step_[xy]' maps/nearweb/*.dmm"
+    run_test_fail "maps contain no cable dir setting" "rg 'd[12] = ' maps/nearweb/*.dmm"
+    run_test_fail "maps contain no layer adjustments" "rg 'layer = ' maps/nearweb/*.dmm"
+    run_test_fail "maps contain no plane adjustments" "rg 'plane = ' maps/nearweb/*.dmm"
+    run_test_fail "ensure nanoui templates unique" "find nano/templates/ -type f -exec md5sum {} + | sort | uniq -D -w 32 | rg nano"
+    run_test_fail "no invalid spans" "rg -En \"<\s*span\s+class\s*=\s*('[^'>]+|[^'>]+')\s*>\" **/*.dm"
     run_test "code quality checks" "test/check-paths.sh"
     run_test "indentation check" "awk -f tools/indentation.awk **/*.dm"
     run_test "check changelog example unchanged" "md5sum -c - <<< '683a3e0d21b90581ae6e4c95052d461e *html/changelogs/example.yml'"
@@ -229,14 +229,14 @@ function run_byond_tests {
         source $HOME/BYOND-${BYOND_MAJOR}.${BYOND_MINOR}/byond/bin/byondsetup
     fi
     run_test "build map unit tests" "scripts/dm.sh -DUNIT_TEST -M$MAP_PATH nearweb.dme"
-    run_test "check no warnings in build" "grep ', 0 warnings' build_log.txt"
+    run_test "check no warnings in build" "rg ', 0 warnings' build_log.txt"
     run_test "run unit tests" "DreamDaemon nearweb.dmb -invisible -trusted -core 2>&1 | tee log.txt"
-    run_test "check tests passed" "grep 'All Unit Tests Passed' log.txt"
-    run_test "check no runtimes" "grep 'Caught 0 Runtimes' log.txt"
-    run_test_fail "check no runtimes 2" "grep 'runtime error:' log.txt"
-    run_test_fail "check no scheduler failures" "grep 'Process scheduler caught exception processing' log.txt"
-    run_test_fail "check no warnings" "grep 'WARNING:' log.txt"
-    run_test_fail "check no errors" "grep 'ERROR:' log.txt"
+    run_test "check tests passed" "rg 'All Unit Tests Passed' log.txt"
+    run_test "check no runtimes" "rg 'Caught 0 Runtimes' log.txt"
+    run_test_fail "check no runtimes 2" "rg 'runtime error:' log.txt"
+    run_test_fail "check no scheduler failures" "rg 'Process scheduler caught exception processing' log.txt"
+    run_test_fail "check no warnings" "rg 'WARNING:' log.txt"
+    run_test_fail "check no errors" "rg 'ERROR:' log.txt"
 }
 
 function run_all_tests {

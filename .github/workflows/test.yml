@@ -56,7 +56,7 @@ jobs:
           path: $HOME/BYOND-${BYOND_MAJOR}.${BYOND_MINOR}
           key: ${{ runner.os }}-byond-${{ env.BYOND_MAJOR }}-${{ env.BYOND_MINOR }}
       - name: Install Dependencies
-        run: sudo apt-get install -y uchardet
+        run: sudo apt-get install -y uchardet ripgrep
       - name: Run Tests
         env:
           TEST: CODE
