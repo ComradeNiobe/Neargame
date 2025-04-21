@@ -258,8 +258,8 @@ proc/get_damage_icon_part(damage_state, body_part, var/icon/dam_icon = 'icons/mo
 		return
 
 	var/icon/artery_icon = 'icons/mob/flesh/human_bleeding_male.dmi'
-	var/image/standing_image = image('icons/mob/human.dmi',"blank")
-	var/image/lying_image = image('icons/mob/human.dmi',"blank")
+	var/image/standing_image = image('icons/neargame/zion362/mob/human.dmi',"blank")
+	var/image/lying_image = image('icons/neargame/zion362/mob/human.dmi',"blank")
 
 	if(src.gender == "male")
 		artery_icon = 'icons/mob/flesh/human_bleeding_male.dmi'
@@ -299,8 +299,8 @@ proc/get_damage_icon_part(damage_state, body_part, var/icon/dam_icon = 'icons/mo
 		overlays_standing[BANDAGE_LAYER]	= null
 		overlays_lying[BANDAGE_LAYER]		= null
 		return
-	var/image/standing_image = image('icons/mob/human.dmi',"blank")
-	var/image/lying_image = image('icons/mob/human.dmi',"blank")
+	var/image/standing_image = image('icons/neargame/zion362/mob/human.dmi',"blank")
+	var/image/lying_image = image('icons/neargame/zion362/mob/human.dmi',"blank")
 
 	if(src.gender == "male")
 		bandage_icon = 'icons/mob/flesh/bandaid_male.dmi'
@@ -517,8 +517,8 @@ proc/get_damage_icon_part(damage_state, body_part, var/icon/dam_icon = 'icons/mo
 	UpdateArteryIcon()
 	UpdateBandageIcon()
 
-	stand_icon = new(species && species.icon_template ? species.icon_template : 'icons/mob/human.dmi',"blank")
-	lying_icon = new(species && species.icon_template ? species.icon_template : 'icons/mob/human.dmi',"blank")
+	stand_icon = new(species && species.icon_template ? species.icon_template : 'icons/neargame/zion362/mob/human.dmi',"blank")
+	lying_icon = new(species && species.icon_template ? species.icon_template : 'icons/neargame/zion362/mob/human.dmi',"blank")
 
 	var/icon_key = "[species.race_key][g][s_tone]"
 	for(var/datum/organ/external/part in organs)
@@ -602,7 +602,7 @@ proc/get_damage_icon_part(damage_state, body_part, var/icon/dam_icon = 'icons/mo
 			//That part makes left and right legs drawn topmost and lowermost when human looks WEST or EAST
 			//And no change in rendering for other parts (they icon_position is 0, so goes to 'else' part)
 			if(part.icon_position&(LEFT|RIGHT))
-				var/icon/temp2 = new('icons/mob/human.dmi',"blank")
+				var/icon/temp2 = new('icons/neargame/zion362/mob/human.dmi',"blank")
 
 				temp2.Insert(new/icon(temp,dir=NORTH),dir=NORTH)
 				temp2.Insert(new/icon(temp,dir=SOUTH),dir=SOUTH)
@@ -645,7 +645,7 @@ proc/get_damage_icon_part(damage_state, body_part, var/icon/dam_icon = 'icons/mo
 	if(has_head)
 		//Eyes
 		var/datum/organ/external/head/E = get_organ("head")
-		var/icon/eye_icon = 'icons/mob/human.dmi'
+		var/icon/eye_icon = 'icons/neargame/zion362/mob/human.dmi'
 		var/icon/face_icon = 'icons/mob/flesh/human_face.dmi'
 		if(gender == FEMALE && !(FAT in mutations))
 			if(E.headwrenched)
@@ -703,7 +703,7 @@ proc/get_damage_icon_part(damage_state, body_part, var/icon/dam_icon = 'icons/mo
 		stand_icon.Blend(new /icon('icons/mob/clothing/underwear/underwear.dmi', "[underwear]_[g]_s"), ICON_OVERLAY)
 
 /*	if(undershirt>0 && undershirt < 5 && species.flags & HAS_UNDERWEAR)
-		stand_icon.Blend(new /icon('icons/mob/human.dmi', "undershirt[undershirt]_s"), ICON_OVERLAY)
+		stand_icon.Blend(new /icon('icons/neargame/zion362/mob/human.dmi', "undershirt[undershirt]_s"), ICON_OVERLAY)
 */
 	if(update_icons)
 		update_icons()
@@ -786,8 +786,8 @@ You might ask why I created this massive awful proc instead of just using multip
 If you draw the arms, sleeves and suit arms at once, there are clipping issues.
 */
 /mob/living/carbon/human/proc/update_above(var/update_icons = TRUE)
-	var/icon/above = icon('icons/mob/human.dmi',"blank")
-	var/icon/abovel = icon('icons/mob/human.dmi',"blank")
+	var/icon/above = icon('icons/neargame/zion362/mob/human.dmi',"blank")
+	var/icon/abovel = icon('icons/neargame/zion362/mob/human.dmi',"blank")
 /*	var/damage_icon
 	if(src.gender == "male")
 		damage_icon = 'icons/mob/dam_human.dmi'
@@ -819,13 +819,13 @@ If you draw the arms, sleeves and suit arms at once, there are clipping issues.
 		temp.Blend(DI, ICON_OVERLAY)
 		ltemp.Blend(LDI, ICON_OVERLAY)
 		if(part.above_layer)//If we should render to the above layer
-			var/icon/temp1 = new('icons/mob/human.dmi',"blank")
+			var/icon/temp1 = new('icons/neargame/zion362/mob/human.dmi',"blank")
 			if(part.above_layer == RIGHT)
 				temp1.Insert(new/icon(temp,dir=EAST),dir=EAST)
-				temp.Insert(new/icon('icons/mob/human.dmi',"blank"),dir=EAST)
+				temp.Insert(new/icon('icons/neargame/zion362/mob/human.dmi',"blank"),dir=EAST)
 			if(part.above_layer == LEFT)
 				temp1.Insert(new/icon(temp,dir=WEST),dir=WEST)
-				temp.Insert(new/icon('icons/mob/human.dmi',"blank"),dir=WEST)
+				temp.Insert(new/icon('icons/neargame/zion362/mob/human.dmi',"blank"),dir=WEST)
 			above.Blend(temp1, ICON_OVERLAY)
 		else
 			above.Blend(temp,ICON_OVERLAY)
@@ -1869,7 +1869,7 @@ If you draw the arms, sleeves and suit arms at once, there are clipping issues.
 
 	//Eyes
 	// Note: These used to be in update_face(), and the fact they're here will make it difficult to create a disembodied head
-	var/icon/eyes_l = new/icon('icons/mob/human.dmi', "eyes_s", dir = SOUTH)
+	var/icon/eyes_l = new/icon('icons/neargame/zion362/mob/human.dmi', "eyes_s", dir = SOUTH)
 	eyes_l.Blend(rgb(r_eyes, g_eyes, b_eyes), ICON_MULTIPLY)
 	face_lying.Blend(eyes_l, ICON_OVERLAY)
 

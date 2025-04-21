@@ -142,7 +142,7 @@ datum/preferences
 			icobase = 'icons/mob/flesh/old/human_fat_old.dmi'
 			gender = ""
 		else
-			icobase = 'icons/mob/human.dmi'
+			icobase = 'icons/neargame/zion362/mob/human.dmi'
 
 		preview_icon = new /icon(icobase, "chest[g]_s")
 		preview_icon.Blend(new /icon(icobase, "groin_[gender == FEMALE ? "f" : "m"]_s"), ICON_OVERLAY)
@@ -176,7 +176,7 @@ datum/preferences
 				preview_icon.Blend(rgb(s_tone, s_tone, s_tone), ICON_ADD)
 			else
 				preview_icon.Blend(rgb(-s_tone,  -s_tone,  -s_tone), ICON_SUBTRACT)
-		var/icon/eye_icon = 'icons/mob/human.dmi'
+		var/icon/eye_icon = 'icons/neargame/zion362/mob/human.dmi'
 		if(gender == FEMALE)
 			eye_icon = 'icons/mob/flesh/human_face_f.dmi'
 		var/icon/eyes_s = new/icon("icon" = eye_icon, "icon_state" = "eyes_s")

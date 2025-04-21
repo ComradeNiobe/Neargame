@@ -1,7 +1,7 @@
 //a gente usa datum de orgao por enquanto
 //entao por enquanto fica essa merda escrota de item aqui
 /obj/item/organ
-	icon = 'icons/mob/human.dmi'
+	icon = 'icons/neargame/zion362/mob/human.dmi'
 	var/body_part
 
 /obj/item/organ/New(loc, mob/living/carbon/human/H)
