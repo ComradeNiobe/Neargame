@@ -810,7 +810,7 @@ note dizziness decrements automatically in the mob's Life() proc.
 //Updates canmove, lying and icons. Could perhaps do with a rename but I can't think of anything to describe it.
 //Robots and brains have their own version so don't worry about them
 /mob/proc/update_canmove()
-	var/ko = weakened || paralysis || stat || (status_flags & FAKEDEATH)
+	var/ko = (weakened || paralysis || stat) || (status_flags & FAKEDEATH)
 	var/bed = !(buckled && istype(buckled, /obj/structure/stool/bed/chair))
 	if(ko || stunned)
 		drop_r_hand()
@@ -938,14 +938,13 @@ note dizziness decrements automatically in the mob's Life() proc.
 
 /mob/proc/AdjustWeakened(amount)
 	if(status_flags & CANWEAKEN)
-		weakened = max(weakened + amount,0)
+		weakened = clamp(weakened + amount, 0, 100)
 		update_canmove()	//updates lying, canmove and icons
 	return
 
 /mob/proc/Paralyse(amount)
-	if(ismonster(src)){
+	if(ismonster(src))
 		return
-	}
 	if(status_flags & CANPARALYSE)
 		facing_dir = null
 		paralysis = max(max(paralysis,amount),0)
@@ -973,6 +972,12 @@ note dizziness decrements automatically in the mob's Life() proc.
 
 /mob/proc/AdjustSleeping(amount)
 	sleeping = max(sleeping + amount,0)
+	return
+
+/mob/proc/AdjustDeafness(amount)
+	if(status_flags & CANWEAKEN)
+		ear_deaf = clamp(ear_deaf + amount, 0, 200)
+		update_canmove()	//updates lying, canmove and icons
 	return
 
 /mob/proc/Resting(amount)

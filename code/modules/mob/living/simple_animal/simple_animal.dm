@@ -54,7 +54,7 @@
 	verbs -= /mob/verb/observe
 
 /mob/living/simple_animal/Destroy()
-	return ..()
+	. = ..()
 
 /mob/living/simple_animal/Login()
 	if(src && src.client)

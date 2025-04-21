@@ -61,10 +61,14 @@
 	stop_automated_movement = 1
 	wander = 0
 	var/attempt_open = 0
-	New()
-		..()
-		init_obj.Add(src)
 
+/mob/living/simple_animal/hostile/mimic/crate/New()
+	. = ..()
+	init_obj.Add(src)
+
+/mob/living/simple_animal/hostile/mimic/crate/Destroy()
+	. = ..()
+	init_obj -= src
 
 // Pickup loot
 /mob/living/simple_animal/hostile/mimic/crate/initialize()

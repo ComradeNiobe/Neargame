@@ -93,7 +93,7 @@ var/global/pipe_processing_killed = 0
 	to_chat(world, "<span class = 'messages'>1. Generating objects...</span>")
 	world.log << "Generating Objects"
 
-	for(var/atom/movable/object in init_obj)
+	for(var/atom/movable/object in global.init_obj)
 		if(!QDELETED(object))
 			object.initialize()
 		CHECK_SLEEP_MASTER
@@ -101,14 +101,14 @@ var/global/pipe_processing_killed = 0
 	to_chat(world, "<span class = 'messages'>2. Initializing tunnel network...</span>")
 	world.log << "Initializing tunnel network"
 
-	for(var/obj/machinery/atmospherics/machine in machines)
+	for(var/obj/machinery/atmospherics/machine in global.machines)
 		machine.build_network()
 		CHECK_SLEEP_MASTER
 
 	to_chat(world, "<span class = 'messages'>3. Initializing the lifeweb...</span>")
 	world.log << "Initalizing Atmos Objects"
 
-	for(var/obj/machinery/atmospherics/unary/U in machines)
+	for(var/obj/machinery/atmospherics/unary/U in global.machines)
 		CHECK_SLEEP_MASTER
 		if(istype(U, /obj/machinery/atmospherics/unary/vent_pump))
 			var/obj/machinery/atmospherics/unary/vent_pump/T = U
