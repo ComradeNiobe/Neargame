@@ -10,7 +10,7 @@
 	a_intent = "hurt"
 	var/cycle_pause = 15
 	var/list/zone_allowed = list("chest", "head", "l_arm", "r_arm", "groin")
-	icon = 'icons/mob/human.dmi'
+	icon = 'icons/neargame/zion362/mob/human.dmi'
 
 	var/rushing = 0
 	var/stamina = 100

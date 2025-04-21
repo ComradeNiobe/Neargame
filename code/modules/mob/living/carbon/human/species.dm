@@ -7,7 +7,7 @@
 	var/name                                             // Species name.
 	var/name_plural
 
-	var/icobase = 'icons/mob/human.dmi'    // Normal icon set.
+	var/icobase = 'icons/neargame/zion362/mob/human.dmi'    // Normal icon set.
 	var/deform = 'icons/mob/human_races/r_def_human.dmi' // Mutated icon set.
 	var/icon/damage_icon = 'icons/mob/dam_human.dmi'
 	var/prone_icon                                       // If set, draws this from icobase when mob is prone.

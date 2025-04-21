@@ -361,13 +361,12 @@ proc/tg_list2text(list/list, glue=",")
 
 /proc/ui_style2icon(ui_style)
 	switch(ui_style)
-		if("Orange")
-			return 'icons/mob/screen1_midnight.dmi'
 		if("Luna")
 			return 'icons/mob/screen1_White.dmi'
-//		if("Orange")	return 'icons/mob/screen1_Orange.dmi'
-//		if("Midnight")	return 'icons/mob/screen1_Midnight.dmi'
-		else			return 'icons/mob/screen2_Midnight.dmi'
+		if("Orange")
+			return 'icons/mob/screen1_tg_ui.dmi'
+		else
+			return 'icons/mob/screen2_tg_ui.dmi'
 
 
 /proc/stat2text(var/stat)

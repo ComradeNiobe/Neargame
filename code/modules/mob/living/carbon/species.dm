@@ -5,7 +5,7 @@
 /datum/species
 	var/name                     // Species name.
 
-	var/icobase = 'icons/mob/human_races/r_human.dmi'    // Normal icon set.
+	var/icobase = 'icons/neargame/zion362/mob/human.dmi'    // Normal icon set.
 	var/deform = 'icons/mob/human_races/r_def_human.dmi' // Mutated icon set.
 	var/eyes = "eyes_s"                                  // Icon for eyes.
 

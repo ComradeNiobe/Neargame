@@ -1,87 +1,69 @@
-# baystation12
 
-[Website](http://baystation12.net/) - [Code](http://github.com/Baystation12/Baystation12/) - [IRC](http://baystation12.net/forums/viewtopic.php?f=12&t=5088)
+<p align="center">
+ <img width="450px" src="https://cdn.imgchest.com/files/7lxcpw6jda7.png" align="center" alt="Neargame Stats" />
+ <h1 align="center">NEARGAME</h1>
+ <h2 align="center">A Machine For Pigs</h2>
+</p>
 
----
+<p align="center">
+    <a href="https://github.com/ComradeNiobe/Neargame/graphs/contributors">
+      <img alt="GitHub Contributors" src="https://img.shields.io/github/contributors/ComradeNiobe/Neargame" />
+    </a>
+    <a href="https://github.com/ComradeNiobe/Neargame/issues">
+      <img alt="Issues" src="https://img.shields.io/github/issues/ComradeNiobe/Neargame?color=0088ff" />
+    </a>
+    <a href="https://github.com/ComradeNiobe/Neargame/pulls">
+      <img alt="GitHub pull requests" src="https://img.shields.io/github/issues-pr/ComradeNiobe/Neargame?color=0088ff" />
+    </a>
+</p>
 
-### LICENSE
-Baystation is licensed under the GNU Affero General Public License version 3 as of ___ January 2015 any new contributions are licensed under the AGPL as well, if you wish to submit code under the GPL v3 then commits and files must be marked as so in comments.  If you wish to use our code in a closed source manner you may use anything before commit ________ which is licensed under GPL v3.  The major change here is that if you host a server using any code licensed under AGPL you are required to provide full source code for your servers users as well including addons and modifications you have made.
+<p align="center">
+	<a href="https://github.com/ComradeNiobe/Neargame/actions/workflows/ci_suite.yml">
+      <img alt="BYOND Build" src="https://github.com/ComradeNiobe/Neargame/actions/workflows/ci_suite.yml/badge.svg" />
+    </a>
+</p>
 
-See [this](https://www.gnu.org/licenses/why-affero-gpl.html) for more information.
+<div align="center">
 
-### GETTING THE CODE
-The simplest way to obtain the code is using the github .zip feature.
+| Website                   | Link                                           |
+|---------------------------|------------------------------------------------|
+| Discord                   | [discord.gg/wYHkRTYc5J](https://discord.gg/wYHkRTYc5J) |
 
-Click [here](https://github.com/Baystation12/Baystation12/archive/master.zip) to get the latest code as a .zip file, then unzip it to wherever you want.
+</div>
 
-The more complicated and easier to update method is using git.  You'll need to download git or some client from [here](http://git-scm.com/).  When that's installed, right click in any folder and click on "Git Bash".  When that opens, type in:
 
-    git clone https://github.com/Baystation12/Baystation12.git
+<h1>
+	<a href="https://github.com/ComradeNiobe/Neargame/blob/dev/CONTRIBUTING.md">
+		Contribution Guidelines
+	</a>
+</h1>
 
-(hint: hold down ctrl and press insert to paste into git bash)
 
-This will take a while to download, but it provides an easier method for updating.
+# LICENSE
 
-Once the repository is in place, run this command:
-```bash
-cd Baystation12
-git update-index --assume-unchanged baystation12.int
-```
-Now git will ignore changes to the file baystation12.int.
+## Neargame
 
-### INSTALLATION
+All original code and assets of this repository are under the [GNU Affero General Public License v3.0](https://www.gnu.org/licenses/agpl-3.0.en.html) unless otherwise indicated.
 
-First-time installation should be fairly straightforward.  First, you'll need BYOND installed.  You can get it from [here](http://www.byond.com/).
+## Neargame - Proprietary
 
-This is a sourcecode-only release, so the next step is to compile the server files.  Open baystation12.dme by double-clicking it, open the Build menu, and click compile.  This'll take a little while, and if everything's done right you'll get a message like this:
+The following code and assets are under a custom proprietary license as per author or client's wishes.
 
-    saving baystation12.dmb (DEBUG mode)
+| Reference                                           | Author   |   License  |
+|-----------------------------------------------------|----------|------------|
+| [Assets](https://github.com/ComradeNiobe/Neargame/blob/dev/icons/neargame/zion362)                                        | Zion362 | [LICENSE.md](https://github.com/ComradeNiobe/Neargame/blob/dev/icons/neargame/zion362/LICENSE.md)|
 
-    baystation12.dmb - 0 errors, 0 warnings
 
-If you see any errors or warnings, something has gone wrong - possibly a corrupt download or the files extracted wrong, or a code issue on the main repo.  Ask on IRC.
+## Baystation12
 
-Once that's done, open up the config folder.  You'll want to edit config.txt to set the probabilities for different gamemodes in Secret and to set your server location so that all your players don't get disconnected at the end of each round.  It's recommended you don't turn on the gamemodes with probability 0, as they have various issues and aren't currently being tested, so they may have unknown and bizarre bugs.
+The code for Baystation is licensed under the [GNU Affero General Public License v3](https://www.gnu.org/licenses/agpl.html), which can be found in full in [/LICENSE](/LICENSE).
 
-You'll also want to edit admins.txt to remove the default admins and add your own.  "Game Master" is the highest level of access, and the other recommended admin levels for now are "Game Admin" and "Moderator".  The format is:
+Code with a git authorship date prior to `1420675200 +0000` (2015/01/08 00:00 GMT) is licensed under the GNU General Public License version 3, which can be found in full in [/GPL3.txt](/GPL3.txt)
 
-    byondkey - Rank
+All code where the authorship dates on or after `1420675200 +0000` is assumed to be licensed under AGPL v3, if you wish to license under GPL v3 please make this clear in the commit message and any added files.
 
-where the BYOND key must be in lowercase and the admin rank must be properly capitalised.  There are a bunch more admin ranks, but these two should be enough for most servers, assuming you have trustworthy admins.
+If you wish to develop and host this codebase in a closed source manner you may use all commits prior to `1420675200 +0000`, which are licensed under GPL v3.  The major change here is that if you host a server using any code licensed under AGPLv3 you are required to provide full source code for your servers users as well including addons and modifications you have made.
 
-Finally, to start the server, run Dream Daemon and enter the path to your compiled baystation12.dmb file.  Make sure to set the port to the one you  specified in the config.txt, and set the Security box to 'Trusted'.  Then press GO and the server should start up and be ready to join.
+See [here](https://www.gnu.org/licenses/why-affero-gpl.html) for more information.
 
----
-
-### UPDATING
-
-To update an existing installation, first back up your /config and /data folders
-as these store your server configuration, player preferences and banlist.
-
-If you used the zip method, you'll need to download the zip file again and unzip it somewhere else, and then copy the /config and /data folders over.
-
-If you used the git method, you simply need to type this in to git bash:
-
-    git pull
-
-When this completes, copy over your /data and /config folders again, just in case.
-
-When you have done this, you'll need to recompile the code, but then it should work fine.
-
----
-
-### Configuration
-
-For a basic setup, simply copy every file from config/example to config.
-
----
-
-### SQL Setup
-
-The SQL backend for the library and stats tracking requires a MySQL server.  Your server details go in /config/dbconfig.txt, and the SQL schema is in /SQL/tgstation_schema.sql.  More detailed setup instructions arecoming soon, for now ask in our IRC channel.
-
----
-
-### IRC Bot Setup
-
-Included in the repo is an IRC bot capable of relaying adminhelps to a specified IRC channel/server (thanks to Skibiliano).  Instructions for bot setup are included in the /bot/ folder along with the bot/relay script itself.
+All assets including icons and sound are under a [Creative Commons 3.0 BY-SA license](https://creativecommons.org/licenses/by-sa/3.0/) unless otherwise indicated.

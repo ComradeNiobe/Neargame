@@ -63,7 +63,7 @@
 	mymob.rest.screen_loc = ui_toxin
 
 	mymob.flash = new /obj/screen()
-	mymob.flash.icon = 'icons/mob/screen1_Midnight.dmi'
+	mymob.flash.icon = 'icons/mob/screen1_tg_ui.dmi'
 	mymob.flash.icon_state = "blank"
 	mymob.flash.name = "flash"
 	mymob.flash.mouse_opacity = 0

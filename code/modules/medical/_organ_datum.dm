@@ -20,7 +20,7 @@
 		return 0
 
 /datum/organ/proc/get_icon(var/icon/race_icon, var/icon/deform_icon)
-	return icon('icons/mob/human.dmi',"blank")
+	return icon('icons/neargame/zion362/mob/human.dmi',"blank")
 
 //Germs
 /datum/organ/proc/handle_antibiotics()

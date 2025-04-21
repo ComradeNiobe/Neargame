@@ -102,7 +102,7 @@
 /obj/item/clothing/ears/offear
 	name = "Other ear"
 	w_class = 5.0
-	icon = 'icons/mob/screen1_Midnight.dmi'
+	icon = 'icons/mob/screen1_tg_ui.dmi'
 	icon_state = "block"
 	slot_flags = SLOT_EARS | SLOT_TWOEARS
 
@@ -316,7 +316,7 @@ BLIND     // can't see anything
 		return
 	var/s = lying ? "2" : ""
 	var/list/icon/parts = list() //body 1, lower 2, left 3, right 4
-	var/icon/suit = icon('icons/mob/human.dmi',"blank")
+	var/icon/suit = icon('icons/neargame/zion362/mob/human.dmi',"blank")
 	if(istype(H.species,/datum/species/human/child))
 		parts = male_icons
 	else if(FAT in H.mutations)
@@ -345,7 +345,7 @@ BLIND     // can't see anything
 			suit.Blend(armor_layer:update_worn_icon(H),ICON_OVERLAY)
 		return suit
 	var/list/icon/parts = list() //body 1, lower 2, left 3, right 4
-	var/icon/suit = icon('icons/mob/human.dmi',"blank")
+	var/icon/suit = icon('icons/neargame/zion362/mob/human.dmi',"blank")
 	if(istype(H.species,/datum/species/human/child))
 		parts = male_icons
 	else if(FAT in H.mutations)
@@ -632,7 +632,7 @@ BLIND     // can't see anything
 /obj/item/clothing/under/proc/update_body(var/mob/living/carbon/human/H, var/lying = FALSE)
 	var/s = lying ? "l" : "s"
 	var/base = null
-	var/icon/body = icon('icons/mob/human.dmi',"blank")
+	var/icon/body = icon('icons/neargame/zion362/mob/human.dmi',"blank")
 	if(istype(H.species,/datum/species/human/child))
 		base = male_icons[1]
 	else if(FAT in H.mutations)
@@ -656,7 +656,7 @@ BLIND     // can't see anything
 	var/s = lying ? "l" : "s"
 	if(male_icons.len == 1)
 		var/base = null
-		var/icon/sleeves = icon('icons/mob/human.dmi',"blank")
+		var/icon/sleeves = icon('icons/neargame/zion362/mob/human.dmi',"blank")
 		if(istype(H.species,/datum/species/human/child))
 			base = male_icons[1]
 		else if(FAT in H.mutations)
@@ -677,7 +677,7 @@ BLIND     // can't see anything
 		//body 1, lower 2, left 3, right 4
 		var/list/parts
 		var/num = s == "s" ? "" : "2" //painful
-		var/icon/sleeves = icon('icons/mob/human.dmi',"blank")
+		var/icon/sleeves = icon('icons/neargame/zion362/mob/human.dmi',"blank")
 		if(istype(H.species,/datum/species/human/child))
 			parts = male_icons
 		else if(FAT in H.mutations)
@@ -697,7 +697,7 @@ BLIND     // can't see anything
 
 /obj/item/clothing/under/proc/update_pants(var/mob/living/carbon/human/H, var/lying = FALSE)
 	var/s = lying ? "l" : "s"
-	var/icon/pants = icon('icons/mob/human.dmi',"blank")
+	var/icon/pants = icon('icons/neargame/zion362/mob/human.dmi',"blank")
 	if(!pants_down)
 		if(male_icons.len == 1)
 			var/base = null

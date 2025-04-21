@@ -2,7 +2,7 @@
 	name = "unknown"
 	real_name = "unknown"
 	voice_name = "unknown"
-	icon = 'icons/mob/human.dmi'
+	icon = 'icons/neargame/zion362/mob/human.dmi'
 	icon_state = "body_m_s"
 	var/list/hud_list = list()
 	appearance_flags = KEEP_TOGETHER|TILE_BOUND|PIXEL_SCALE|LONG_GLIDE
