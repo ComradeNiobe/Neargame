@@ -1,6 +1,6 @@
 @font-face{
 	font-family: 'PTSansWebRegular';
-	src: url(PTSANS.woff2) format("woff2");
+	src: url('./PTSANS.woff2') format("woff2");
 }
 body{
     background-image: url("https://cdn.discordapp.com/attachments/717109734574129213/779138998080897034/chatbg.png");
