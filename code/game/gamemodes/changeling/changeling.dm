@@ -23,12 +23,12 @@
 	for(var/mob/new_player/player in player_list)
 		for(var/mob/new_player/player2 in player_list)
 			for(var/mob/new_player/player3 in player_list)
-				if(player.ready && player.client.work_chosen == "Baron" && player2.ready && player2.client.work_chosen == "Vicar"&& player3.ready && player3.client.work_chosen == "Merchant")
+				if((player.ready && player.client.work_chosen == "Baron") && (player2.ready && player2.client.work_chosen == "Vicar") && (player3.ready && player3.client.work_chosen == "Merchant"))
 					return 1
 	return 0
 
 /datum/game_mode/changeling/pre_setup()
-	
+
 	if(config.protect_roles_from_antagonist)
 		restricted_jobs += protected_jobs
 
@@ -91,8 +91,8 @@
 /datum/game_mode/proc/greet_changeling(datum/mind/changeling, you_are=1)
 	if(you_are)
 		to_chat(changeling.current, SPAN_LEGEND("I am spreading across the planet in many bodies. I am ancient. Death and fear are unknown to me. I think with the meat of this creature, and it grants me a mind. The mind will help me spread."))
-		changeling.current << sound('sound/music/changeling_intro.ogg', repeat = 0, wait = 0, volume = 100, channel = 10)
-		changeling.current << sound('sound/music/the_collective.ogg', repeat = 0, wait = 0, volume = 80, channel = 3)
+		sound_to(changeling.current, sound('sound/music/changeling_intro.ogg', repeat = 0, wait = 0, volume = 100, channel = 10))
+		sound_to(changeling.current, sound('sound/music/the_collective.ogg', repeat = 0, wait = 0, volume = 80, channel = 3))
 
 	to_chat(changeling.current, SPAN_ITALIC("I will use WHISPER (+) to talk to the other parts of myself."))
 	to_chat(changeling.current, SPAN_NOTICE("We must be wary, as we know [changeling_chem] will cause us to reveal ourselves!"))

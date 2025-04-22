@@ -649,13 +649,6 @@ datum/mind
 			special_role = "Changeling"
 			ticker.mode.forge_changeling_objectives(src)
 			ticker.mode.greet_changeling(src)
-			for(var/obj/structure/theycage/T in world)
-				if(T.usable && T.not_open)
-					current.loc = T.loc
-					T.not_open = FALSE
-					T.usable = FALSE
-					T.icon_state = "floater2"
-					T.density = 0
 
 	// check whether this mind's mob has been brigged for the given duration
 	// have to call this periodically for the duration to work properly

@@ -144,54 +144,53 @@
 	ticker.mode.absorbedcount++
 	changeling.isabsorbing = 0
 
-	T.TheyCage(T)
+	T.TheyCage()
 	playsound(T, 'sound/lfwbsounds/they_absorb.ogg', 100, 1)
 	qdel(G)
 	return 1
 
-/mob/living/carbon/human/proc/TheyCage(mob/living/carbon/human/M as mob)
-	new/obj/structure/theycage(src.loc, M)
+/mob/living/carbon/human/proc/TheyCage()
+	var/obj/structure/theycage/cage = new(src)
 
-	// for the love of god find out a better way to do this
-	M.can_stand = 0
-	M.sleeping = 900
-
-	M.invisibility = INVISIBILITY_OBSERVER
-	M.alpha = max(M.alpha - 100, 0)
-	
-	M.update_icons()
-	M.update_body()
+	sleeping = 900
+	if(client)
+		client.perspective = EYE_PERSPECTIVE
+		client.eye = cage
+	forceMove(cage)
 
 /obj/structure/theycage
 	name = "Meat"
 	icon = 'icons/monsters/critter.dmi'
 	icon_state = "floater"
-	var/not_open = TRUE
-	var/usable
+	var/mob/living/carbon/human/caged_human
 
-/obj/structure/theycage/New(turf/T as turf, mob/living/carbon/human/M as mob)
-	..()
-	spawn(600)
-		src.visible_message("<span class='warning'>[src] begins to shake!</span>")
-		usable = TRUE
-		icon_state = "floaterx"
-		makeThey(M)
+/obj/structure/theycage/New(mob/living/carbon/human/M)
+	. = ..()
+	caged_human = M
+	addtimer(CALLBACK(src, PROC_REF(they_transformation), caged_human), 60 SECONDS)
 
-/obj/structure/theycage/proc/makeThey(mob/living/carbon/human/M as mob)
-		M.mind.make_They()
-		M.updateStatPanel()
+/obj/structure/theycage/proc/they_transformation(mob/living/carbon/human/caged_human)
+	visible_message("<span class='warning'>[src] begins to shake!</span>")
+	icon_state = "floaterx"
 
-		// for the love of god find out a better way to do this
-		M.can_stand = 1
-		M.sleeping = 0
+	if(caged_human.client)
+		caged_human.client.eye = caged_human.client.mob
+		caged_human.client.perspective = MOB_PERSPECTIVE
+	caged_human.dropInto(loc)
 
-		M.invisibility = initial(M.invisibility)
-		M.alpha = max(M.alpha + 100, 255)
+	caged_human.mind.make_They()
+	caged_human.updateStatPanel()
 
-		M.update_icons()
-		M.update_body()
+	caged_human.sleeping = 0
 
-		log_game("[M.real_name]([M?.key]) is now a THEY(spawned from theycage).")
+	caged_human.update_icons()
+	caged_human.update_body()
+
+	log_game("[key_name(caged_human)] is now a THEY (spawned from theycage).")
+
+	icon_state = "floater2"
+	density = 0
+	caged_human = null
 
 //Change our DNA to that of somebody we've absorbed.
 /mob/proc/extend_tentacles()
@@ -300,22 +299,23 @@
 	set category = "villain"
 	set name = "Lump"
 	set desc = "Lump"
-	if(!ishuman(src)) return
+	if(!ishuman(src))
+		return
 	var/mob/living/carbon/human/H = src
 	if(!H?.mind?.changeling)
 		return
+
 	var/datum/changeling/changeling = H.mind.changeling
 	if(world.time > (changeling.last_lump + changeling.lump_delay))
 		changeling.last_lump = world.time
 		if(!H.wear_suit && !H.w_uniform)
 			if(do_after(H, 40))
 				playsound(H, pick('sound/lfwbsounds/lump_spawn.ogg', 'sound/lfwbsounds/lump_spawn2.ogg'), 100, 1)
-				new/obj/effect/lump(src.loc)
+				new /obj/effect/lump(src)
 		else
-			to_chat(H, "<span class='combat'>[pick(fnord)] I need to be naked.</span>")
+			to_chat(H, "<span class='combat'>[pick(global.fnord)] I need to be naked.</span>")
 	else
-		to_chat(H, "<span class='combat'>[pick(fnord)] I need to wait longer!</span>")
-		return
+		to_chat(H, "<span class='combat'>[pick(global.fnord)] I need to wait longer!</span>")
 
 /mob/proc/learn()
 	set category = "villain"
