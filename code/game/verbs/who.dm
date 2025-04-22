@@ -9,7 +9,7 @@ var/showlads = FALSE
 	..()
 	anonymous_number = rand(100,600)
 
-var/list/datum/showlads_holder/showlads_list = list()
+var/global/list/datum/showlads_holder/showlads_list = list()
 /datum/showlads_holder //for when people's bodies get destroyed.
 	var/name = ""
 	var/job = ""
@@ -23,24 +23,25 @@ var/list/datum/showlads_holder/showlads_list = list()
 /client/verb/showlads()
 	set name = "Show Lads"
 	set category = "OOC"
-	var/dat = "<html><head><style>table, th, td {  border: 1px solid black; border-collapse: collapse;} th, td {padding: 15px;}</style></head><body>"
-
 	if(!showlads)
 		return
+
+	var/list/dat = list()
+
 	if(master_mode == "holywar" || master_mode == "minimig")
 		dat += "<center><h2>POST CHRISTIANS</h2></center>"
-		for(var/mob/living/C in world)
+		for(var/mob/living/C in global.mob_list)
 			if(C.old_key)
 				dat += "&#8226;<b>\t[C.real_name]</b>([C.old_job]) : [C.old_key]<br>"
-		for(var/datum/showlads_holder/S in showlads_list)
+		for(var/datum/showlads_holder/S as anything as anything in global.showlads_list)
 			if(S.job && S.name && S.key)
 				dat += "&#8226;<b>\t[S.name]</b>([S.job]) : [S.key]<br>"
 		dat += "<br><center><h2><font color='red'>THANATI</font></h2></center>"
 
-		for(var/mob/living/carbon/human/C in mob_list)
+		for(var/mob/living/carbon/human/C in global.mob_list)
 			if(C.old_key && C.religion == "Thanati")
 				dat += "&#8226;<b>\t[C.real_name]</b>([C.old_job]) : [C.old_key]<br>"
-			for(var/datum/showlads_holder/S in showlads_list)
+			for(var/datum/showlads_holder/S as anything in global.showlads_list)
 				if(!S.thanati)
 					continue
 				if(S.job && S.name && S.key)
@@ -48,24 +49,28 @@ var/list/datum/showlads_holder/showlads_list = list()
 
 	else
 		dat += "<center><h2>THE GATE'S VICTIMS</h2></center>"
-		for(var/mob/living/carbon/human/H in world)
+		for(var/mob/living/carbon/human/H in global.mob_list)
 			if(H.old_key)
 				dat += "&#8226;<b>\t[H.real_name]</b>([H.old_job]) : [H.old_key]<br>"
-		for(var/datum/showlads_holder/S in showlads_list)
+		for(var/datum/showlads_holder/S as anything in global.showlads_list)
 			if(S.name && S.key)
 				dat += "&#8226;<b>\t[S.name]</b>([S.job]) : [S.key]<br>"
 		dat += "<br><center><h2><font color='red'>THANATI</font></h2></center>"
 
-		for(var/mob/living/carbon/human/C in mob_list)
+		for(var/mob/living/carbon/human/C in global.mob_list)
 			if(C.old_key && C.religion == "Thanati")
 				dat += "&#8226;<b>\t[C.real_name]</b>([C.old_job]) : [C.old_key]<br>"
-		for(var/datum/showlads_holder/S in showlads_list)
+		for(var/datum/showlads_holder/S as anything in global.showlads_list)
 			if(!S.thanati)
 				continue
 			if(S.job && S.name && S.key)
 				dat += "&#8226;<b>\t[S.name]</b>([S.job]) : [S.key]<br>"
 
-	src << browse(dat, "window=showlads;size=450x500;can_close=1")
+	var/datum/browser/popup = new(usr, "showlads", "Show Lads", 450, 500)
+	popup.set_content(JOINTEXT(dat))
+	popup.add_head_content("<style>table, th, td { border: 1px solid black; border-collapse: collapse; } th, td { padding: 15px; }</style>")
+	popup.open()
+
 
 /*
 	if(holder)
