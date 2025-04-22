@@ -1,0 +1,91 @@
+html {
+  overflow: auto;
+}
+
+body {
+  background-image: url("./bg2.png");
+  background-color: #0d0d0d;
+  color: #9d9d9d;
+  cursor: url("./pointer.cur"), auto;
+  overflow: hidden;
+  font-family: Times;
+  background-repeat: repeat-x;
+}
+
+a {
+  text-decoration: none;
+  outline: none;
+  border: none;
+  margin: -1px;
+}
+
+a:focus {
+  outline: none;
+  border: none;
+}
+
+a:hover {
+  color: #0d0d0d;
+  background: #9d9d9d;
+  outline: none;
+  border: none;
+}
+
+a:link:hover {
+  color: #4a2b2b;
+}
+
+a:active,
+a:visited,
+a:link {
+  text-decoration: none;
+  color: #967170;
+  border: none;
+}
+
+a:inactive:hover {
+  text-decoration: none;
+  color: #0d0d0d;
+  background: #bb0000;
+  border: none;
+}
+
+a:active:hover {
+  color: #bb0000;
+  background: #0f0f0f;
+}
+
+a img {
+  border: 0;
+}
+
+table.winto {
+  z-index: -1;
+  position: absolute;
+  top: 12;
+  left: 14;
+  background-position: bottom;
+  background-repeat: repeat-x;
+  border: 4px dotted #222222;
+  border-bottom: none;
+  border-top: none;
+  background-image: url("./bg.png");
+  background-color: #0d0d0d;
+}
+
+TR {
+  border: 0px;
+}
+
+p.window-mode-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+p.join-or-ready-button {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+}

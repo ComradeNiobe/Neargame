@@ -328,6 +328,7 @@ var/global/max_players = 100
 		'html/loading.gif',
 		'html/search.js',
 		'html/panels.css',
+		'html/pointer.cur',
 		'sound/music/OS13_combat.ogg',
 		'sound/music/haruspex-combat.ogg',
 		'sound/music/OS13_combat.ogg',
