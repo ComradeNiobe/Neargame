@@ -26,7 +26,6 @@
 	return 0
 */
 /datum/game_mode/quietday/can_start()
-/*
 	for(var/mob/new_player/player in player_list)
 		for(var/mob/new_player/player2 in player_list)
 			for(var/mob/new_player/player3 in player_list)
@@ -34,7 +33,6 @@
 					return TRUE
 
 	return FALSE
-*/
 
 /datum/game_mode/quietday/declare_completion()
 	if(!has_starring)
