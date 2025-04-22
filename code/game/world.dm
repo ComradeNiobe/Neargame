@@ -34,6 +34,7 @@ var/rtlog_path
 		// dumb and hardcoded but I don't care~
 		config.server_name += " #[(world.port % 1000) / 100]"
 
+	world_name()
 	callHook("startup")
 	load_admins()
 	LoadBansjob()
