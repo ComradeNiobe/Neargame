@@ -53,7 +53,8 @@
 	//preload_rsc = "https://www.dropbox.com/s/kfe9yimm9oi2ooj/MACACHKA.zip?dl=1"
 	mouse_pointer_icon='icons/pointer.dmi'
 	var/datum/chatOutput/chatOutput
-	var/JoinDate = null
+	///Date of byond account creation in ISO 8601 format
+	var/account_join_date = null
 	var/InvitedBy = null
 	var/Country_Code = null
 	var/last_song_file = null

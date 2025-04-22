@@ -141,6 +141,18 @@ var/global/max_players = 100
 	fileaccess_timer = world.time + FTPDELAY	*/
 	return 1
 
+/client/proc/findJoinDate()
+	var/list/http = world.Export("http://byond.com/members/[ckey]?format=text")
+	if(!http)
+		log_world("Failed to connect to byond member page to age check [ckey]")
+		return
+	var/F = file2text(http["CONTENT"])
+	if(F)
+		var/regex/R = regex("joined = \"(\\d{4}-\\d{2}-\\d{2})\"")
+		if(R.Find(F))
+			. = R.group[1]
+		else
+			CRASH("Age check regex failed for [src.ckey]")
 
 	///////////
 	//CONNECT//
@@ -172,23 +184,17 @@ var/global/max_players = 100
 		src << link("https://wiki.nearweb.org/images/0/00/Pool_overpop.png")
 		qdel(src)
 		return
-	/*
-	if(!JoinDate)
-		var/list/http[] = world.Export("http://www.byond.com/members/[src.ckey]?format=text")
-		var/Joined = 0000-00-00
-		if(http && http.len && ("CONTENT" in http))
-			var/String = file2text(http["CONTENT"])
-			var/JoinPos = findtext(String, "joined")+10
-			Joined = copytext(String, JoinPos, JoinPos+10)
-			src.JoinDate = Joined
-	*/
+
+	if(!account_join_date)
+		account_join_date = findJoinDate()
 	switch(private_party)
 		if(TRUE)
-			if((!ckeywhitelistweb.Find(src.ckey)))
+			if((!global.ckeywhitelistweb.Find(src.ckey)))
 				notInvited()
 				return
 		if(FALSE)
-			if(!ckeywhitelistweb.Find(src.ckey) && text2num(copytext(src.JoinDate, 1, 5)) >= 2024)
+			global.standard_year.Find(account_join_date)
+			if(text2num(global.standard_year.group[1]) >= 2024)
 				notInvited()
 				return
 
@@ -773,8 +779,8 @@ var/global/max_players = 100
 		winset(src, "name", "text='[mob.real_name]'")
 
 /client/proc/notInvited()
-	src << link("https://wiki.nearweb.org/images/6/69/Not_invited.jpg")
-	src << 'sound/not_invited.ogg'
+	show_browser(src, file('interface/youarenotinvited.png'), "window=notinvited;size=450x450")
+	sound_to(src, sound('sound/not_invited.ogg'))
 	qdel(src)
 
 // Byond seemingly calls stat, each tick.
