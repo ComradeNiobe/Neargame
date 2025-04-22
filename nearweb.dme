@@ -1826,7 +1826,6 @@
 #include "code\modules\virus2\isolator.dm"
 #include "code\modules\virus2\items_devices.dm"
 #include "code\statpanel\statpanel.dm"
-#include "code\tgs\chatcommands.dm"
 #include "code\tgs\includes.dm"
 #include "code\tgsort\TgSort.dm"
 #include "code\TriDimension\controller.dm"

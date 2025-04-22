@@ -135,7 +135,7 @@ var/rtlog_path
 
 
 /world/Reboot(reason)
-	TgsTargetedChatBroadcast("<@&1075561850374209546> The round has restarted! - <byond://play.nearweb.org:59490>", FALSE)
+	TgsTargetedChatBroadcast("<@&1075561850374209546> The round has restarted! - <byond://[world.address]:[world.port]>", FALSE)
 	story_holder.story_number++
 	add_story_id()
 	for(var/client/C in clients)
