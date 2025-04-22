@@ -352,7 +352,6 @@
 		if(dist > 1)
 			return
 		withdraw = abs(withdraw) //No negative numbers or floating points.
-		liquify = idcard.money_account.get_money() //prevent cheating
 		if(withdraw > liquify)
 			to_chat(usr, "I don't have enough obols to withdraw that amount!")
 			return
