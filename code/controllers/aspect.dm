@@ -757,12 +757,17 @@ var/list/allClothing
 			H.equip_to_slot_or_del(new /obj/item/staffoflaw/zeus(H), slot_r_hand)
 
 /datum/round_event/reallover/apply_event()
-	var/list/L = list()
-	for(var/mob/living/carbon/human/H in mob_list)
-		if(H.client && H.age >= 18)
-			L.Add(H)
-	var/mob/living/carbon/human/chosenOne = pick(L)
-	chosenOne.Chosenlover = 1
-	chosenOne.penis_size = 30
-	spawn(5 SECONDS)
-		to_chat(world, "<span class='horriblestate' style='font-size: 150%;'><b><i>They say [chosenOne.real_name] is a great lover!</i></b></span>")
+	var/list/real_lover_candidates = list()
+	var/mob/living/carbon/human/chosen_lover
+
+	for(var/mob/living/carbon/human/candidate in living_mob_list)
+		if(candidate.client && candidate.age >= 18)
+			real_lover_candidates += candidate
+
+	chosen_lover = pick(real_lover_candidates)
+	chosen_lover.Chosenlover = TRUE
+	chosen_lover.penis_size = 30
+	addtimer(CALLBACK(src, PROC_REF(announce_event), chosen_lover.real_name), 5 SECONDS, TIMER_UNIQUE)
+
+/datum/round_event/reallover/proc/announce_event(chosen_lover)
+	to_chat(world, "<span class='horriblestate' style='font-size: 150%;'><b><i>They say [chosen_lover] is a great lover!</i></b></span>")
