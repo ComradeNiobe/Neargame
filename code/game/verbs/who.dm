@@ -33,7 +33,7 @@ var/global/list/datum/showlads_holder/showlads_list = list()
 		for(var/mob/living/C in global.mob_list)
 			if(C.old_key)
 				dat += "&#8226;<b>\t[C.real_name]</b>([C.old_job]) : [C.old_key]<br>"
-		for(var/datum/showlads_holder/S as anything as anything in global.showlads_list)
+		for(var/datum/showlads_holder/S as anything in global.showlads_list)
 			if(S.job && S.name && S.key)
 				dat += "&#8226;<b>\t[S.name]</b>([S.job]) : [S.key]<br>"
 		dat += "<br><center><h2><font color='red'>THANATI</font></h2></center>"
