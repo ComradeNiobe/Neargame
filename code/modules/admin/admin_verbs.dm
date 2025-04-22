@@ -881,7 +881,7 @@ var/list/admin_verbs_mod = list(
 			C.relevancy_color = "#bbbbbb"
 			dat += "<td>\t<font color='[C.relevancy_color]'><img src='[no_country]' width='20' height='20'><small>[C.key]</small></font></td>"
 
-		C.InvitedBy ? (dat += "<td>\t[C.InvitedBy]</td>") : (dat += "<td>\t[C.JoinDate]</td>")
+		C.InvitedBy ? (dat += "<td>\t[C.InvitedBy]</td>") : (dat += "<td>\t[C.account_join_date]</td>")
 
 		dat += "<td>\t[C.byond_version]/[C.byond_build]</td>"
 		dat += "<td>\t<a href='byond://?src=\ref[src];achievements=\ref[C]'>Check</a></td>"
