@@ -15,7 +15,7 @@
 	var/zodiacdesc = ""
 	msg += "<hr class='linexd'>"
 	msg += "<span class='moodboxtext'>My name is</span><span class='[mind.say_color]'>[src.real_name]</span>\n"
-	
+
 	if(dom_hand == RIGHT_HAND)
 		msg += "<span class='moodboxtext'>I'm right-handed.</span>\n"
 	else if (dom_hand == LEFT_HAND)
@@ -28,7 +28,7 @@
 	else if(src.penis_size <=20 && src.has_penis())
 		msg += "<span class='moodboxtext'>My size: regular.</span>\n"
 	else if (src.penis_size >20 && src.has_penis())
-		msg += "<span class='moodboxtext'>My size: large.</span>\n" 
+		msg += "<span class='moodboxtext'>My size: large.</span>\n"
 	if(src.outsider && src.province && src.province != "Wanderer")
 		msg += "<span class='moodboxtext'>I come from <b>[src.province]</b></span>\n"
 	msg += "<br>"
@@ -136,11 +136,18 @@
 			if(mood_icon)
 				mood_icon.icon_state = "pressure0"
 
-	if(old_icon && old_icon != mood_icon.icon_state)
-		if(old_happiness > happiness)
-			to_chat(src, "<span class='combatglow'>My mood gets worse.</span>")
-		else
-			to_chat(src, "<span class='passiveglow'>My mood gets better.</span>")
+	if(ishuman(src))
+		var/living/carbon/human/empath = src
+
+		if(!COOLDOWN_FINISHED(empath, mood_notification))
+			return
+
+		if(empath.old_icon && empath.old_icon != empath.mood_icon.icon_state)
+			COOLDOWN_START(empath, mood_notification, 5 MINUTES)
+			if(empath.old_happiness > empath.happiness)
+				to_chat(empath, SPAN_CGLOW("My mood gets worse."))
+			else
+				to_chat(empath, SPAN_PGLOW("My mood gets better."))
 
 /mob/proc/flash_sadness()
 	if(prob(2))

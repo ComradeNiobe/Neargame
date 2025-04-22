@@ -202,5 +202,8 @@
 	var/right_eye_fucked = FALSE // better to code like this
 	var/left_eye_fucked = FALSE //better to code like this
 	default_buttons = list("verbs","emotes","craft")
-// OTHER SHIT
+	// OTHER SHIT
 	var/dreamerArchetype
+
+	/// This cooldown exists so the player doesn't get constantly spammed by mood change messages.
+	COOLDOWN_DECLARE(mood_notification)

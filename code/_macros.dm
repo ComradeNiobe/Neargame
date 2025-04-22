@@ -55,6 +55,7 @@
 // nearweb specific styles - add more as needed
 #define SPAN_CBOLD(X)    SPAN_CLASS("combatbold",    X)
 #define SPAN_PBOLD(X)    SPAN_CLASS("passivebold",   X)
+#define SPAN_PGLOW(X)    SPAN_CLASS("passiveglow",   X)
 #define SPAN_COMBAT(X)   SPAN_CLASS("combat",        X)
 #define SPAN_CGLOW(X)    SPAN_CLASS("combatglow",    X)
 #define SPAN_CMODE(X)    SPAN_CLASS("combatmodes",   X)

@@ -285,6 +285,7 @@
 #include "code\__DEFINES\chemistry_defines.dm"
 #include "code\__DEFINES\colors.dm"
 #include "code\__DEFINES\combat_defines.dm"
+#include "code\__DEFINES\cooldowns.dm"
 #include "code\__DEFINES\flags.dm"
 #include "code\__DEFINES\fluid_defines.dm"
 #include "code\__DEFINES\html_assistant.dm"
