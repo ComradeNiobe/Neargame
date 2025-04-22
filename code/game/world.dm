@@ -182,30 +182,28 @@ var/rtlog_path
 
 /world/proc/update_status()
 	var/s = ""
-	s += "<b>[vessel_name()]</b> &#8212; "
+	s += "<b>Neargame†: A Machine For Pigs</b> &#8212; "
 	s += " ("
 	s += "<a href=\"https://discord.gg/wYHkRTYc5J\">" //Change this to wherever you want the hub to link to.
-	s += "Dungeon"  //Replace this with something else. Or ever better, delete it and uncomment the game version.
+	s += "Discord"  //Replace this with something else. Or ever better, delete it and uncomment the game version.
 	s += "</a>"
 	s += ")"
 
+	s += "<br>Immersive Dark Science Fantasy Roleplay"
+
 	var/list/features = list()
 
-	var/n = 0
-	for (var/mob/M in player_list)
-		if (M.client)
-			n++
+	var/n = length(global.clients)
 
 	if (n > 1)
 		features += "~[n] addicts"
 	else if (n > 0)
 		features += "~[n] addict"
 
-	features += "<b>+\[18\]</b>"
+	features += "<b>+\[18 Only\]</b>"
 
 	if (features)
 		s += "<br>[list2text(features, ", ")]"
-	s += "<br><b>Server:</b> [src.port]"
 	s += "<br><b>Map of the Week:</b> [currentmaprotation]"
 	s += "<br><b>Hosted by:</b> [config.hostedby]"
 	if(!private_party)
