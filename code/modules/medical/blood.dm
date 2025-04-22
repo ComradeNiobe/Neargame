@@ -353,7 +353,7 @@ proc/blood_splatter(var/target,var/datum/reagent/blood/source,var/large)
 	pool = locate(/obj/effect/decal/cleanable/bloodpool) in T
 	var/obj/item/reagent_containers/glass/G = locate() in T
 	if(!B && !pool)
-		if(G && !G.reagents.total_volume != G.reagents.maximum_volume && ishuman(source))
+		if(G && G.reagents.total_volume < G.volume && ishuman(source))
 			var/datum/reagent/blood/BB
 			var/mob/living/carbon/human/H = source.data["donor"]
 			BB = H.take_blood(G,5)
@@ -365,7 +365,7 @@ proc/blood_splatter(var/target,var/datum/reagent/blood/source,var/large)
 
 		B = PoolOrNew(decal_type, T)
 	else if(istype(B, /obj/effect/decal/cleanable/blood/drip) && !pool)
-		if(G && !G.reagents.total_volume != G.reagents.maximum_volume)
+		if(G && G.reagents.total_volume < G.volume)
 
 			var/datum/reagent/blood/BB
 			var/mob/living/carbon/human/H = source.data["donor"]
