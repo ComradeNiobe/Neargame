@@ -58,17 +58,17 @@ var/global/list/bee_queen = list()
 
 var/global/list/patreons = list()
 
-var/global/list/ckeywhitelistweb = list("")
+var/global/list/ckeywhitelistweb = list()
 
 var/global/private_party = FALSE // Dictates whether whitelist is needed to join or not
 
 var/global/list/proxyignore = list()
 
-var/global/list/access_comrade = list("")
+var/global/list/access_comrade = list()
 
-var/global/list/access_villain = list("")
+var/global/list/access_villain = list()
 
-var/global/list/femstatic_rank = list("")
+var/global/list/femstatic_rank = list()
 
 var/global/list/access_pigplus = list()
 
