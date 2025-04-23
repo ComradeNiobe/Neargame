@@ -10,7 +10,7 @@
 	var/description = ""
 	var/datum/reagents/holder = null
 	var/reagent_state = SOLID
-	var/alist/data = null
+	var/list/data = null
 	var/first_life = TRUE // Tracks wether or not this reagent is on the first life tick, important for some drugs.
 	var/volume = 0
 	var/nutriment_factor = 0
@@ -139,13 +139,6 @@ datum/reagent/proc/addiction_act_stage4(var/mob/living/M as mob)
 	id = "blood"
 	reagent_state = LIQUID
 	color = BLOOD_COLOR // rgb: 200, 0, 0
-
-/datum/reagent/blood/proc/is_heretic()
-	for(var/mob/living/carbon/human/blood_donor, donor in data)
-		if(blood_donor.religion != "Gray Church")
-			return TRUE
-		else
-			return FALSE
 
 /datum/reagent/blood/reaction_mob(var/mob/M, var/method=TOUCH, var/volume)
 	var/datum/reagent/blood/self = src
