@@ -1,6 +1,4 @@
 /mob/living/carbon/human/New()
-	..()
-	if(!client)
-		return
-	if(donation_30cm.Find(ckey))
+	. = ..()
+	if(client?.prefs?.togglesize)
 		penis_size = rand(30, 32)

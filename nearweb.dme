@@ -579,7 +579,6 @@
 #include "code\game\dna\genes\monkey.dm"
 #include "code\game\dna\genes\powers.dm"
 #include "code\game\donations\donations.dm"
-#include "code\game\donations\whitelist.dm"
 #include "code\game\fire\fireComicao.dm"
 #include "code\game\fire\waterfake.dm"
 #include "code\game\gamemodes\events.dm"
