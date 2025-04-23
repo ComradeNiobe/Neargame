@@ -70,7 +70,7 @@
 	..()
 
 /datum/game_mode/kingwill/declare_completion()
-	..()
+	. = ..()
 	if(kingwilldone1 && kingwilldone2 && kingwilldone3)
 		to_chat(world, "<span class='dreamershitbutitsactuallypassivebutitactuallyisbigandbold'>The Lord Baron managed to give the God-King his tributes!</span>")
 	else
@@ -189,6 +189,7 @@
 
 
 /datum/game_mode/kingwill/can_start()
+	. = ..()
 	for(var/mob/new_player/player in player_list)
 		for(var/mob/new_player/player2 in player_list)
 			for(var/mob/new_player/player3 in player_list)

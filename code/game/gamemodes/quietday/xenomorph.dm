@@ -49,6 +49,7 @@
 	return 0
 */
 /datum/game_mode/xenomorph/can_start()
+	. = ..()
 	for(var/mob/new_player/player in player_list)
 		for(var/mob/new_player/player2 in player_list)
 			for(var/mob/new_player/player3 in player_list)
@@ -57,7 +58,7 @@
 	return 0
 
 /datum/game_mode/xenomorph/declare_completion()
-	..()
+	. = ..()
 	var/number = 0
 	var/isOnLeviathan = 0
 	for(var/mob/living/carbon/human/H in mob_list)

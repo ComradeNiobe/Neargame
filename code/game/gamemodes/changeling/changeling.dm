@@ -20,12 +20,14 @@
 	world << "<B>Our quiet night is interrupted by aliens.</B>"
 
 /datum/game_mode/changeling/can_start()
+	. = ..()
+
 	for(var/mob/new_player/player in player_list)
 		for(var/mob/new_player/player2 in player_list)
 			for(var/mob/new_player/player3 in player_list)
 				if((player.ready && player.client.work_chosen == "Baron") && (player2.ready && player2.client.work_chosen == "Vicar") && (player3.ready && player3.client.work_chosen == "Merchant"))
-					return 1
-	return 0
+					return TRUE
+	return FALSE
 
 /datum/game_mode/changeling/pre_setup()
 
@@ -50,9 +52,9 @@
 			possible_changelings -= changeling
 			changelings += changeling
 			modePlayer += changelings
-		return 1
+		return TRUE
 	else
-		return 0
+		return FALSE
 
 /datum/game_mode/changeling/post_setup()
 	for(var/datum/mind/changeling in changelings)
@@ -111,7 +113,7 @@
 	changeling_mob.make_changeling()
 
 /datum/game_mode/changeling/declare_completion(datum/mind/changeling)
-	..()
+	. = ..()
 	if(length(changelings))
 		var/text = "<FONT size = 2><B>THEY</B></FONT>"
 		var/society_win = TRUE

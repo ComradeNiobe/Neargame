@@ -753,6 +753,7 @@ var/global/log_adminsay = 1
 		alert("Unable to start the game as it is not set up.")
 		return
 	if(ticker.current_state == GAME_STATE_PREGAME)
+		ticker.force_started = TRUE
 		ticker.current_state = GAME_STATE_SETTING_UP
 		log_admin("[usr.key] has started the game.")
 		message_admins("<font color='blue'>[usr.key] has started the game (master_mode: [master_mode]).</font>")

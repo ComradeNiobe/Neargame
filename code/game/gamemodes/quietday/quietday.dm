@@ -16,15 +16,17 @@
 
 /datum/game_mode/quietday/post_setup()
 	..()
-/*
+
 /datum/game_mode/quietday/can_start()
-	for(var/mob/new_player/player in mob_list)
+	. = ..()
+	for(var/mob/new_player/player in player_list)
 		if(player.ready && player.client.work_chosen == "Baron")
-			return 1
+			return TRUE
 		else
-			return 0
-	return 0
-*/
+			return FALSE
+	return FALSE
+
+/*
 /datum/game_mode/quietday/can_start()
 	for(var/mob/new_player/player in player_list)
 		for(var/mob/new_player/player2 in player_list)
@@ -33,12 +35,11 @@
 					return TRUE
 
 	return FALSE
-
+*/
 /datum/game_mode/quietday/declare_completion()
+	. = ..()
 	if(!has_starring)
 		var/mob/living/carbon/human/H
 		H = pick(player_list)
 		to_chat(world, "<span class='bname'>Starring: [H.real_name]</span>")
 		to_chat(world, "<span class='bname'>Objective #1:</span> Prevent tragedy from happening in Enoch's Gate. <font color='green'>Success!</font>")
-	..()
-	return

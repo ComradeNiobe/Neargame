@@ -79,6 +79,7 @@
 
 
 /datum/game_mode/succubus/can_start()
+	. = ..()
 	for(var/mob/new_player/player in player_list)
 		for(var/mob/new_player/player2 in player_list)
 			for(var/mob/new_player/player3 in player_list)
@@ -103,7 +104,7 @@
 
 
 /datum/game_mode/succubus/declare_completion()
-	..()
+	. = ..()
 	var/datum/mind/SUC = pick(succubi)
 	LAZYREMOVE(succubi, SUC)
 	var/datum/mind/SUC2 = pick(succubi)

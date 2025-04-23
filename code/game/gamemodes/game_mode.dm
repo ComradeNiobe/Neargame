@@ -90,14 +90,17 @@ Implants;
 		if((player.client)&&(player.ready))
 			playerC++
 
-	if(master_mode=="secret")
+	if(master_mode == "secret")
 		if(playerC >= required_players_secret)
-			return 1
+			return TRUE
 	else
 		if(playerC >= required_players)
-			return 1
-	return 0
+			return TRUE
 
+	if(ticker.force_started)
+		return TRUE
+
+	return FALSE
 
 ///pre_setup()
 ///Attempts to select players for special roles the mode might have.

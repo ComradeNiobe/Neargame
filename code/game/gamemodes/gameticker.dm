@@ -67,6 +67,7 @@ var/round_nuke_loc = "None"
 	var/migwave_going = FALSE
 	var/list/migrants_inwave = list()
 	var/forcemod = null
+	var/force_started
 
 var/turf/MiniSpawn
 
@@ -186,31 +187,31 @@ var/turf/MiniSpawn
 		else
 			src.mode = config.pick_mode(master_mode)
 
-	/*
+
 	if (!src.mode.can_start())
-		//world << "<B>Unable to start [mode.name].</B> Not enough victims, [mode.required_players] victims are required. Reverting to pre-simulation lobby."
-		var/baron = "badmood"
-		var/bishop = "badmood"
-		var/merchant = "badmood"
-		for(var/mob/new_player/NN in player_list)
-			if(NN.client.work_chosen == "Baron" && NN.ready)
-				baron = "hit"
-			else if(NN.client.work_chosen == "Vicar" && NN.ready)
-				bishop = "hit"
-			else if(NN.client.work_chosen == "Merchant" && NN.ready)
-				merchant = "hit"
+		if(!ticker.force_started)
+			var/baron = "badmood"
+			var/bishop = "badmood"
+			var/merchant = "badmood"
+			for(var/mob/new_player/NN in player_list)
+				if(NN.client.work_chosen == "Baron" && NN.ready)
+					baron = "hit"
+				else if(NN.client.work_chosen == "Vicar" && NN.ready)
+					bishop = "hit"
+				else if(NN.client.work_chosen == "Merchant" && NN.ready)
+					merchant = "hit"
 
 
-		if(master_mode == "holywar")
-			to_chat(world,"<b><span class='highlighttext'>Crusade aborted:</span></b> We need <span class='bname'>20 soldiers</span>!")
-			to_chat(world,"<b><span class='bname'>10 Thanatis</span> and <span class='bname'>10 Post-Christians</span>!")
-		else
-			to_chat(world,"<b><span class='hitbold'>Story aborted:</span></b><span class='hit'> The fortress needs a generous </span><span class='[merchant]'><b>Merchant</b></span>,<span class='hit'> a just </span><span class='[baron]'><b>Baron</b></span><span class='hit'> and a pious </span><span class='[bishop]'><b>Vicar</b></span><span class='hit'>!</span>")
-		qdel(mode)
-		first_timer = FALSE
-		current_state = GAME_STATE_PREGAME
-		return 0
-	*/
+			if(master_mode == "holywar")
+				to_chat(world,"<b><span class='highlighttext'>Crusade aborted:</span></b> We need <span class='bname'>20 soldiers</span>!")
+				to_chat(world,"<b><span class='bname'>10 Thanatis</span> and <span class='bname'>10 Post-Christians</span>!")
+			else
+				to_chat(world,"<b><span class='hitbold'>Story aborted:</span></b><span class='hit'> The fortress needs a generous </span><span class='[merchant]'><b>Merchant</b></span>,<span class='hit'> a just </span><span class='[baron]'><b>Baron</b></span><span class='hit'> and a pious </span><span class='[bishop]'><b>Vicar</b></span><span class='hit'>!</span>")
+			qdel(mode)
+			first_timer = FALSE
+			current_state = GAME_STATE_PREGAME
+			return FALSE
+
 	//Configure mode and assign player to special mode stuff
 	job_master.DivideOccupations() //Distribute jobs
 	var/can_continue = src.mode.pre_setup()//Setup special modes

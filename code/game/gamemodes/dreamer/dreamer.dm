@@ -10,12 +10,13 @@
 	var/dreamer_awakened = FALSE
 
 /datum/game_mode/dreamer/can_start()
+	. = ..()
 	for(var/mob/new_player/player in player_list)
 		for(var/mob/new_player/player2 in player_list)
 			for(var/mob/new_player/player3 in player_list)
 				if(player.ready && player.client.work_chosen == "Baron" && player2.ready && player2.client.work_chosen == "Vicar"&& player3.ready && player3.client.work_chosen == "Merchant")
-					return 1
-	return 0
+					return TRUE
+	return FALSE
 
 /datum/game_mode/proc/greet_dreamer(datum/mind/dreamer)
 	to_chat(dreamer.current, SPAN_DREAMER("Recently I've been visited by a lot of VISIONS. They're all about another WORLD, ANOTHER life. I will do EVERYTHING to know the TRUTH, to return to the REAL world."))
@@ -65,7 +66,7 @@
 	return 1
 
 /datum/game_mode/dreamer/declare_completion(datum/mind/dreamer)
-	..()
+	. = ..()
 	var/text = "<span class='dreamershitfuckcomicao1'>Starring: [starringlist]</span>"
 	var/mob/living/carbon/human/H = dreamer.current
 
@@ -75,4 +76,3 @@
 	else
 		text += "<br><span class='dreamershitbutitsactuallypassivebutitactuallyisbigandbold'>The Dreamer is still imprisioned in his own labyrinth.</span>"
 	to_world(text)
-	return

@@ -72,7 +72,7 @@ var/list/WarAirlocks = list()
 				HH?.client?.images += my_I
 
 /datum/game_mode/miniwar/declare_completion()
-	..()
+	. = ..()
 	switch(result)
 		if(SOUTH_VICTORY)
 			to_chat(world, "<h2><B>Northners has been defeated! Southners are glorious tonight!</B></h2>")

@@ -14,25 +14,14 @@
 	world << 'sound/AI/siege_declared.ogg'
 
 /datum/game_mode/holywar/pre_setup()
-	return 1
+	return TRUE
 
 /datum/game_mode/holywar/post_setup()
-	..()
+	. = ..()
 
 
 /datum/game_mode/holywar/can_start()
-	var/playerC = 0
-	for(var/mob/new_player/player in player_list)
-		if(player.client)
-			playerC++
-
-	if(master_mode=="secret")
-		if(playerC >= required_players_secret)
-			return 1
-	else
-		if(playerC >= required_players)
-			return 1
-	return 0
+	. = ..()
 
 /mob/living/carbon/human/var/list/updateteamlist = list()
 

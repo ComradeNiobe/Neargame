@@ -12,29 +12,16 @@
 	world << "<B>Our fate is peaceful.</B>"
 
 /datum/game_mode/extended/pre_setup()
-	return 1
+	return TRUE
 
 /datum/game_mode/extended/post_setup()
-	..()
+	. = ..()
 
 /datum/game_mode/extended/can_start()
-	var/playerC = 0
-	for(var/mob/new_player/player in player_list)
-		if((player.client)&&(player.ready))
-			playerC++
-
-	if(master_mode=="secret")
-		if(playerC >= required_players_secret)
-			return 1
-	else
-		if(playerC >= required_players)
-			return 1
-
-	return 0
-
+	. = ..()
 
 /datum/game_mode/extended/declare_completion()
-	..()
+	. = ..()
 	if(!has_starring)
 		var/mob/living/carbon/human/H
 		H = pick(player_list)

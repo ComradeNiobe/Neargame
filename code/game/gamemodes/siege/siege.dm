@@ -29,6 +29,7 @@
 	var/result
 
 /datum/game_mode/siege/can_start()
+	. = ..()
 	for(var/mob/new_player/player in player_list)
 		for(var/mob/new_player/player2 in player_list)
 			for(var/mob/new_player/player3 in player_list)
@@ -94,7 +95,7 @@
 			HH?.client?.images += my_I
 
 /datum/game_mode/siege/declare_completion()
-	..()
+	. = ..()
 	switch(result)
 		if(SIEGE_FAILED_REINFORCEMENT)
 			to_chat(world, "<h2><B>Great losses broke down the attackers! Count [hascount.real_name]([hascount.key]) gathers cave warriors withdraw from the Firethorn Fortress to fight another day.</B></h2>")
