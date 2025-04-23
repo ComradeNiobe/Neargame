@@ -1,10 +1,37 @@
 var/roundsinvite = 1
 
-client/verb/prompt_command()
+/client/verb/prompt_command()
 	set name = "Command Prompt"
 	set category = "OOC"
-	var/list/inputlist = list("showlads","togglenat","setspouse","invite","togglefuta","mycolor","retro","add_donator", "ban", "unban", "add_role", "absencelabiosdeseda", "superretro","remove_role", "musica", "tremer","rsctoggle","fix64","togglesquire","togglesize","setfontsize")
-	var/list/debug = list("showgamemode", "setgamemode", "changeskill", "showaspect")
+	var/list/inputlist = list(
+		"showlads",
+		"togglenat",
+		"setspouse",
+		"invite",
+		"togglefuta",
+		"mycolor",
+		"retro",
+		"add_donator",
+		"ban",
+		"unban",
+		"add_role",
+		"absencelabiosdeseda",
+		"superretro",
+		"remove_role",
+		"musica",
+		"tremer",
+		"rsctoggle",
+		"fix64",
+		"togglesquire",
+		"togglesize",
+		"setfontsize"
+	)
+	var/list/debug = list(
+		"showgamemode",
+		"setgamemode",
+		"changeskill",
+		"showaspect"
+	)
 	var/chosenoption = sanitize_safe(input("Input a command.","[src.key]"))
 	if(!chosenoption)
 		return
@@ -64,9 +91,6 @@ client/verb/prompt_command()
 				src.colorooc()
 				return
 			if("togglefuta")
-				if(!donation_futa.Find(src.ckey))
-					to_chat(usr, "<span class='combatbold'>[pick(fnord)]</span> <span class='combat'>[pick("I'm poor","I don't have it","My wallet is empty","I'm broke")]!</span>")
-					return
 				if(src.mob.type != /mob/new_player)
 					to_chat(usr, "<span class='combatbold'>FAIL!</span><span class='combat'> It can only be changed in the lobby!</span>")
 					return
@@ -89,9 +113,6 @@ client/verb/prompt_command()
 						return
 				return
 			if("togglesize")
-				if(!donation_30cm.Find(src.ckey))
-					to_chat(usr, "<span class='combatbold'>[pick(fnord)]</span> <span class='combat'>[pick("I'm poor","I don't have it","My wallet is empty","I'm broke")]!</span>")
-					return
 				if(src.mob.type != /mob/new_player)
 					to_chat(usr, "<span class='combatbold'>FAIL!</span><span class='combat'> It can only be changed in the lobby!</span>")
 					return
@@ -132,46 +153,6 @@ client/verb/prompt_command()
 							prefs.savefile_update()
 						return
 				return
-			if("add_donator")
-				if(!usr.client.holder && !(usr.ckey in puppeteers))
-					to_chat(src, "<span class='highlighttext'>You are not allowed to do that.</span>")
-					return
-				var/donateadd = input("What type of donation do you want to add?") in list ("Squire Tier","Tiamat Tier","Marduk Tier", "Crusader Tier", "Mercenary","Seaspotter Merc", "Red Dawn Merc", "Lord", "Crusader", "Monk", "Futa", "Trap", "Outlaw", "Water bottle", "Luxury donation", "Custom OOC Color","30cm",)
-				switch(donateadd)
-					if("Squire Tier")
-						add_tier_squire()
-					if("Tiamat Tier")
-						add_tier_tiamat()
-					if("Marduk Tier")
-						add_tier_marduk()
-					if("Crusader Tier")
-						add_tier_crusader()
-					if("Seaspotter Merc")
-						add_seaspotter()
-					if("Mercenary")
-						add_mercenary()
-					if("Red Dawn Merc")
-						add_reddawn()
-					if("Lord")
-						add_lord()
-					if("Crusader")
-						add_crusader()
-					if("Monk")
-						add_monk()
-					if("Futa")
-						add_futa()
-					if("Trap")
-						add_trapapoc()
-					if("Outlaw")
-						add_outlaw()
-					if("Water bottle")
-						add_waterbottle()
-					if("Luxury donation")
-						add_luxurydonation()
-					if("Custom OOC Color")
-						add_customooc()
-					if("30cm")
-						add_30cm()
 			if("ban")
 				if(!usr.client.holder && !(usr.ckey in puppeteers))
 					to_chat(usr, "<span class='highlighttext'>You are not allowed to do that.</span>")
@@ -207,7 +188,7 @@ client/verb/prompt_command()
 					if("Pig+")
 						remove_pigplus()
 			if("musica")
-				if(ishuman(src.mob) && usr.ckey in tier_marduk)
+				if((ishuman(src.mob)) && (usr.ckey in tier_marduk))
 					var/mob/living/carbon/human/H = mob
 
 					if(H.combat_musicoverlay)
@@ -222,7 +203,7 @@ client/verb/prompt_command()
 						to_chat(H, "<span class='highlighttext'><b>MÚSICA CUSTOM ATIVADA</b></span>")
 					return
 			if("tremer")
-				if(ishuman(src.mob) && usr.ckey in tier_marduk)
+				if((ishuman(src.mob)) && (usr.ckey in tier_marduk))
 					var/mob/living/carbon/human/H = mob
 
 					if(H.fakeDREAMER)
