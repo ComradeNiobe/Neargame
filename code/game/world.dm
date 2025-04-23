@@ -1,13 +1,4 @@
 var/current_server
-/world
-	mob = /mob/new_player
-	turf = /turf/simulated/wall/r_wall/cave
-	area = /area/dunwell/surface
-	view = "15x15"
-	cache_lifespan = 0	//stops player uploaded stuff from being kept in the rsc past the current session
-	sleep_offline = FALSE
-	fps = 20
-
 var/story_id = 0
 var/server_language = "IZ"
 var/april_fools = FALSE
@@ -146,6 +137,7 @@ var/rtlog_path
 	..(reason)
 
 /world/Del()
+	processScheduler.stop()
 	Master.Shutdown()
 	auxcleanup()
 	. = ..()

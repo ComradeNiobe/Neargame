@@ -21,11 +21,6 @@ var/list/soulbroken = list()
 var/TIME_SINCE_START = 0
 
 var/round_nuke_loc = "None"
-#define GAME_STATE_PREGAME		1
-#define GAME_STATE_SETTING_UP	2
-#define GAME_STATE_PLAYING		3
-#define GAME_STATE_FINISHED		4
-#define HARD_MODE_PLAYER_CAP    25
 
 /datum/controller/gameticker
 	var/message_events
@@ -153,6 +148,7 @@ var/turf/MiniSpawn
 				pregame_timeleft--
 			if(pregame_timeleft <= 0)
 				current_state = GAME_STATE_SETTING_UP
+				Master.SetRunLevel(RUNLEVEL_SETUP)
 	while (!setup())
 
 
@@ -165,6 +161,7 @@ var/turf/MiniSpawn
 		runnable_modes = config.get_runnable_modes()
 		if (LAZYLEN(runnable_modes) == 0)
 			current_state = GAME_STATE_PREGAME
+			Master.SetRunLevel(RUNLEVEL_LOBBY)
 			world << "<B>Unable to choose playable game mode.</B> Reverting to pre-game lobby."
 			return 0
 		if(secret_force_mode != "secret")
@@ -210,17 +207,19 @@ var/turf/MiniSpawn
 			qdel(mode)
 			first_timer = FALSE
 			current_state = GAME_STATE_PREGAME
+			Master.SetRunLevel(RUNLEVEL_LOBBY)
 			return FALSE
 
 	//Configure mode and assign player to special mode stuff
 	job_master.DivideOccupations() //Distribute jobs
 	var/can_continue = src.mode.pre_setup()//Setup special modes
 	if(!can_continue)
-		qdel(mode)
 		current_state = GAME_STATE_PREGAME
+		Master.SetRunLevel(RUNLEVEL_LOBBY)
 		to_chat(world,"<B>Error setting up [master_mode].</B> Reverting to pre-game lobby.")
+		qdel(mode)
 		job_master.ResetOccupations()
-		return 0
+		return FALSE
 
 	createnuke()
 	createHellDoor()
@@ -246,6 +245,7 @@ var/turf/MiniSpawn
 	//here to initialize the random events nicely at round start
 	//setup_economy()
 
+	// TODO - Leshana - Dear God Fix This.  Fix all of this. Not just this line, this entire proc. This entire file!
 	spawn(0)//Forking here so we dont have to wait for this to finish
 		mode.post_setup()
 		//Cleanup some stuff
@@ -276,11 +276,12 @@ var/turf/MiniSpawn
 
 	supply_shuttle.process() 		//Start the supply shuttle regenerating points -- TLE
 	processScheduler.start()
+	Master.SetRunLevel(RUNLEVEL_GAME)
 	createnpcs()
 	lightlumosoviks()
-//	update_the_treasury()
+	//update_the_treasury()
 	update_the_graceperiods()
-//	lighting_controller.process()	//Start processing DynamicAreaLighting updates
+	//lighting_controller.process()	//Start processing DynamicAreaLighting updates
 	var/list/possibletiamathi = list()
 	var/list/possiblehunters = list()
 	var/mob/living/carbon/human/traitor_tiamat
@@ -632,6 +633,7 @@ var/turf/MiniSpawn
 		var/mode_finished = (mode.check_finished() || (emergency_shuttle.location == 2 && emergency_shuttle.alert == 1 || S.location_flag & FLAG_LEVIATHAN)) // 3 == LEVIATHAN
 		if((!mode.explosion_in_progress && mode_finished)|| quietend)
 			current_state = GAME_STATE_FINISHED
+			Master.SetRunLevel(RUNLEVEL_POSTGAME)
 
 			declare_completion()
 
