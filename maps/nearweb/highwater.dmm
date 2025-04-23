@@ -3956,6 +3956,10 @@
 /area/dunwell/station/medbay)
 "aop" = (
 /obj/structure/lifeweb/statue/angel,
+/obj/machinery/light/small/green{
+	dir = 8;
+	tag = 7
+	},
 /turf/simulated/floor/lifeweb{
 	dir = 6;
 	icon_state = "exotic"
@@ -39929,6 +39933,9 @@
 /area/dunwell/miscplaces)
 "qIs" = (
 /obj/structure/morgueslab,
+/obj/machinery/light/small/green{
+	dir = 4
+	},
 /turf/simulated/floor/shuttle6,
 /area/dunwell/station/church)
 "qIC" = (
@@ -41488,6 +41495,15 @@
 /obj/structure/railing,
 /turf/simulated/floor/lifeweb/nfloorz3,
 /area/dunwell/village)
+"sCJ" = (
+/obj/structure/lifeweb/s_stone/xsd{
+	dir = 1
+	},
+/obj/structure/fireplace/alt2,
+/turf/simulated/floor/lifeweb/wood/woodtF75{
+	icon_state = "3323"
+	},
+/area/dunwell/station/church)
 "sCM" = (
 /turf/simulated/floor/lifeweb{
 	dir = 9;
@@ -139531,7 +139547,7 @@ xzr
 nRg
 xzr
 aay
-biS
+sCJ
 aDQ
 axS
 bhA
