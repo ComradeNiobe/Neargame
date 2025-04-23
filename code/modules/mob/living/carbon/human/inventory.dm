@@ -375,7 +375,7 @@
 	var/place = null
 
 /obj/effect/equip_e/human/Destroy()
-	..()
+	. = ..()
 	target.requests -= src
 	source = null
 	target = null
@@ -399,12 +399,11 @@
 	return
 
 /obj/effect/equip_e/New()
+	. = ..()
 	if (!ticker)
 		qdel(src)
 	spawn(100)
 		qdel(src)
-	..()
-	return
 
 /obj/effect/equip_e/human/process()
 	if (item)
