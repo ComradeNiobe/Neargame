@@ -7,6 +7,7 @@
 	. = ..()
 	if(.)
 		return
+	user.set_machine(src)
 
 	var/list/dat = list()
 
@@ -60,6 +61,8 @@
 			to_chat(usr, "[src.name] has been nullified ([src.rank])")
 			log_game("[usr.real_name]([usr.key]) has nullified [src.name]'s funds.")
 			money_account.set_money(0)
+
+			return TOPIC_REFRESH
 		if("addfund")
 			if(money_account == treasuryworth)
 				to_chat(usr, "<span class='combatbold'>[pick(fnord)] I can't do this to Baron's ring!</span>")
@@ -75,37 +78,45 @@
 			log_game("[usr.real_name]([usr.key]) has added [manyobols] to [src.name]'s ring.")
 			src.receivePayment(manyobols)
 
-/obj/machinery/computer/meister/Topic(href, href_list)
+			return TOPIC_REFRESH
+
+/obj/machinery/computer/meister/Topic(href, href_list, state = global.physical_topic_state)
+	. = ..()
 	switch(href_list["choice"])
 		if ("wage")
 			var/list/wages = list("Maid","Kraken","Triton","Sheriff","Charybdis","Mortus","Misero","Servant","Pusher")
 			var/choice = input("Choose a job to receive their wage!", "MEISTERY") as null|anything in wages
 			if(!choice)
-				return
+				return TOPIC_HANDLED
 			var/manyobols = input("How many obols in copper are they going to receive? [treasuryworth.get_money()] obols in Treasury!", "MEISTERY") as null|num
 			if(manyobols <= 0)
-				return
+				return TOPIC_HANDLED
 			var/list/wagelist = list()
 			for(var/obj/item/card/id/ID in rings)
-				if(ID.rank != choice)	continue
+				if(ID.rank != choice)
+					continue
 				else
 					wagelist.Add(ID)
 			playsound(src.loc, 'sound/webbers/console_interact7.ogg', 60, 0)
 			to_chat(usr, "[manyobols] sent!")
-			log_game("[usr.real_name]([usr.key]) has paid all [choice] a wage of [manyobols].")
+			log_game("[key_name(usr)] has paid all [choice] a wage of [manyobols].")
 			for(var/obj/item/card/id/ID in wagelist)
 				ID.receivePayment(manyobols)
+
+			return TOPIC_REFRESH
 		if ("recovercrown")
 			if(!fortCrown)
 				to_chat(usr, "<span class='combatbold'>[pick(fnord)] The crown does not exist!</span>")
-				return
+				return TOPIC_HANDLED
 			if(istype(fortCrown.loc, /mob/living))
 				to_chat(usr, "<span class='combatbold'>[pick(fnord)] Someone is wearing the crown!</span>")
-				return
-			log_game("[usr.real_name]([usr.key]) has recovered the crown.")
+				return TOPIC_HANDLED
+			log_game("[key_name(usr)] has recovered the crown.")
 			to_chat(usr, "<span class='passive'>Success</span>")
 			playsound(src.loc, 'sound/webbers/console_interact7.ogg', 60, 0)
 			fortCrown.loc = src.loc
+
+			return TOPIC_HANDLED
 		if ("alarmoff")
 			for(var/obj/machinery/emergency_room/E in emergency_rooms)
 				if(E.activearea.alarm_toggled)
@@ -113,9 +124,11 @@
 					E.icon_state = E.normal_state
 					E.active = FALSE
 					processing_objects.Remove(E)
-			log_game("[usr.real_name]([usr.key]) has disabled the alarms.")
+			log_game("[key_name(usr)] has disabled the alarms.")
 			to_chat(usr, "<span class='passive'>Success</span>")
 			playsound(src.loc, 'sound/webbers/console_interact7.ogg', 60, 0)
+
+			return TOPIC_HANDLED
 
 /obj/machinery/computer/meister/attackby(obj/item/W as obj, mob/user as mob)
 	if(istype(W, /obj/item/spacecash))
