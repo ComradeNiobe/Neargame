@@ -60,22 +60,19 @@ var/list/department_radio_keys = list(
 		if(!istype(dongle)) return
 		if(dongle.translate_binary) return 1
 
-/mob/living/proc/do_message_checks(var/message = null)
+/mob/living/proc/do_message_checks(var/message)
 	if(!message)
 		return
 
-	message = html_decode(message)
-
 	if(findtext(lowertext(message), config.ic_filter_regex))
-		src << 'sound/vam_ban.ogg'
+		sound_to(src, 'sound/vam_ban.ogg')
 		to_chat(src, "I SHOULDN'T HAVE SAID THAT!")
-		sleep(10)
-		log_admin("[src.client.ckey] just tried to say cringe")
-		message_admins("[src.client.ckey] just tried to say cringe")
+		log_admin("[key_name(src)] just tried to say cringe")
+		message_admins("[key_name(src)] just tried to say cringe")
 		if(!client.holder)
 			//bans.Add(src.client.ckey)
 			//client.game_remove_whitelist(reason = "Automatic ban: ([real_name]/[key] : [message])")
-			qdel(src.client)
+			qdel(client)
 		return null
 
 	message = replacetext(message, " i ", " I ") // for�a preto a usar letra em caps
@@ -100,23 +97,25 @@ var/list/department_radio_keys = list(
 	message = replacetext(message, "babylon ", "ulysses ")
 	message = replacetext(message, " babylon", " ulysses")
 	message = replacetext(message, "babylon", "ulysses") // ISSO AQUI T� UM NOJO QUE NOJO
-	message = sanitize(message)
 
 	var/end_char = copytext(message, length(message), length(message) + 1)
 	if(!(end_char in list(".", "?", "!", "-", "~")))
 		message += "." // agora toda mensagem tem um . no final, fvck analfabetos!
 
-	return html_encode(message)
+	return message
 
-/mob/living/say(var/message, var/datum/language/speaking = null, var/verb="says", var/alt_name="", var/italics=0, var/message_range = world.view, var/sound/speech_sound, var/sound_vol, var/was_exclaiming)
+/mob/living/say(message, datum/language/speaking = null, verb="says", alt_name = "", italics = 0, message_range = world.view, sound/speech_sound, sound_vol, was_exclaiming, sanitize = TRUE)
 
 	if(!message)
 		return
 
-	log_say("[name]/[key] : [message]")
+	log_say("[key_name(src)] : [message]")
 	message = do_message_checks(message)
 	if(!message)
 		return
+
+	if(sanitize)
+		message = trim(copytext(sanitize(message), 1, MAX_MESSAGE_LEN))
 
 	if(ishuman(src))
 		var/mob/living/carbon/human/H = src

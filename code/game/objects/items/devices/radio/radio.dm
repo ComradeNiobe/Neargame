@@ -291,7 +291,8 @@ var/GLOBAL_RADIO_TYPE = 1 // radio type to use
 
 		// --- Human: use their actual job ---
 		if (ishuman(M))
-			jobname = M:get_assignment()
+			var/mob/living/carbon/human/H = M
+			jobname = H.get_assignment()
 
 		// --- Carbon Nonhuman ---
 		else if (iscarbon(M)) // Nonhuman carbon mob

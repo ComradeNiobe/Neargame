@@ -266,12 +266,7 @@ var/global/max_players = 100
 		winset(src, "rpane.changelog", "background-color=#eaeaea;font-style=bold")
 	fit_viewport()
 
-	#ifdef NEARWEB_LIVE
-	if(authenticated)
-		chatOutput.start()
-	#else
 	chatOutput.start()
-	#endif
 	ambience_playing = FALSE
 
 	//////////////
@@ -283,7 +278,6 @@ var/global/max_players = 100
 		global.admins -= src
 	global.directory -= ckey
 	global.clients -= src
-	authenticated = FALSE
 	return ..()
 
 /client/Destroy()
