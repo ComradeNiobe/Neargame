@@ -1,5 +1,6 @@
 /atom
 	layer = 2
+	var/atom_flags = 0
 	var/level = 2
 	var/flags = FPRINT
 	var/list/fingerprints

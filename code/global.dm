@@ -90,10 +90,6 @@ var/event = 0
 var/hadevent = 0
 ///////////////
 
-var/diary = null
-var/diaryofmeanpeople = null
-var/href_logfile = null
-
 var/game_version = "Nearweb"
 var/changelog_hash = ""
 var/game_year = (text2num(time2text(world.realtime, "YYYY")) + 544)
