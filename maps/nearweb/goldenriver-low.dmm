@@ -331,7 +331,7 @@
 	},
 /area/dunwell/station/consyte)
 "abe" = (
-/obj/structure/bee_hive,
+/obj/item/storage/bee_hive,
 /obj/structure/torchwall{
 	dir = 8
 	},
@@ -14642,7 +14642,7 @@
 	},
 /area/dunwell/station/hydro)
 "aQF" = (
-/obj/structure/bee_hive,
+/obj/item/storage/bee_hive,
 /turf/simulated/floor/lifeweb{
 	icon_state = "wf2"
 	},

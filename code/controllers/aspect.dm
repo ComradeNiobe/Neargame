@@ -747,7 +747,7 @@ var/list/allClothing
 
 	for(var/obj/effect/landmark/S in landmarks_list)
 		if(S.name == "Beekeeper")
-			new /obj/structure/bee_hive(S.loc)
+			new /obj/item/storage/bee_hive(S.loc)
 
 /datum/round_event/thunderstruck/apply_event()
 	for(var/mob/living/carbon/human/H in mob_list)

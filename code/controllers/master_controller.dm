@@ -219,7 +219,7 @@ var/global/pipe_processing_killed = 0
 				var/firepool = /obj/structure/campfire/firepool
 				new firepool(D)
 			if(prob(1) && (D.z < 7))
-				var/hive = /obj/structure/bee_hive
+				var/hive = /obj/item/storage/bee_hive
 				new hive(D)
 			if(prob(2))
 				var/selectedSarcophagus = /obj/structure/closet/crate/sarcophagus

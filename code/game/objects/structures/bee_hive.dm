@@ -1,63 +1,64 @@
-/obj/structure/bee_hive
+/obj/item/storage/bee_hive
 	name = "Bee Hive"
 	icon = 'icons/obj/lw_bees.dmi'
 	icon_state = "hive1"
-	density = TRUE
+	density = FALSE
+	anchored = FALSE
+	w_class = 8.0 // No, you may not have pocket or backpack pipe-bee-bombs.
+	can_hold = list(
+		"/obj/item/reagent_containers/food/snacks/honeycomb",
+	)
 	var/burned = FALSE
 	var/without_honey = FALSE
 	var/last_time = 0
-	var/honey_time = 6000 //10 min
-	var/mob_targeted
+	var/mob/living/carbon/human/mob_targeted
 	var/mob/living/simple_animal/bee/child_bee
-	var/obj/item/storage/touchable/storage_inside
+	COOLDOWN_DECLARE(honey_time)
 
-/obj/structure/bee_hive/New()
+/obj/item/storage/bee_hive/New()
 	. = ..()
-	storage_inside = new /obj/item/storage/touchable(src)
 	last_time = world.time
-	new /obj/item/reagent_containers/food/snacks/honeycomb(src.storage_inside)
+	new /obj/item/reagent_containers/food/snacks/honeycomb(src)
 	processing_objects.Add(src)
 
-/obj/structure/bee_hive/Destroy()
-	qdel(storage_inside)
+/obj/item/storage/bee_hive/Destroy()
+	. = ..()
 	processing_objects.Remove(src)
-	return ..()
 
-/obj/structure/bee_hive/process()
-	if(storage_inside.contents && without_honey)
-		for(var/HC in storage_inside.contents)
-			if(istype(HC, /obj/item/reagent_containers/food/snacks/honeycomb))
-				without_honey = FALSE
-				break
+/obj/item/storage/bee_hive/process()
+	if(contents && without_honey)
+		var/obj/item/reagent_containers/food/snacks/honeycomb/honey_comb
+		if(contents.Find(honey_comb))
+			without_honey = FALSE
 
-	else if(!(storage_inside.contents.len))
+	else if(!(length(contents)))
 		without_honey = TRUE
 
 	if(!without_honey)
-		if((last_time + honey_time < world.time) && (storage_inside.contents.len < storage_inside.storage_slots))
-			new /obj/item/reagent_containers/food/snacks/honeycomb(src.storage_inside)
-			last_time = world.time
+		if((COOLDOWN_FINISHED(src, honey_time)) && (length(contents) < storage_slots))
+			new /obj/item/reagent_containers/food/snacks/honeycomb(src)
+			COOLDOWN_START(src, honey_time, 10 MINUTES)
 
 		if(!mob_targeted)
 			for(var/mob/living/carbon/human/M in view(5, src))
-				if(!M.stat && !iszombie(M) && !(M.check_perk(/datum/perk/bee_queen)))
-					child_bee = new /mob/living/simple_animal/bee(src.loc)
+				if((!M.stat && !iszombie(M)) && !(M.check_perk(/datum/perk/bee_queen)))
+					child_bee = new /mob/living/simple_animal/bee(loc)
 					child_bee.target_mob = M
 					child_bee.hive = src
 					mob_targeted = M
 					break
 	update_icon()
 
-/obj/structure/bee_hive/attackby(var/obj/item/O as obj, var/mob/user as mob)
+/obj/item/storage/bee_hive/attackby(var/obj/item/O, var/mob/user)
 	if(istype(O, /obj/item/flame))
 		var/obj/item/flame/F = O
 		if(F.lit)
 			processing_objects.Remove(src)
 			burned = TRUE
 			without_honey = TRUE
-			for(var/obj/item/reagent_containers/food/snacks/honeycomb/H in storage_inside.contents)
+			for(var/obj/item/reagent_containers/food/snacks/honeycomb/H in contents)
 				qdel(H)
-				new /obj/item/wax(src.storage_inside)
+				new /obj/item/wax(src)
 			update_icon()
 
 	else if(istype(O, /obj/item/wax) && ishuman(user))
@@ -69,12 +70,13 @@
 			burned = FALSE
 			update_icon()
 
-/obj/structure/bee_hive/attack_hand(mob/living/carbon/human/user as mob)
-	storage_inside.orient2hud(user)
-	storage_inside.show_to(user)
-	..()
+/obj/item/storage/bee_hive/attack_hand(mob/living/carbon/human/user as mob)
+	. = ..()
+	if(user.s_active)
+		user.s_active.close(user)
+	show_to(user)
 
-/obj/structure/bee_hive/update_icon()
+/obj/item/storage/bee_hive/update_icon()
 	if(burned) icon_state = "hive2"
 	else if(without_honey)	icon_state = "hive0"
 	else	icon_state = "hive1"

@@ -6,7 +6,7 @@
 	icon_dead = "swarm"
 	var/turf/target_turf
 	var/mob/target_mob
-	var/obj/structure/bee_hive/hive
+	var/obj/item/storage/bee_hive/hive
 	var/spawn_time = 0
 	var/time_to_live = 600 // 1 minute
 	var/max_distance = 3

@@ -752,7 +752,7 @@ var/mob/FortLordHand
 			H.my_stats.change_stat(STAT_DX, 0)
 			H.my_stats.change_stat(STAT_IN, 1)
 			H.add_perk(/datum/perk/bees)
-			new /obj/structure/bee_hive(H.loc)
+			new /obj/item/storage/bee_hive(H.loc)
 		if("Engineer")
 			H.equip_to_slot_or_del(new /obj/item/flame/torch/lantern/on(H), slot_r_hand)
 			H.equip_to_slot_or_del(new /obj/item/clothing/under/rank/migrant(H), slot_w_uniform)
