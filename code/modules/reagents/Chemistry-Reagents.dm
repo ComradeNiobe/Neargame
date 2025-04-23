@@ -126,7 +126,7 @@ datum/reagent/proc/addiction_act_stage4(var/mob/living/M as mob)
 
 
 /datum/reagent/blood
-	data = alist(
+	data = list(
 		"donor" = null,
 		"viruses" = null,
 		"blood_DNA" = null,
