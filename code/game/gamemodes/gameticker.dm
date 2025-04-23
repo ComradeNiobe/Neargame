@@ -21,11 +21,6 @@ var/list/soulbroken = list()
 var/TIME_SINCE_START = 0
 
 var/round_nuke_loc = "None"
-#define GAME_STATE_PREGAME		1
-#define GAME_STATE_SETTING_UP	2
-#define GAME_STATE_PLAYING		3
-#define GAME_STATE_FINISHED		4
-#define HARD_MODE_PLAYER_CAP    25
 
 /datum/controller/gameticker
 	var/message_events
