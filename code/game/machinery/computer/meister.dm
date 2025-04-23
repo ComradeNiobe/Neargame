@@ -4,18 +4,53 @@
 //	req_one_access = list(access_change_ids)
 
 /obj/machinery/computer/meister/attack_hand(var/mob/user as mob)
-	var/dat = " <META http-equiv='X-UA-Compatible' content='IE=edge' charset='UTF-8'><Title>RAVENHEART</title></META> <style type='text/css'> @font-face {font-family: Gothic;src: url(gothic.ttf);} @font-face {font-family: Book;src: url(book.ttf);} @font-face {font-family: Hando;src: url(hando.ttf);} @font-face {font-family: Eris;src: url(eris.otf);} @font-face {font-family: Brandon;src: url(brandon.otf);} @font-face {font-family: VRN;src: url(vrn.otf);} @font-face {font-family: NEOM;src: url(neom.otf);} @font-face {font-family: 'PTSansWebRegular';src: url('./PTSANS.woff2') format('woff2');} @font-face {font-family: Type;src: url(type.ttf);} @font-face {font-family: Enlightment;src: url(enlightment.ttf);} @font-face {font-family: Arabic;src: url(arabic.ttf);} @font-face {font-family: Digital;src: url(digital.ttf);} @font-face {font-family: Cond;src: url(cond2.ttf);} @font-face {font-family: Semi;src: url(semi.ttf);} @font-face {font-family: Droser;src: url(Droser.ttf);} .goth {font-family: Gothic, Verdana, sans-serif;} .book {font-family: Book, serif;} .hando {font-family: Hando, Verdana, sans-serif;} .typewriter {font-family: Type, Verdana, sans-serif;} .arabic {font-family: Arabic, serif; font-size:180%;} .droser {font-family: Droser, Verdana, sans-serif;} </style> <style type='text/css'> @charset 'utf-8'; body {font-family: 'PTSansWebRegular';cursor: url('pointer.cur'), auto;} a {text-decoration:none;outline: none;border: none;margin:-1px;} a:focus{outline:none;} a:hover {color:#0d0d0d;background:#505055;outline: none;border: none;} a.active { text-decoration:none; color:#533333;} a.inactive:hover {color:#0d0d0d;background:#bb0000} a.active:hover {color:#bb0000;background:#0f0f0f} a.inactive:hover { text-decoration:none; color:#0d0d0d; background:#bb0000}</style> <body background bgColor=#0d0d0d text=#533333 alink=#777777 vlink=#777777 link=#777777> <style type='text/css'> body { font-family: 'Cond'; margin: 0; padding: 0; } #l { padding:10px; padding-left:20px; overflow-y: scroll; } #log { color: #a99; padding:30px; background-color: #222; } #r { position: fixed; top: 0; right: 0; width: 150px; background-color: #555; height: 100%; padding: 10px; } .rpo { color: #000; } # table { margin:10px; padding:10px; align:center; background-color: #222; border: 1px solid black; } table,tr,td { color: #666; } th { background-color: #555; color: #000; font-weight: bold; border-bottom: 2px solid #222; padding: 10px; } td { padding:5px; } tr:nth-child(even) { background: #111; } </style>"
-	dat += "<BR><BR><DIV><div id ='l'><TABLE><TH>NAME</TH><TH>POSITION</TH><TH>LOCATION</TH><TH>ACCOUNT</TH><TH>OPERATIONS</TH>"
+	. = ..()
+	if(.)
+		return
+	user.set_machine(src)
+
+	var/list/dat = list()
+
+	dat += "<div><div id = 'l'>"
+	dat += "<table>"
+	dat += {"
+		<th>NAME</th>
+		<th>POSITION</th>
+		<th>LOCATION</th>
+		<th>ACCOUNT</th>
+		<th>OPERATIONS</th>
+	"}
 	if(!ticker)	return
-	for(var/obj/item/card/id/ID in rings_account)
-		if(ID.no_showing) continue
-		if(ID.registered_name == "Unknown")	continue
-		var/area/t = get_area(ID)
+	for(var/obj/item/card/id/ID as anything in rings_account)
+		if(ID.no_showing)
+			continue
+		if(ID.registered_name == "Unknown")
+			continue
+		var/area/T = get_area(ID)
 		var/money_in = ID.money_account.get_money()
-		dat += "<TR><TD>[ID.registered_name]</TD><TD>[ID.assignment]</TD><TD>[t.name]</TD><TD>[money_in]</TD><TD><A href='byond://?src=\ref[ID];choice=nullify'>Nullify</a><BR><A href='byond://?src=\ref[ID];choice=addfund'>Add Funds</a><BR></TD></TR>"
-	dat += "</TABLE><BR></div></div><div id = 'r'><BR><BR><a class='rpo' href='byond://?src=\ref[src];choice=wage'>Give Wage</a><BR><a class ='rpo' href='byond://?src=\ref[src];choice=recovercrown'>Recover the Crown</a><BR><a class='rpo' href='byond://?src=\ref[src];choice=alarmoff'>Turn Off All Alarms</a><BR></div>"
-	user << browse(dat, "window=id_com;size=700x520")
-	//onclose(user, "id_com")
+		dat += "<tr>"
+		dat += "<td>[ID.assignment]</td>"
+		dat += "<td>[T.name]</td>"
+		dat += "<td>[ID.registered_name]</td>"
+		dat += "<td>[money_in]</td>"
+		dat += "<td>"
+		dat += "<a href='byond://?src=\ref[ID];choice=nullify'>Nullify</a><br>"
+		dat += "<a href='byond://?src=\ref[ID];choice=addfund'>Add Funds</a><br>"
+		dat += "</td>"
+		dat += "</tr>"
+	dat += "</table><br>"
+	dat += "</div></div>"
+
+	dat += "<div id = 'r'>"
+	dat += "<br><br>"
+	dat += "<a class = 'rpo' href='byond://?src=\ref[src];choice=wage'>Give Wage</a><br>"
+	dat += "<a class = 'rpo' href='byond://?src=\ref[src];choice=recovercrown'>Recover the Crown</a><br>"
+	dat += "<a class='rpo' href='byond://?src=\ref[src];choice=alarmoff'>Turn Off All Alarms</a><br>"
+	dat += "</div>"
+
+	var/datum/browser/popup = new(user, "id_com", "ENOCH'S GATE - MANAGEMENT", 700, 520)
+	popup.set_content(JOINTEXT(dat))
+	popup.open()
 
 /obj/item/card/id/Topic(href, href_list)
 	switch(href_list["choice"])
@@ -26,6 +61,8 @@
 			to_chat(usr, "[src.name] has been nullified ([src.rank])")
 			log_game("[usr.real_name]([usr.key]) has nullified [src.name]'s funds.")
 			money_account.set_money(0)
+
+			return TOPIC_REFRESH
 		if("addfund")
 			if(money_account == treasuryworth)
 				to_chat(usr, "<span class='combatbold'>[pick(fnord)] I can't do this to Baron's ring!</span>")
@@ -41,37 +78,49 @@
 			log_game("[usr.real_name]([usr.key]) has added [manyobols] to [src.name]'s ring.")
 			src.receivePayment(manyobols)
 
-/obj/machinery/computer/meister/Topic(href, href_list)
+			return TOPIC_REFRESH
+
+/obj/machinery/computer/meister/Topic(href, href_list, state = global.physical_topic_state)
+	. = ..()
+	if(!CanPhysicallyInteractWith(usr, src))
+		to_chat(usr, SPAN_WARNING("You must stay close to \the [src]!"))
+		return
+
 	switch(href_list["choice"])
 		if ("wage")
 			var/list/wages = list("Maid","Kraken","Triton","Sheriff","Charybdis","Mortus","Misero","Servant","Pusher")
 			var/choice = input("Choose a job to receive their wage!", "MEISTERY") as null|anything in wages
 			if(!choice)
-				return
+				return TOPIC_HANDLED
 			var/manyobols = input("How many obols in copper are they going to receive? [treasuryworth.get_money()] obols in Treasury!", "MEISTERY") as null|num
 			if(manyobols <= 0)
-				return
+				return TOPIC_HANDLED
 			var/list/wagelist = list()
 			for(var/obj/item/card/id/ID in rings)
-				if(ID.rank != choice)	continue
+				if(ID.rank != choice)
+					continue
 				else
 					wagelist.Add(ID)
 			playsound(src.loc, 'sound/webbers/console_interact7.ogg', 60, 0)
 			to_chat(usr, "[manyobols] sent!")
-			log_game("[usr.real_name]([usr.key]) has paid all [choice] a wage of [manyobols].")
+			log_game("[key_name(usr)] has paid all [choice] a wage of [manyobols].")
 			for(var/obj/item/card/id/ID in wagelist)
 				ID.receivePayment(manyobols)
+
+			return TOPIC_REFRESH
 		if ("recovercrown")
 			if(!fortCrown)
 				to_chat(usr, "<span class='combatbold'>[pick(fnord)] The crown does not exist!</span>")
-				return
+				return TOPIC_HANDLED
 			if(istype(fortCrown.loc, /mob/living))
 				to_chat(usr, "<span class='combatbold'>[pick(fnord)] Someone is wearing the crown!</span>")
-				return
-			log_game("[usr.real_name]([usr.key]) has recovered the crown.")
+				return TOPIC_HANDLED
+			log_game("[key_name(usr)] has recovered the crown.")
 			to_chat(usr, "<span class='passive'>Success</span>")
 			playsound(src.loc, 'sound/webbers/console_interact7.ogg', 60, 0)
 			fortCrown.loc = src.loc
+
+			return TOPIC_HANDLED
 		if ("alarmoff")
 			for(var/obj/machinery/emergency_room/E in emergency_rooms)
 				if(E.activearea.alarm_toggled)
@@ -79,9 +128,11 @@
 					E.icon_state = E.normal_state
 					E.active = FALSE
 					processing_objects.Remove(E)
-			log_game("[usr.real_name]([usr.key]) has disabled the alarms.")
+			log_game("[key_name(usr)] has disabled the alarms.")
 			to_chat(usr, "<span class='passive'>Success</span>")
 			playsound(src.loc, 'sound/webbers/console_interact7.ogg', 60, 0)
+
+			return TOPIC_HANDLED
 
 /obj/machinery/computer/meister/attackby(obj/item/W as obj, mob/user as mob)
 	if(istype(W, /obj/item/spacecash))

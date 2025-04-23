@@ -56,19 +56,19 @@ var/global/list/holodeck_programs = list(
 		dat += "<B>Holodeck Control System</B><BR>"
 		dat += "<HR>Current Loaded Programs:<BR>"
 		for(var/prog in supported_programs)
-			dat += "<A href='?src=\ref[src];program=[supported_programs[prog]]'>(([prog]))</A><BR>"
+			dat += "<A href='byond://?src=\ref[src];program=[supported_programs[prog]]'>(([prog]))</A><BR>"
 
 		dat += "Please ensure that only holographic weapons are used in the holodeck if a combat simulation has been loaded.<BR>"
 
 		if(issilicon(user))
 			if(emagged)
-				dat += "<A href='?src=\ref[src];AIoverride=1'>(<font color=green>Re-Enable Safety Protocols?</font>)</A><BR>"
+				dat += "<A href='byond://?src=\ref[src];AIoverride=1'>(<font color=green>Re-Enable Safety Protocols?</font>)</A><BR>"
 			else
-				dat += "<A href='?src=\ref[src];AIoverride=1'>(<font color=red>Override Safety Protocols?</font>)</A><BR>"
+				dat += "<A href='byond://?src=\ref[src];AIoverride=1'>(<font color=red>Override Safety Protocols?</font>)</A><BR>"
 
 		if(emagged)
 			for(var/prog in restricted_programs)
-				dat += "<A href='?src=\ref[src];program=[restricted_programs[prog]]'>(<font color=red>Begin [prog]</font>)</A><BR>"
+				dat += "<A href='byond://?src=\ref[src];program=[restricted_programs[prog]]'>(<font color=red>Begin [prog]</font>)</A><BR>"
 				dat += "Ensure the holodeck is empty before testing.<BR>"
 				dat += "<BR>"
 			dat += "Safety Protocols are <font color=red> DISABLED </font><BR>"

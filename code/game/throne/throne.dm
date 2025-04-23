@@ -53,6 +53,9 @@ var/global/list/riot_essential = list("Baron", "Court Bodyguard", "Charybdis", "
 	. = ..()
 	if(user != src.buckled_mob)
 		return TOPIC_HANDLED
+	if(!CanPhysicallyInteractWith(user, src))
+		to_chat(user, SPAN_WARNING("You must stay close to \the [src]!"))
+		return
 
 	var/obj/item/clothing/head/caphat/crown = user.get_item_by_slot(slot_head)
 	var/list/allowedjobs = list("Baron","Hand","Count","Baroness","Heir","Successor")

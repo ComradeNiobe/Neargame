@@ -19,15 +19,15 @@
     <br>
     <h5>Authentication:</h5>
     <b>Captain's Key:</b> [captains_key_loc]
-    <a href='?src=\ref[admins];choice=activate_captains_key'>Activate</a><br>
+    <a href='byond://?src=\ref[admins];choice=activate_captains_key'>Activate</a><br>
     <b>Secondary Key:</b> [secondary_key_loc]
-    <a href='?src=\ref[admins];choice=activate_secondary_key'>Activate</a><br>
+    <a href='byond://?src=\ref[admins];choice=activate_secondary_key'>Activate</a><br>
     <b>EAD: [ead ? ead.get_status() : "Lost or Destroyed"]</b>
-    <a href='?src=\ref[admins];choice=activate_ead'>Activate</a><br>
+    <a href='byond://?src=\ref[admins];choice=activate_ead'>Activate</a><br>
     <hr>
   "}
 
-  txt += "<a href='?src=\ref[admins];choice=reassign_head_loyalist'>Reassign Head Loyalist</a><br>"
+  txt += "<a href='byond://?src=\ref[admins];choice=reassign_head_loyalist'>Reassign Head Loyalist</a><br>"
   if(head_loyalist)
     txt += check_role_table("Head Loyalist", list(head_loyalist), admins, 0)
 
@@ -35,7 +35,7 @@
   if(loyal_crew.len)
     txt += check_role_table("Loyalists", loyal_crew, admins, 0)
 
-  txt += "<a href='?src=\ref[admins];choice=reassign_head_mutineer'>Reassign Head Mutineer</a><br>"
+  txt += "<a href='byond://?src=\ref[admins];choice=reassign_head_mutineer'>Reassign Head Mutineer</a><br>"
   if(head_mutineer)
     txt += check_role_table("Head Mutineer", list(head_mutineer), admins, 0)
 
