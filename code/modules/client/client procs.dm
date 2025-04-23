@@ -187,6 +187,7 @@ var/global/max_players = 100
 
 	if(!account_join_date)
 		account_join_date = findJoinDate()
+
 	switch(private_party)
 		if(TRUE)
 			if((!global.ckeywhitelistweb.Find(src.ckey)))

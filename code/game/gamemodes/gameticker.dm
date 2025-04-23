@@ -326,9 +326,6 @@ var/turf/MiniSpawn
 		if(H.job == "Baron" || H.job == "Vicar" || H.job == "Merchant")
 			H.client.ChromieWinorLoose(1)
 
-#ifdef NEARWEB_LIVE
-	set_donation_locks()
-#endif
 	for(var/obj/multiz/ladder/L in ladder_list) L.connect() //Lazy hackfix for ladders. TODO: move this to an actual controller. ~ Z
 	return 1
 

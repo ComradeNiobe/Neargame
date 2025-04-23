@@ -11,10 +11,6 @@ var/rtlog_path
 /world/New()
 	//logs]
 	set waitfor = FALSE
-#ifdef NEARWEB_LIVE
-	server_language = "IZ"
-	current_server = "S1"
-#endif
 	TgsNew(minimum_required_security_level = TGS_SECURITY_TRUSTED)
 	for(var/obj/effect/landmark/mapinfo/L in landmarks_list)
 		if (L.name == "mapinfo" && L.mapname != "Mini War")
