@@ -27,11 +27,7 @@
 						log_access("Notice: [key_name(src)] has the same [matches] as [key_name(M)] (no longer logged in).")
 
 /mob/Login()
-#ifdef NEARWEB_LIVE
-	client.authenticated = TRUE // very hacky solution to nuking the password system but it'll work for now
-	if(client.authenticated == TRUE)
-		client.chatOutput.start()
-#endif
+	client.chatOutput.start()
 	player_list |= src
 	update_Login_details()
 	world.update_status()
