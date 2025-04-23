@@ -49,7 +49,8 @@ var/global/isEmergency = 0
 var/global/isMeeting = 0
 var/global/list/riot_essential = list("Baron", "Court Bodyguard", "Charybdis", "Squire", "Kraken", "Triton", "Hand", "Heir", "Successor", "Baroness", "Guest", "Meister", "Treasurer", "Praetor", "Vicar", "Sniffer", "Sheriff")
 
-/obj/structure/stool/bed/chair/ThroneMid/OnTopic(mob/living/carbon/human/user, list/href_list)
+/obj/structure/stool/bed/chair/ThroneMid/Topic(mob/living/carbon/human/user, list/href_list, state = global.physical_topic_state)
+	. = ..()
 	if(user != src.buckled_mob)
 		return TOPIC_HANDLED
 

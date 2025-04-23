@@ -373,7 +373,7 @@ var/message_delay = 0 // To make sure restarting the recentmessages list is kept
 			if (ending != "!")
 				var/mob/living/carbon/human/H = M
 				var/ageAndGender = ageAndGender2Desc(H.age, H.gender)
-				part_b = "</span> \[[icon2html(radio, world, realsize = TRUE)]\]<span class='commsbold'> - \[[job]\  [ageAndGender]] " // Tweaked for security headsets -- TLE
+				part_b = "</span> \[[icon2html(radio, world)]\]<span class='commsbold'> - \[[job]\  [ageAndGender]] " // Tweaked for security headsets -- TLE
 			else if (ending == "!")
 				var/mob/living/carbon/human/H = M
 				var/ageAndGender = ageAndGender2Desc(H.age, H.gender)

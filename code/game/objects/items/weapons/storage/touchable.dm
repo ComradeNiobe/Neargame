@@ -7,7 +7,7 @@
 	var/mob/living/carbon/human/owner
 
 /obj/item/storage/touchable/organ/New()
-	..()
+	. = ..()
 	if(ishuman(loc))
 		owner = loc
 

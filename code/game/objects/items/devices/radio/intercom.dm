@@ -30,7 +30,7 @@ var/list/intercoms = list()
 	pixel_x = 26
 
 /obj/item/device/radio/intercom/New()
-	..()
+	. = ..()
 	processing_objects += src
 	intercoms += src
 
