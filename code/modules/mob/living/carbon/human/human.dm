@@ -345,42 +345,43 @@
 
 
 /mob/living/carbon/human/show_inv(mob/user as mob)
+	if(!CanPhysicallyInteractWith(user, src))
+		return
 	if(istype(src, /mob/living/carbon/human/monster))
 		return
 	user.set_machine(src)
-	var/dat = {"<META http-equiv="X-UA-Compatible" content="IE=edge" charset="UTF-8"> <Title>Inventory</title> <style type="text/css"> body {font-family: Times; cursor: url('https://lfwb.ru/Icons/pointer.cur'), auto;} a {text-decoration:none;outline: none;border: none;margin:-1px;} a:focus{outline:none;} a:hover {color:#0d0d0d;background:#505055;outline: none;border: none;} a.active { text-decoration:none; color:#533333;} a.inactive:hover {color:#0d0d0d;background:#bb0000} a.active:hover {color:#bb0000;background:#0f0f0f} a.inactive:hover { text-decoration:none; color:#0d0d0d; background:#bb0000}</style> <body background bgColor=#0d0d0d text=#862525 alink=#777777 vlink=#777777 link=#777777>
-	<B><HR><FONT size=3>[name]</FONT></B>
-	<BR><HR>
-	<BR><B>Mask:</B> <A href='byond://?src=\ref[src];item=mask'>[(wear_mask ? wear_mask : "<small>Nothing</small>")]</A>
-	<BR><B>Neck:</B> <A href='byond://?src=\ref[src];item=amulet'>[(amulet ? amulet : "<small>Nothing</small>")]</A>
-	<BR><B>Left Hand:</B> <A href='byond://?src=\ref[src];item=l_hand'>[(l_hand ? l_hand  : "<small>Nothing</small>")]</A>
-	<BR><B>Right Hand:</B> <A href='byond://?src=\ref[src];item=r_hand'>[(r_hand ? r_hand : "<small>Nothing</small>")]</A>
-	<BR><B>Gloves:</B> <A href='byond://?src=\ref[src];item=gloves'>[(gloves ? gloves : "<small>Nothing</small>")]</A>
-	<BR><B>Glasses:</B> <A href='byond://?src=\ref[src];item=eyes'>[(glasses ? glasses : "<small>Nothing</small>")]</A>
-	<BR><B>Left Ear:</B> <A href='byond://?src=\ref[src];item=l_ear'>[(l_ear ? l_ear : "<small>Nothing</small>")]</A>
-	<BR><B>Right Ear:</B> <A href='byond://?src=\ref[src];item=r_ear'>[(r_ear ? r_ear : "<small>Nothing</small>")]</A>
-	<BR><B>Helmet:</B> <A href='byond://?src=\ref[src];item=head'>[(head ? head : "<small>Nothing</small>")]</A>
-	<BR><B>Boots:</B> <A href='byond://?src=\ref[src];item=shoes'>[(shoes ? shoes : "<small>Nothing</small>")]</A>
-	<BR><B>Belt:</B> <A href='byond://?src=\ref[src];item=belt'>[(belt ? belt : "<small>Nothing</small>")]</A>
-	<BR><B>Clothes:</B> <A href='byond://?src=\ref[src];item=uniform'>[(w_uniform ? w_uniform : "<small>Nothing</small>")]</A>
-	<BR><B>(Exo)Suit:</B> <A href='byond://?src=\ref[src];item=suit'>[(wear_suit ? wear_suit : "<small>Nothing</small>")]</A>
-	<BR><B>Back:</B> <A href='byond://?src=\ref[src];item=back'>[(back ? back : "<small>Nothing</small>")]</A> [((istype(wear_mask, /obj/item/clothing/mask) && istype(back, /obj/item/tank) && !( internal )) ? text(" <A href='byond://?src=\ref[];item=internal'>Set Internal</A>", src) : "")]
-	<BR><B>Back II:</B> <A href='byond://?src=\ref[src];item=back2'>[(back2 ? back2 : "<small>Nothing</small>")]</A> [((istype(wear_mask, /obj/item/clothing/mask) && istype(back, /obj/item/tank) && !( internal )) ? text(" <A href='byond://?src=\ref[];item=internal'>Set Internal</A>", src) : "")]
-	<BR><B>ID:</B> <A href='byond://?src=\ref[src];item=id'>[(wear_id ? wear_id : "<small>Nothing</small>")]</A>
-	<BR><B>Suit Storage:</B> <A href='byond://?src=\ref[src];item=s_store'>[(s_store ? s_store : "<small>Nothing</small>")]</A>
-	<BR><B>Left Wrist:</B> <A href='byond://?src=\ref[src];item=wrist_l'>[(wrist_l ? wrist_l : "<small>Nothing</small>")]</A>
-	<BR><B>Right Wrist:</B> <A href='byond://?src=\ref[src];item=wrist_r'>[(wrist_r ? wrist_r : "<small>Nothing</small>")]</A>
-	<BR>[(handcuffed ? text("<A href='byond://?src=\ref[src];item=handcuff'>Handcuffed</A>") : text("<A href='byond://?src=\ref[src];item=handcuff'>Not Handcuffed</A>"))]
-	<BR>[(legcuffed ? text("<A href='byond://?src=\ref[src];item=legcuff'>Legcuffed</A>") : text(""))]
-	<BR>[(internal ? text("<A href='byond://?src=\ref[src];item=internal'>Remove Internal</A>") : "")]
-	<BR><A href='byond://?src=\ref[src];item=splints'>Remove Splints</A>
-	<BR><A href='byond://?src=\ref[src];item=pockets'>Empty Pockets</A>
-	<BR><A href='byond://?src=\ref[user];refresh=1'>Refresh</A>
-	<BR><A href='byond://?src=\ref[user];mach_close=mob[name]'>Close</A>
-	<BR>"}
-	user << browse(dat, text("window=Inventory;size=340x480;border=1;"))
-	onclose(user, "Inventory")
-	return
+	var/list/dat = list()
+
+	dat += "<B>Mask:</B> <A href='byond://?src=\ref[src];item=mask'>[(wear_mask ? wear_mask : "<small>Nothing</small>")]</A>"
+	dat += "<B>Neck:</B> <A href='byond://?src=\ref[src];item=amulet'>[(amulet ? amulet : "<small>Nothing</small>")]</A>"
+	dat += "<B>Left Hand:</B> <A href='byond://?src=\ref[src];item=l_hand'>[(l_hand ? l_hand  : "<small>Nothing</small>")]</A>"
+	dat += "<B>Right Hand:</B> <A href='byond://?src=\ref[src];item=r_hand'>[(r_hand ? r_hand : "<small>Nothing</small>")]</A>"
+	dat += "<B>Gloves:</B> <A href='byond://?src=\ref[src];item=gloves'>[(gloves ? gloves : "<small>Nothing</small>")]</A>"
+	dat += "<B>Glasses:</B> <A href='byond://?src=\ref[src];item=eyes'>[(glasses ? glasses : "<small>Nothing</small>")]</A>"
+	dat += "<B>Left Ear:</B> <A href='byond://?src=\ref[src];item=l_ear'>[(l_ear ? l_ear : "<small>Nothing</small>")]</A>"
+	dat += "<B>Right Ear:</B> <A href='byond://?src=\ref[src];item=r_ear'>[(r_ear ? r_ear : "<small>Nothing</small>")]</A>"
+	dat += "<B>Helmet:</B> <A href='byond://?src=\ref[src];item=head'>[(head ? head : "<small>Nothing</small>")]</A>"
+	dat += "<B>Boots:</B> <A href='byond://?src=\ref[src];item=shoes'>[(shoes ? shoes : "<small>Nothing</small>")]</A>"
+	dat += "<B>Belt:</B> <A href='byond://?src=\ref[src];item=belt'>[(belt ? belt : "<small>Nothing</small>")]</A>"
+	dat += "<B>Clothes:</B> <A href='byond://?src=\ref[src];item=uniform'>[(w_uniform ? w_uniform : "<small>Nothing</small>")]</A>"
+	dat += "<B>(Exo)Suit:</B> <A href='byond://?src=\ref[src];item=suit'>[(wear_suit ? wear_suit : "<small>Nothing</small>")]</A>"
+	dat += "<B>Back:</B> <A href='byond://?src=\ref[src];item=back'>[(back ? back : "<small>Nothing</small>")]</A> [((istype(wear_mask, /obj/item/clothing/mask) && istype(back, /obj/item/tank) && !( internal )) ? text(" <A href='byond://?src=\ref[];item=internal'>Set Internal</A>", src) : "")]"
+	dat += "<B>Back II:</B> <A href='byond://?src=\ref[src];item=back2'>[(back2 ? back2 : "<small>Nothing</small>")]</A> [((istype(wear_mask, /obj/item/clothing/mask) && istype(back, /obj/item/tank) && !( internal )) ? text(" <A href='byond://?src=\ref[];item=internal'>Set Internal</A>", src) : "")]"
+	dat += "<B>ID:</B> <A href='byond://?src=\ref[src];item=id'>[(wear_id ? wear_id : "<small>Nothing</small>")]</A>"
+	dat += "<B>Suit Storage:</B> <A href='byond://?src=\ref[src];item=s_store'>[(s_store ? s_store : "<small>Nothing</small>")]</A>"
+	dat += "<B>Left Wrist:</B> <A href='byond://?src=\ref[src];item=wrist_l'>[(wrist_l ? wrist_l : "<small>Nothing</small>")]</A>"
+	dat += "<B>Right Wrist:</B> <A href='byond://?src=\ref[src];item=wrist_r'>[(wrist_r ? wrist_r : "<small>Nothing</small>")]</A>"
+	dat += "[(handcuffed ? text("<A href='byond://?src=\ref[src];item=handcuff'>Handcuffed</A>") : text("<A href='byond://?src=\ref[src];item=handcuff'>Not Handcuffed</A>"))]"
+	dat += "[(legcuffed ? text("<A href='byond://?src=\ref[src];item=legcuff'>Legcuffed</A>") : text(""))]"
+	dat += "[(internal ? text("<A href='byond://?src=\ref[src];item=internal'>Remove Internal</A>") : "")]"
+	dat += "<A href='byond://?src=\ref[src];item=splints'>Remove Splints</A>"
+	dat += "<A href='byond://?src=\ref[src];item=pockets'>Empty Pockets</A>"
+	dat += "<A href='byond://?src=\ref[user];refresh=1'>Refresh</A>"
+	dat += "<A href='byond://?src=\ref[user];mach_close=mob[name]'>Close</A>"
+
+	var/datum/browser/popup = new(user, "Inventory", "[name]'s Inventory", 340, 480)
+	popup.set_content(jointext(dat,"<br>"))
+	popup.open()
 
 // called when something steps onto a human
 // this could be made more general, but for now just handle mulebot
@@ -495,10 +496,10 @@
 	return ..(shock_damage,source,siemens_coeff)
 
 
+/// TODO: Refactor this with proper state checks.
 /mob/living/carbon/human/Topic(href, href_list)
 	if (href_list["refresh"])
-		if((machine)&&(in_range(src, usr)))
-			show_inv(machine)
+		show_inv(machine)
 
 	if (href_list["mach_close"])
 		var/t1 = text("window=[]", href_list["mach_close"])

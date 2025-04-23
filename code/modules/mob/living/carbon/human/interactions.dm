@@ -197,6 +197,9 @@ var/list/cuckoldlist = list()
 	return (!w_uniform || P.pants_down) ? 1 : 0
 
 /mob/living/carbon/human/make_interaction()
+	// No ass slapping from miles away.
+	if(!CanPhysicallyInteractWith(usr, src))
+		return
 	set_machine(src)
 
 	var/mob/living/carbon/human/H = usr
@@ -225,51 +228,52 @@ var/list/cuckoldlist = list()
 
 	H.lastfucked = null
 	H.lfhole = ""
-	var/dat = "<META http-equiv='X-UA-Compatible' content='IE=edge' charset='UTF-8'><style type='text/css'> body {font-family: Times; cursor: url('https://lfwb.ru/Icons/pointer.cur'), auto;} a {text-decoration:none;outline: none;border: none;margin:-1px;} a:focus{outline:none;} a:hover {color:#0d0d0d;background:#505055;outline: none;border: none;} a.active { text-decoration:none; color:#533333;} a.inactive:hover {color:#0d0d0d;background:#bb0000} a.active:hover {color:#bb0000;background:#0f0f0f} a.inactive:hover { text-decoration:none; color:#0d0d0d; background:#bb0000}</style>"
-	dat += "<body background bgColor=#0d0d0d text=#862525 alink=#777777 vlink=#777777 link=#777777>"
-	dat += "<title>Interactions</title><B><HR><FONT size=3>INTERACTIONS - [H.partner]</FONT></B><BR><HR>"
+
+	var/list/dat = list()
+
 	if (hashands)
-		dat +=  {"<font size=3><B>Hands:</B></font><BR>"}
+		dat +=  "<font size=3><B>Hands:</B></font>"
 		if(get_dist(H,P) <= 1)
-			dat +=  {"<A href='byond://?src=\ref[usr];interaction=slap'>Slap face!</A><BR>"}
+			dat +=  "<A href='byond://?src=\ref[usr];interaction=slap'>Slap face!</A>"
 			if (hasanus_p)
-				dat += {"<A href='byond://?src=\ref[usr];interaction=assslap'>Slap ass!</A><BR>"}
+				dat += "<A href='byond://?src=\ref[usr];interaction=assslap'>Slap ass!</A>"
 			if (isnude_p)
 				if (hasvagina_p && (!P.mutilated_genitals))
-					dat += {"<A href='byond://?src=\ref[usr];interaction=fingering'>Put fingers in places.</A><BR>"}
+					dat += "<A href='byond://?src=\ref[usr];interaction=fingering'>Put fingers in places.</A>"
 				if(P.gender == FEMALE || P.isFemboy())
-					dat += {"<A href='byond://?src=\ref[usr];interaction=squeezebreast'>Squeeze breasts!</A><BR>"}
+					dat += "<A href='byond://?src=\ref[usr];interaction=squeezebreast'>Squeeze breasts!</A>"
 
 	if (mouthfree && (lying == P.lying || !lying))
-		dat += {"<font size=3><B>Mouth:</B></font><BR>"}
-		dat += {"<A href='byond://?src=\ref[usr];interaction=kiss'>Kiss.</A><BR>"}
+		dat += "<font size=3><B>Mouth:</B></font>"
+		dat += "<A href='byond://?src=\ref[usr];interaction=kiss'>Kiss.</A>"
 		if(get_dist(H,P) <= 1)
 			if (isnude_p && (!P.mutilated_genitals))
 				if (haspenis_p)
-					dat += {"<A href='byond://?src=\ref[usr];interaction=blowjob'>Suck cock.</A><BR>"}
-					dat += {"<A href='byond://?src=\ref[usr];interaction=handjob'>Masturbate.</A><BR>"}
-					dat += {"<A href='byond://?src=\ref[usr];interaction=ballsuck'>Suck balls.</A><BR>"}
+					dat += "<A href='byond://?src=\ref[usr];interaction=blowjob'>Suck cock.</A>"
+					dat += "<A href='byond://?src=\ref[usr];interaction=handjob'>Masturbate.</A>"
+					dat += "<A href='byond://?src=\ref[usr];interaction=ballsuck'>Suck balls.</A>"
 				if (hasvagina_p)
-					dat += {"<A href='byond://?src=\ref[usr];interaction=vaglick'>Lick vagina.</A><BR>"}
-			dat +=  {"<A href='byond://?src=\ref[usr];interaction=spit'>Spit.</A><BR>"}
+					dat += "<A href='byond://?src=\ref[usr];interaction=vaglick'>Lick vagina.</A>"
+			dat +=  "<A href='byond://?src=\ref[usr];interaction=spit'>Spit.</A>"
 
 	if(isnude && get_dist(usr,H.partner) <= 1)
 		if (haspenis && hashands)
-			dat += {"<font size=3><B>Forbidden Fruits:</B></font><BR>"}
+			dat += "<font size=3><B>Forbidden Fruits:</B></font>"
 			if (isnude_p)
 				if (hasvagina_p && (!P.mutilated_genitals))
-					dat += {"<A href='byond://?src=\ref[usr];interaction=vaginal'>Vaginal.</A><BR>"}
+					dat += "<A href='byond://?src=\ref[usr];interaction=vaginal'>Vaginal.</A>"
 				if (hasanus_p)
-					dat += {"<A href='byond://?src=\ref[usr];interaction=anal'>Anal.</A><BR>"}
+					dat += "<A href='byond://?src=\ref[usr];interaction=anal'>Anal.</A>"
 				if (mouthfree_p)
-					dat += {"<A href='byond://?src=\ref[usr];interaction=oral'>Oral.</A><BR>"}
+					dat += "<A href='byond://?src=\ref[usr];interaction=oral'>Oral.</A>"
 	if (isnude && get_dist(usr,H.partner) <= 1)
 		if (hasvagina && haspenis_p && (!H.mutilated_genitals))
-			dat += {"<font size=3><B>Vagina:</B></font><BR>"}
-			dat += {"<A href='byond://?src=\ref[usr];interaction=mount'>Mount</A><BR><HR>"}
+			dat += "<font size=3><B>Vagina:</B></font>"
+			dat += "<A href='byond://?src=\ref[usr];interaction=mount'>Mount</A><HR>"
 
-	usr << browse(dat, "window=interactions;size=350x300;can_resize=0")
-
+	var/datum/browser/popup = new(H, "interactions", "INTERACTIONS - [H.partner.name]", 350, 300)
+	popup.set_content(jointext(dat,"<br>"))
+	popup.open()
 
 //INTERACTIONS
 /mob/living/carbon/human
