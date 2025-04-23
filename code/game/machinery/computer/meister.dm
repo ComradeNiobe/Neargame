@@ -82,6 +82,10 @@
 
 /obj/machinery/computer/meister/Topic(href, href_list, state = global.physical_topic_state)
 	. = ..()
+	if(!CanPhysicallyInteractWith(usr, src))
+		to_chat(usr, SPAN_WARNING("You must stay close to \the [src]!"))
+		return
+
 	switch(href_list["choice"])
 		if ("wage")
 			var/list/wages = list("Maid","Kraken","Triton","Sheriff","Charybdis","Mortus","Misero","Servant","Pusher")

@@ -44,7 +44,7 @@
 		<style>
 			tr:nth-of-type(even) {
 				background-color: #7d7d7d;
-				color: #300000;
+				color: #121212;
 			}
 		</style>
 	"}
@@ -87,6 +87,10 @@
 
 /obj/machinery/lwvend/Topic(href, href_list, state = global.physical_topic_state)
 	. = ..()
+	if(!CanPhysicallyInteractWith(usr, src))
+		to_chat(usr, SPAN_WARNING("You must stay close to \the [src]!"))
+		return
+
 	var/hrefParsed = splittext(href, ";")[2]
 
 	if(href_list["change"])
@@ -349,11 +353,17 @@ var/debt = 1
 	var/illiterate = FALSE
 	if(user.check_perk(/datum/perk/illiterate))
 		illiterate = TRUE
-	var/dat
-	dat += {"<META http-equiv='X-UA-Compatible' content='IE=edge' charset='UTF-8'> <style type='text/css'> @font-face {font-family: Gothic;src: url(gothic.ttf);} @font-face {font-family: Book;src: url(book.ttf);} @font-face {font-family: Hando;src: url(hando.ttf);} @font-face {font-family: Eris;src: url(eris.otf);} @font-face {font-family: Brandon;src: url(brandon.otf);} @font-face {font-family: VRN;src: url(vrn.otf);} @font-face {font-family: NEOM;src: url(neom.otf);} @font-face {font-family: 'PTSansWebRegular';src: url('./PTSANS.woff2') format('woff2');} @font-face {font-family: Type;src: url(type.ttf);} @font-face {font-family: Enlightment;src: url(enlightment.ttf);} @font-face {font-family: Arabic;src: url(arabic.ttf);} @font-face {font-family: Digital;src: url(digital.ttf);} @font-face {font-family: Cond;src: url(cond2.ttf);} @font-face {font-family: Semi;src: url(semi.ttf);} @font-face {font-family: Droser;src: url(Droser.ttf);} .goth {font-family: Gothic, Verdana, sans-serif;} .book {font-family: Book, serif;} .hando {font-family: Hando, Verdana, sans-serif;} .typewriter {font-family: Type, Verdana, sans-serif;} .arabic {font-family: Arabic, serif; font-size:180%;} .droser {font-family: Droser, Verdana, sans-serif;} </style> <style type='text/css'> @charset 'utf-8'; body {font-family: 'PTSansWebRegular';cursor: url('pointer.cur'), auto;} a {text-decoration:none;outline: none;border: none;margin:-1px;} a:focus{outline:none;} a:hover {color:#0d0d0d;background:#505055;outline: none;border: none;} a.active { text-decoration:none; color:#533333;} a.inactive:hover {color:#0d0d0d;background:#bb0000} a.active:hover {color:#bb0000;background:#0f0f0f} a.inactive:hover { text-decoration:none; color:#0d0d0d; background:#bb0000}</style>
-	<body background bgColor=#0d0d0d text=#533333 alink=#777777 vlink=#777777 link=#777777>
-	<TT><CENTER><b>[src.name]</b></CENTER></TT><br>
+
+	var/css = {"
+		<style>
+			tr:nth-of-type(even) {
+				background-color: #7d7d7d;
+				color: #121212;
+			}
+		</style>
 	"}
+	var/list/dat = list()
+
 	dat += "<TABLE width=100%><TR><TD><TT><B>Item:</B></TT></TD> <TD><TT><B>Price:</B></TT></TD><TD></TD><TD></TD><TD></TD></TR>"
 	for(var/obj/item/A in contents)
 		var/ProductPrice = A.priceSet
@@ -380,12 +390,17 @@ var/debt = 1
 	else
 		dat += "</TABLE><br><TT><b>Obols Loaded: [obols]</b><br></TT><BR><TT><A href='byond://?src=\ref[src];change=1'>Change</A></TT>"
 
-	user << browse(dat, "window=vending;size=575x450")
+	var/datum/browser/popup = new(user, "vending", "[name]", 575, 450)
+	popup.set_content(JOINTEXT(dat))
+	popup.add_head_content(css)
+	popup.open()
 
 /obj/machinery/computerVendor/Topic(href, href_list)
 	if(..())
 		return
-
+	if(!CanPhysicallyInteractWith(usr, src))
+		to_chat(usr, SPAN_WARNING("You must stay close to \the [src]!"))
+		return
 
 	if(href_list["change"])
 		playsound(src.loc, pick('sound/effects/public1.ogg','sound/effects/public2.ogg','sound/effects/public3.ogg'), 30, 0)
