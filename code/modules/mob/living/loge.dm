@@ -75,7 +75,7 @@
 
 					if(H.stat == 2)
 						target = null
-				if(get_dist(src, target) > 3 && target.x != x && target.y != y)
+				if(get_dist(src, target) > 3 && target?.x != x && target?.y != y)
 					if(step_towards_3d(src,target))
 						return 1
 			else
