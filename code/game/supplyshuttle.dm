@@ -390,14 +390,15 @@ var/global/TaxUponSells = 20
 		dat += {"<BR><B>Supply shuttle</B><HR>
 		Location: [supply_shuttle.moving ? "Moving to station ([supply_shuttle.eta] Mins.)":supply_shuttle.at_station ? "Station":"Dock"]<BR>
 		<HR>Supply points: [supply_shuttle.points]<BR>
-		<BR>\n<A href='byond://?src=\ref[src];order=categories'>Request items</A><BR><BR>
+		<BR><A href='byond://?src=\ref[src];order=categories'>Request items</A><BR><BR>
 		<A href='byond://?src=\ref[src];vieworders=1'>View approved orders</A><BR><BR>
 		<A href='byond://?src=\ref[src];viewrequests=1'>View requests</A><BR><BR>
 		<A href='byond://?src=\ref[user];mach_close=computer'>Close</A>"}
 
-	user << browse(dat, "window=computer;size=575x450")
-	onclose(user, "computer")
-	return
+
+	var/datum/browser/popup = new(user, "merchantcomp", "Merchant's Guild", 300, 700)
+	popup.set_content(JOINTEXT(dat))
+	popup.open()
 
 /obj/machinery/computer/ordercomp/Topic(href, href_list)
 	if(..())
@@ -512,24 +513,28 @@ var/global/TaxUponSells = 20
 
 	if(..())
 		return
+	if(!CanPhysicallyInteractWith(user, src))
+		to_chat(user, SPAN_WARNING("You must stay close to \the [src]!"))
+		return
+
 	user.set_machine(src)
 	post_signal("supply")
-	var/dat = "<html><head><style> a{color:white; font-size: 125%; text-decoration: none;}a:hover{text-decoration: underline} body{font-size: 135%}</style><title>Merchant Console</title> <body style='background-color:#0e0c0e; color: #43302f; text-align: center;'>"
+	var/list/dat = list()
+
 	if (temp)
 		dat = temp
 	else
-		dat += {"<html><head><title>Bookmaking Console</title>
-		<body style='background-color:#0e0c0e; color: #43302f;'>
+		dat += {"
 		<BR><B>Merchant Guild</B><HR>
-		\nThe boat is [supply_shuttle.moving ? "coming to Enoch's Gate ([supply_shuttle.eta] Mins.)":supply_shuttle.at_station ? "in Enoch's Gate":"in City."]<BR>
-		<HR>\nIn your account: [supply_shuttle.points] obols.<BR>\n<BR>
-		[supply_shuttle.moving ? "\nBoat must be in the city to take orders.<BR>\n<BR>":supply_shuttle.at_station ? "\nThe Boat must be in the city to make orders.<BR>\n<BR>":"\n<A href='byond://?src=\ref[src];order=categories'>Make Orders</A><BR>\n<BR>"]
-		[supply_shuttle.moving ? "\nThe boat has already been called.<BR>\n<BR>":supply_shuttle.at_station ? "\n<A href='byond://?src=\ref[src];send=1'>Send boat to the city.</A><BR>\n<BR>":"\n<A href='byond://?src=\ref[src];send=1'>Send boat back to the fortress.</A><BR>\n<BR>"]
-		\n<A href='byond://?src=\ref[src];withdraw=1'>Withdraw obols</A><BR>\n<BR>
-		\n<A href='byond://?src=\ref[src];viewrequests=1'>View requests</A><BR>\n<BR>
-		\n<A href='byond://?src=\ref[src];vieworders=1'>View orders</A><BR>\n<BR>
-		\n<A href='byond://?src=\ref[src];changetaxes=1'>Current Taxes upon Vendors: [TaxUponSells]%!</A><BR>\n<BR>
-		\n<A href='byond://?src=\ref[user];mach_close=computer'>Close</A>"}
+		<p>The boat is [supply_shuttle.moving ? "coming to Enoch's Gate ([supply_shuttle.eta] Mins.)":supply_shuttle.at_station ? "in Enoch's Gate":"in City."]</p><BR>
+		<HR>In your account: [supply_shuttle.points] obols.<BR><BR>
+		[supply_shuttle.moving ? "Boat must be in the city to take orders.<BR><BR>":supply_shuttle.at_station ? "The Boat must be in the city to make orders.<BR><BR>":"<A href='byond://?src=\ref[src];order=categories'>Make Orders</A><BR><BR>"]
+		[supply_shuttle.moving ? "The boat has already been called.<BR><BR>":supply_shuttle.at_station ? "<A href='byond://?src=\ref[src];send=1'>Send boat to the city.</A><BR><BR>":"<A href='byond://?src=\ref[src];send=1'>Send boat back to the fortress.</A><BR><BR>"]
+		<A href='byond://?src=\ref[src];withdraw=1'>Withdraw obols</A><BR><BR>
+		<A href='byond://?src=\ref[src];viewrequests=1'>View requests</A><BR><BR>
+		<A href='byond://?src=\ref[src];vieworders=1'>View orders</A><BR><BR>
+		<A href='byond://?src=\ref[src];changetaxes=1'>Current Taxes upon Vendors: [TaxUponSells]%!</A><BR><BR>
+		<A href='byond://?src=\ref[user];mach_close=computer'>Close</A>"}
 
 	user << browse(dat, "window=player_panel;size=600x600;can_close=1;can_resize=0;border=0;titlebar=1")
 	onclose(user, "computer")
@@ -597,6 +602,9 @@ var/global/TaxUponSells = 20
 		world.log << "## ERROR: Eek. The supply_shuttle controller datum is missing somehow."
 		return
 	if(..())
+		return
+	if(!CanPhysicallyInteractWith(usr, src))
+		to_chat(usr, SPAN_WARNING("You must stay close to \the [src]!"))
 		return
 
 	if(isturf(loc) && ( in_range(src, usr) || istype(usr, /mob/living/silicon) ) )
