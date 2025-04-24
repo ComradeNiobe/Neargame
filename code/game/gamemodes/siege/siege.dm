@@ -31,11 +31,10 @@
 /datum/game_mode/siege/can_start()
 	. = ..()
 	for(var/mob/new_player/player in player_list)
-		for(var/mob/new_player/player2 in player_list)
-			for(var/mob/new_player/player3 in player_list)
-				if(player.ready && player.client.work_chosen == "Baron" && player2.ready && player2.client.work_chosen == "Vicar"&& player3.ready && player3.client.work_chosen == "Merchant")
-					return 1
-	return 0
+		if(player.ready && player.client.work_chosen == "Baron")
+			return TRUE
+	return FALSE
+
 
 /datum/game_mode/siege/post_setup()
 	ticker.migrant_req = 3
