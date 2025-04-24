@@ -383,7 +383,12 @@ var/global/TaxUponSells = 20
 		return
 	if(level_check()==0)	return
 	user.set_machine(src)
-	var/dat
+
+	if(!CanPhysicallyInteractWith(user, src))
+		to_chat(user, SPAN_WARNING("You must stay close to \the [src]!"))
+		return
+
+	var/list/dat = list()
 	if(temp)
 		dat = temp
 	else
@@ -536,9 +541,9 @@ var/global/TaxUponSells = 20
 		<A href='byond://?src=\ref[src];changetaxes=1'>Current Taxes upon Vendors: [TaxUponSells]%!</A><BR><BR>
 		<A href='byond://?src=\ref[user];mach_close=computer'>Close</A>"}
 
-	user << browse(dat, "window=player_panel;size=600x600;can_close=1;can_resize=0;border=0;titlebar=1")
-	onclose(user, "computer")
-	return
+	var/datum/browser/popup = new(user, "merchantcomp", "Merchant's Guild", 600, 600)
+	popup.set_content(JOINTEXT(dat))
+	popup.open()
 
 /obj/machinery/computer/supplycomp/RightClick(mob/living/carbon/human/user as mob)
 	if(ishuman(user) && user.wear_id)

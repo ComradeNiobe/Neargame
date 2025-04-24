@@ -195,8 +195,6 @@ var/turf/MiniSpawn
 	if (!src.mode.can_start())
 		if(!ticker.force_started)
 			var/baron = "badmood"
-			var/bishop = "badmood"
-			var/merchant = "badmood"
 			for(var/mob/new_player/NN in player_list)
 				if(NN.client.work_chosen == "Baron" && NN.ready)
 					baron = "hit"
