@@ -198,11 +198,6 @@ var/turf/MiniSpawn
 			for(var/mob/new_player/NN in player_list)
 				if(NN.client.work_chosen == "Baron" && NN.ready)
 					baron = "hit"
-				else if(NN.client.work_chosen == "Vicar" && NN.ready)
-					bishop = "hit"
-				else if(NN.client.work_chosen == "Merchant" && NN.ready)
-					merchant = "hit"
-
 
 			if(master_mode == "holywar")
 				to_chat(world,"<b><span class='highlighttext'>Crusade aborted:</span></b> We need <span class='bname'>20 soldiers</span>!")
