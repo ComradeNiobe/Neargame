@@ -14525,7 +14525,6 @@
 /area/dunwell/ruins/power)
 "aZU" = (
 /obj/machinery/door/airlock/orbital/gates/ex/_2,
-/obj/structure/disposalpipe/segment,
 /turf/simulated/floor/lifewebe{
 	dir = 8;
 	icon_state = "steel"
@@ -15322,7 +15321,11 @@
 /turf/simulated/wall/r_wall/metal,
 /area/dunwell/ruins)
 "bcO" = (
-/obj/structure/disposalpipe/segment,
+/obj/structure/disposalpipe/segment{
+	dir = 4;
+	icon_state = "conpipe-c";
+	tag = "icon-conpipe-c (EAST)"
+	},
 /turf/simulated/floor/bridge/_3{
 	dir = 9
 	},
@@ -21276,6 +21279,9 @@
 	},
 /area/dunwell/station/bridge)
 "bDB" = (
+/obj/structure/disposalpipe/segment{
+	dir = 8
+	},
 /turf/simulated/floor/bridge/_4,
 /area/dunwell/station/gates)
 "bDC" = (
@@ -27173,6 +27179,14 @@
 	},
 /turf/simulated/floor/os13,
 /area/supply/dock)
+"cHQ" = (
+/obj/structure/disposalpipe/segment{
+	dir = 2;
+	icon_state = "conpipe-c";
+	tag = "icon-conpipe-c (EAST)"
+	},
+/turf/simulated/wall/r_wall/metal,
+/area/dunwell/station/gates)
 "cHY" = (
 /obj/structure/structural_cables{
 	dir = 4
@@ -27959,9 +27973,8 @@
 	},
 /area/dunwell/artemis)
 "duU" = (
-/obj/machinery/door/airlock/orbital/gates/magma/trap_door/gate,
 /obj/structure/disposalpipe/segment,
-/turf/simulated/floor/open,
+/turf/simulated/wall/r_wall/metal,
 /area/dunwell/station/gates)
 "dwo" = (
 /turf/simulated/floor/lifeweb/cerb3{
@@ -30424,6 +30437,15 @@
 	},
 /turf/simulated/floor/lifeweb/wood/wooddaarkkk,
 /area/dunwell/station/church/bishopoffice)
+"fWz" = (
+/obj/structure/disposalpipe/segment{
+	dir = 8
+	},
+/turf/simulated/floor/lifewebe{
+	dir = 8;
+	icon_state = "steel"
+	},
+/area/dunwell/station)
 "fWF" = (
 /obj/structure/rack/lwtable/table10end{
 	dir = 1
@@ -31429,7 +31451,11 @@
 	},
 /area/safespawnarea/siege)
 "hgq" = (
-/obj/structure/disposalpipe/segment,
+/obj/structure/disposalpipe/segment{
+	dir = 1;
+	icon_state = "conpipe-c";
+	tag = "icon-conpipe-c (EAST)"
+	},
 /turf/simulated/floor/lifewebe{
 	dir = 8;
 	icon_state = "steel"
@@ -34795,7 +34821,6 @@
 /area/dunwell/realsurface)
 "kUn" = (
 /obj/machinery/door/airlock/orbital/gates/ins/_2,
-/obj/structure/disposalpipe/segment,
 /turf/simulated/floor/lifewebe{
 	dir = 8;
 	icon_state = "steel"
@@ -36572,6 +36597,7 @@
 /area/dunwell/miscplaces)
 "mLP" = (
 /obj/structure/lfwindow/stonewindow,
+/obj/structure/disposalpipe/segment,
 /turf/simulated/wall/r_wall/metal,
 /area/dunwell/station/gates)
 "mMp" = (
@@ -37074,6 +37100,11 @@
 /area/dunwell/station/train_station_fort)
 "noz" = (
 /obj/structure/sign/signnew/web/walllargeenoch,
+/obj/structure/disposalpipe/segment{
+	dir = 8;
+	icon_state = "conpipe-c";
+	tag = "icon-conpipe-c (WEST)"
+	},
 /turf/simulated/wall/r_wall/metal,
 /area/dunwell/station/gates)
 "noP" = (
@@ -45672,6 +45703,7 @@
 	id = "gateshutter";
 	name = "Quarantine"
 	},
+/obj/structure/disposalpipe/segment,
 /turf/simulated/floor/lifeweb/cerb,
 /area/dunwell/station/gates)
 "xkm" = (
@@ -142552,9 +142584,9 @@ bYr
 anh
 hgq
 kUn
-duU
-duU
-duU
+agW
+agW
+agW
 aZU
 bcO
 rXF
@@ -142752,7 +142784,7 @@ bgx
 cdX
 dsj
 jQF
-pLu
+fWz
 dHJ
 agW
 ade
@@ -142954,12 +142986,12 @@ brs
 eNW
 aPf
 aPf
-adB
-adB
+cHQ
+duU
 mLP
-adB
+duU
 xjW
-adB
+duU
 noz
 aOV
 bcP
