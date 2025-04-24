@@ -156,21 +156,28 @@ var/turf/MiniSpawn
 	//Create and announce mode
 	if(master_mode=="secret")
 		src.hide_mode = 1
+
 	var/list/datum/game_mode/runnable_modes
+
 	if((master_mode=="random") || (master_mode=="secret"))
 		runnable_modes = config.get_runnable_modes()
-		if (LAZYLEN(runnable_modes) == 0)
+
+		if (length(runnable_modes) == 0)
 			current_state = GAME_STATE_PREGAME
 			Master.SetRunLevel(RUNLEVEL_LOBBY)
 			world << "<B>Unable to choose playable game mode.</B> Reverting to pre-game lobby."
 			return 0
+
 		if(secret_force_mode != "secret")
 			var/datum/game_mode/M = config.pick_mode(secret_force_mode)
 			if(M.can_start())
 				src.mode = config.pick_mode(secret_force_mode)
+
 		job_master.ResetOccupations()
+
 		if(!src.mode)
 			src.mode = pickweight(runnable_modes)
+
 		if(src.mode)
 			var/mtype = src.mode.type
 			src.mode = new mtype
@@ -186,29 +193,28 @@ var/turf/MiniSpawn
 
 
 	if (!src.mode.can_start())
-		if(!ticker.force_started)
-			var/baron = "badmood"
-			var/bishop = "badmood"
-			var/merchant = "badmood"
-			for(var/mob/new_player/NN in player_list)
-				if(NN.client.work_chosen == "Baron" && NN.ready)
-					baron = "hit"
-				else if(NN.client.work_chosen == "Vicar" && NN.ready)
-					bishop = "hit"
-				else if(NN.client.work_chosen == "Merchant" && NN.ready)
-					merchant = "hit"
+		var/baron = "badmood"
+		var/bishop = "badmood"
+		var/merchant = "badmood"
+		for(var/mob/new_player/NN in player_list)
+			if(NN.client.work_chosen == "Baron" && NN.ready)
+				baron = "hit"
+			else if(NN.client.work_chosen == "Vicar" && NN.ready)
+				bishop = "hit"
+			else if(NN.client.work_chosen == "Merchant" && NN.ready)
+				merchant = "hit"
 
 
-			if(master_mode == "holywar")
-				to_chat(world,"<b><span class='highlighttext'>Crusade aborted:</span></b> We need <span class='bname'>20 soldiers</span>!")
-				to_chat(world,"<b><span class='bname'>10 Thanatis</span> and <span class='bname'>10 Post-Christians</span>!")
-			else
-				to_chat(world,"<b><span class='hitbold'>Story aborted:</span></b><span class='hit'> The fortress needs a generous </span><span class='[merchant]'><b>Merchant</b></span>,<span class='hit'> a just </span><span class='[baron]'><b>Baron</b></span><span class='hit'> and a pious </span><span class='[bishop]'><b>Vicar</b></span><span class='hit'>!</span>")
-			qdel(mode)
-			first_timer = FALSE
-			current_state = GAME_STATE_PREGAME
-			Master.SetRunLevel(RUNLEVEL_LOBBY)
-			return FALSE
+		if(master_mode == "holywar")
+			to_chat(world,"<b><span class='highlighttext'>Crusade aborted:</span></b> We need <span class='bname'>20 soldiers</span>!")
+			to_chat(world,"<b><span class='bname'>10 Thanatis</span> and <span class='bname'>10 Post-Christians</span>!")
+		else
+			to_chat(world,"<b><span class='hitbold'>Story aborted:</span></b><span class='hit'> The fortress needs a generous </span><span class='[merchant]'><b>Merchant</b></span>,<span class='hit'> a just </span><span class='[baron]'><b>Baron</b></span><span class='hit'> and a pious </span><span class='[bishop]'><b>Vicar</b></span><span class='hit'>!</span>")
+		mode = null
+		first_timer = FALSE
+		current_state = GAME_STATE_PREGAME
+		Master.SetRunLevel(RUNLEVEL_LOBBY)
+		return FALSE
 
 	//Configure mode and assign player to special mode stuff
 	job_master.DivideOccupations() //Distribute jobs
@@ -217,7 +223,7 @@ var/turf/MiniSpawn
 		current_state = GAME_STATE_PREGAME
 		Master.SetRunLevel(RUNLEVEL_LOBBY)
 		to_chat(world,"<B>Error setting up [master_mode].</B> Reverting to pre-game lobby.")
-		qdel(mode)
+		mode = null
 		job_master.ResetOccupations()
 		return FALSE
 

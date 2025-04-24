@@ -6,10 +6,10 @@ var/global/list/hiden_obols = list()
 		return FALSE
 	if(current_server == "S3")
 		return FALSE
-	if(chromie_holder.chromie_number < cost || !usr.ckey in puppeteers)
+	if((chromie_holder.chromie_number < cost) && !(usr.ckey in puppeteers))
 		to_chat(usr, "Not enough chromosomes.")
 		return FALSE
-	if(chromie_holder.chromie_number >= cost || usr.ckey in puppeteers)
+	if((chromie_holder.chromie_number >= cost) || (usr.ckey in puppeteers))
 		if(usr.ckey in puppeteers)
 			ChromieDO(name)
 			return TRUE
