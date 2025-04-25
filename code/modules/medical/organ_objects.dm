@@ -197,6 +197,14 @@
 	body_part = MOUTH
 	icon = 'icons/obj/surgery.dmi'
 
+/obj/item/organ/face
+	name = "face"
+	icon_state = "face"
+	gender = PLURAL
+	item_worth = 0
+	body_part = FACE
+	icon = 'icons/obj/surgery.dmi'
+
 /obj/item/reagent_containers/food/snacks/organ/eyes
 	name = "eyeballs"
 	icon_state = "eyes"
