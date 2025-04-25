@@ -191,6 +191,16 @@ var/turf/MiniSpawn
 		else
 			src.mode = config.pick_mode(master_mode)
 
+	if(!src.mode)
+		current_state = GAME_STATE_PREGAME
+		Master.SetRunLevel(RUNLEVEL_LOBBY)
+		to_chat(world, "<span class='danger'>Serious error in mode setup!</span> Reverting to pre-game lobby.")
+		return FALSE
+
+
+	job_master.ResetOccupations()
+	src.mode.pre_setup()
+	job_master.DivideOccupations() // Apparently important for new antagonist system to register specific job antags properly.
 
 	if (!src.mode.can_start())
 		if(!ticker.force_started)
@@ -204,22 +214,12 @@ var/turf/MiniSpawn
 				to_chat(world,"<b><span class='bname'>10 Thanatis</span> and <span class='bname'>10 Post-Christians</span>!")
 			else
 				to_chat(world,"<b><span class='hitbold'>Story aborted:</span></b><span class='hit'> The fortress needs a just </span><span class='[baron]'><b>Baron.</b></span>")
-			mode = null
 			first_timer = FALSE
 			current_state = GAME_STATE_PREGAME
 			Master.SetRunLevel(RUNLEVEL_LOBBY)
+			mode = null
+			job_master.ResetOccupations()
 			return FALSE
-
-	//Configure mode and assign player to special mode stuff
-	job_master.DivideOccupations() //Distribute jobs
-	var/can_continue = src.mode.pre_setup()//Setup special modes
-	if(!can_continue)
-		current_state = GAME_STATE_PREGAME
-		Master.SetRunLevel(RUNLEVEL_LOBBY)
-		to_chat(world,"<B>Error setting up [master_mode].</B> Reverting to pre-game lobby.")
-		mode = null
-		job_master.ResetOccupations()
-		return FALSE
 
 	createnuke()
 	createHellDoor()
@@ -322,12 +322,15 @@ var/turf/MiniSpawn
 			hunter.mind.special_role = "hunter"
 			ticker.mode.hunter = hunter.real_name
 			hunter.combat_music = 'sound/lfwbsounds/bloodlust1.ogg'
+
 	for(var/mob/living/carbon/human/H in player_list)
 		if(H.job == "Baron" || H.job == "Vicar" || H.job == "Merchant")
 			H.client.ChromieWinorLoose(1)
 
-	for(var/obj/multiz/ladder/L in ladder_list) L.connect() //Lazy hackfix for ladders. TODO: move this to an actual controller. ~ Z
-	return 1
+	for(var/obj/multiz/ladder/L as anything in ladder_list)
+		L.connect() //Lazy hackfix for ladders. TODO: move this to an actual controller. ~ Z
+
+	return TRUE
 
 /datum/controller/gameticker
 	//station_explosion used to be a variable for every mob's hud. Which was a waste!
