@@ -72,26 +72,18 @@ var/global/list/admin_ranks = list()								//list of all ranks with associated 
 	if(config.admin_legacy_system)
 		load_admin_ranks()
 
-		//load text from file
-		var/list/Lines = file2list("config/admins.txt")
+		//load json from file
+		var/list/json = rustg_read_toml_file("config/admins.toml")
+		if(!json)
+			PRINT_STACK_TRACE("Failed to load admins.toml!")
+			return
 
-		//process each line seperately
-		for(var/line in Lines)
-			if(!length(line))				continue
-			if(copytext(line,1,2) == "#")	continue
+		for(var/key in json)
+			var/ckey = ckey(key)
+			if(!ckey)
+				continue
 
-			//Split the line at every "-"
-			var/list/List = splittext(line, "-")
-			if(!List.len)					continue
-
-			//ckey is before the first "-"
-			var/ckey = ckey(List[1])
-			if(!ckey)						continue
-
-			//rank follows the first "-"
-			var/rank = ""
-			if(List.len >= 2)
-				rank = ckeyEx(List[2])
+			var/rank = ckeyEx(LAZYACCESS(json, key))
 
 			//load permissions associated with this rank
 			var/rights = global.admin_ranks[rank]
