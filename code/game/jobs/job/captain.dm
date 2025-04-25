@@ -102,7 +102,7 @@ var/fortHand = null
 	sex_lock = MALE
 	jobdesc = "A very close friend to the Baron and their most trusted advisor. Your status as Lord Regent gives you near equal power to the Baron himself in their presence, and equal power in their absence. The Hand is expected to make sure the will of the Baron is being executed, and reserves the rare right to lead the garrison forces to do so."
 	jobdescbr = "A very close friend to the Baron and their most trusted advisor. Your status as Lord Regent gives you near equal power to the Baron himself in their presence, and equal power in their absence. The Hand is expected to make sure the will of the Baron is being executed, and reserves the rare right to lead the garrison forces to do so."
-	latejoin_locked = TRUE
+	latejoin_locked = FALSE
 	thanati_chance = 75
 	skill_mods = list(
 	list(SKILL_SWORD,0,2),
@@ -156,7 +156,7 @@ var/fortHand = null
 	selection_color = "#ddddff"
 	idtype = /obj/item/card/id/heir
 	minimal_player_age = 10
-	latejoin_locked = TRUE
+	latejoin_locked = FALSE
 	sex_lock = MALE
 	jobdesc = "The heir to the throne of The Gate. You have been taught all your life how to lead, yet still no one seems to take your word seriously. One day, however, it will be expected of you to follow in your father&#8217;s footsteps - for better or worse."
 	jobdescbr = "The heir to the throne of The Gate. You have been taught all your life how to lead, yet still no one seems to take your word seriously. One day, however, it will be expected of you to follow in your father&#8217;s footsteps - for better or worse."
@@ -208,7 +208,7 @@ var/fortHand = null
 	title = "Successor"
 	titlebr = "Sucessora"
 	flag = SUCCESSOR
-	
+
 	department_flag = ENGSEC
 	stat_mods = list(STAT_ST = -1, STAT_DX = 1, STAT_HT = -1, STAT_IN = 1)
 	faction = "Station"
@@ -220,7 +220,7 @@ var/fortHand = null
 	selection_color = "#ddddff"
 	idtype = /obj/item/card/id/successor
 	minimal_player_age = 10
-	latejoin_locked = TRUE
+	latejoin_locked = FALSE
 	sex_lock = FEMALE
 	thanati_chance = 75
 	no_trapoc = TRUE
@@ -272,7 +272,7 @@ var/fortHand = null
 	title = "Baroness"
 	titlebr = "Baronesa"
 	flag = BARONESS
-	
+
 	department_flag = ENGSEC
 	stat_mods = list(STAT_ST = -1, STAT_DX = 0, STAT_HT = 0, STAT_IN = 2)
 	faction = "Station"
@@ -282,7 +282,7 @@ var/fortHand = null
 	selection_color = "#ddddff"
 	idtype = /obj/item/card/id/baroness
 	minimal_player_age = 10
-	latejoin_locked = TRUE
+	latejoin_locked = FALSE
 	sex_lock = FEMALE
 	thanati_chance = 75
 	jobdesc = "The wife of the Baron himself. Your personal life is often carefree and filled with luxury. You&#8217;re fortunate beauty and elegance is a power all men respect. And they respect you."
@@ -351,7 +351,7 @@ var/fortHand = null
 	minimal_player_age = 3
 	access = list(garrison,keep)
 	minimal_access = list(garrison,keep,baronquarter)
-	latejoin_locked = TRUE
+	latejoin_locked = FALSE
 	thanati_chance = 1
 	jobdesc = "Serving as the noble protectors of The Gates Keep residents, their focus is to protect the local Baron and his family, although he may direct them to guard anyone worthy of his attention. They come from a variety of backgrounds, be it having once been part of the Baroness´ retinue, been employed by the lord´s heir, or even a long standing bodyguard hired by the Lord Baron himself, in his youth. You are bound by an oath to protect your target, and you have no intention of breaking it, ever, under any circumstance."
 	skill_mods = list(
@@ -387,7 +387,7 @@ var/fortHand = null
 				H.job = "Heir's Warden"
 			if("Baron's Retinue")
 				H.job = "Baron's Retinue"
-				
+
 		H.voicetype = pick("strong","noble","sketchy")
 		H.equip_to_slot_or_del(new /obj/item/clothing/under/rank/security(H), slot_w_uniform)
 		H.equip_to_slot_or_del(new /obj/item/clothing/shoes/lw/jackboots(H), slot_shoes)
@@ -614,7 +614,7 @@ var/fortHand = null
 	minimal_player_age = 10
 	//sex_lock = MALE
 	thanati_chance = 25
-	latejoin_locked = TRUE
+	latejoin_locked = FALSE
 	access = list(keep,meistery,treasury)
 	minimal_access = list(keep,meistery,treasury)
 	skill_mods = list(
@@ -667,7 +667,7 @@ var/fortHand = null
 	thanati_chance = 80
 	jobdesc = "Tasked with handling all aspects of financial management within Enoch&#8217;s Gate Hold, their ceremonial gilded cuirass is given to them as a signifier of their importance, and to emphasize the wealth of the Baron himself."
 	jobdescbr = "Tasked with handling all aspects of financial management within Enoch&#8217;s Gate Hold, their ceremonial gilded cuirass is given to them as a signifier of their importance, and to emphasize the wealth of the Baron himself."
-	latejoin_locked = TRUE
+	latejoin_locked = FALSE
 	idtype = /obj/item/card/id/ltgrey
 	access = list(keep,meistery,treasury)
 	minimal_access = list(keep,meistery,treasury)

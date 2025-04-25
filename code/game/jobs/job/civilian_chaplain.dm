@@ -515,7 +515,7 @@ var/rewarded = 0
 	minimal_access = list(church, access_morgue, access_chapel_office)
 	jobdesc = "A fanatical zealot of the Grey Church, he holds no true nor official position as part of the clergy or even the INKVD, but he cares little for such facts. The Praetor is the iron first of The Church and the enforcer of the local Vicar. While they are useful muscle, one should take care when dealing with them, for this zealot may yet turn on those that use him, if they consider certain behavior or acts unacceptable, or worse, sacrilege."
 	sex_lock = MALE
-	latejoin_locked = TRUE
+	latejoin_locked = FALSE
 	skill_mods = list(
 	list(SKILL_MELEE,6,6),
 	list(SKILL_UNARM,0,2),
@@ -722,7 +722,7 @@ var/rewarded = 0
 	access = list(church, access_morgue, access_chapel_office, access_maint_tunnels)
 	minimal_access = list(church, access_morgue, access_chapel_office)
 	sex_lock = MALE
-	latejoin_locked = TRUE
+	latejoin_locked = FALSE
 	skill_mods = list(
 	list(SKILL_MELEE,5,5),
 	list(SKILL_RANGE,8,8),

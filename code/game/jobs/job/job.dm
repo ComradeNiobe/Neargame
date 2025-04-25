@@ -42,7 +42,7 @@
 
 	var/no_trapoc
 
-	var/latejoin_locked
+	var/latejoin_locked = FALSE
 
 	var/list/donation_lock = list()
 

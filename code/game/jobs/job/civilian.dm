@@ -1016,7 +1016,7 @@
 	idtype = /obj/item/card/id/qmboss
 	access = list(merchant)
 	minimal_access = list(merchant)
-	latejoin_locked = TRUE
+	latejoin_locked = FALSE
 	thanati_chance = 33
 	jobdesc = "A newcomer from somewhere far from the South, rumors say hes the scion of a wealthy merchant family from Gahan, but ever since opening up their trade post they havent confirmed or denied these claims. Buy wholesale and foist! Not everyone in Enoch&#8217;s Gate has money to pay at your premium prices. You could still give these losers tasks in exchange for a discount."
 	skill_mods = list(
@@ -1396,7 +1396,7 @@
 	minimal_access = list(keep,courtroom,garrison)
 	sex_lock = MALE
 	jobdesc = "Once an Ealdorman within the village long before the Baron took office, the Magistrate was recognized for their nack for mediating disputes and ensuring the will of the Meister was upheld. In whispers, you hear them call you scum: But you know that&#8217;s simply another fine to lace your pockets with gold."
-	latejoin_locked = TRUE
+	latejoin_locked = FALSE
 	thanati_chance = 75
 	skill_mods = list(
 	list(SKILL_MELEE,2,2),

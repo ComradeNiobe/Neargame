@@ -13,7 +13,7 @@
 	access = list(meistery,sanctuary,garrison,keep,hump,courtroom,soilery,lifeweb, baronquarter, marduk, innkeep, hand_access)
 	minimal_access = list(meistery,sanctuary,garrison,keep,hump,courtroom,soilery,lifeweb, baronquarter, marduk, innkeep, hand_access)
 	minimal_player_age = 14
-	latejoin_locked = TRUE
+	latejoin_locked = FALSE
 	jobdesc = "Champion of Enoch´s Gate, Captain of the Triton Guard, a near-inhumanly strong warrior, the Kraken is one of the most horrifying men one will ever face in battle. His formidable skills are recognized throughout the Southern provinces. He is sometimes sent to take part in hastilude and martial games among more wealthy nobility, representing his lord and fort. Many more influential and wealthier nobles have offered this veteran a seat among their mighty men, but his loyalty towards his Lord is undying."
 	sex_lock = MALE
 	money = 66
@@ -86,8 +86,8 @@
 	minimal_player_age = 3
 	sex_lock = MALE
 	money = 25
-	jobdesc = " Members of The Gate´s Triton Guard, Tritons are the personal guard of the Baron. Skilled in combat, their main priority is to protect their Lord, his family, and enforce his will. So long as they´re being paid, that is."	
-	latejoin_locked = TRUE
+	jobdesc = " Members of The Gate´s Triton Guard, Tritons are the personal guard of the Baron. Skilled in combat, their main priority is to protect their Lord, his family, and enforce his will. So long as they´re being paid, that is."
+	latejoin_locked = FALSE
 	thanati_chance = 1
 	skill_mods = list(
 	list(SKILL_MELEE,5,5),
@@ -164,7 +164,7 @@
 			H.my_stats.change_stat(STAT_HT , -3)
 			H.my_stats.change_stat(STAT_DX , 0)
 			H.my_stats.change_stat(STAT_IN , 0)
-		
+
 
 		var/weaponSpecs = rand(0,2)
 		switch(weaponSpecs)
@@ -198,7 +198,7 @@
 	jobdesc = "Serving as both the village´s watchman and lawman, you are the first person to know of any impending threat to Enoch´s Gate. You once used to patrol the caves, watching the migrants roll into what later became the village. Now? You are redelegated to following the Magistrate´s orders and enforcing a semblance of law in the Village. Maybe one day you might end up getting promoted to the guard, but until that comes, you atleast have a comfortable office."
 	sex_lock = MALE
 	money = 25
-	latejoin_locked = TRUE
+	latejoin_locked = FALSE
 	thanati_chance = 10
 	skill_mods = list(
 	list(SKILL_MELEE,2,2),
@@ -348,7 +348,7 @@ var/global/Gatekeeper_Type = "Null"
 	minimal_access = list(garrison,keep,courtroom)
 	minimal_player_age = 3
 	sex_lock = MALE
-	latejoin_locked = TRUE
+	latejoin_locked = FALSE
 	money = 13
 	thanati_chance = 1
 	jobdesc = " Gatekeeper to the Barons Fort. Dungeon Master. Armourer of the Triton Guard. The Charybdis is all of these at once. His nightly duty is to watch the keeps gates, ensuring the smerds dont just wander in when they please while letting the Tritons and nobility in and out as often as they want.  And who better to watch the Dungeon and guard the armory, than the one that has to sit atop both for hours on end?"
