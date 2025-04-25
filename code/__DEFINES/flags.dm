@@ -1,20 +1,3 @@
-// Atom-level flags (/atom/var/atom_flags)
-#define ATOM_FLAG_CHECKS_BORDER             BITFLAG(0)  // If a dense atom (potentially) only blocks movements from a given direction, i.e. window panes
-#define ATOM_FLAG_CLIMBABLE                 BITFLAG(1)  // This object can be climbed on
-#define ATOM_FLAG_NO_BLOOD                  BITFLAG(2)  // Used for items if they don't want to get a blood overlay.
-#define ATOM_FLAG_NO_REACT                  BITFLAG(3)  // Reagents don't react inside this container.
-#define ATOM_FLAG_OPEN_CONTAINER            BITFLAG(4)  // Is an open container for chemistry purposes.
-#define ATOM_FLAG_INITIALIZED               BITFLAG(5)  // Has this atom been initialized
-#define ATOM_FLAG_CAN_BE_PAINTED            BITFLAG(6)  // Can be painted using a paint sprayer or similar.
-#define ATOM_FLAG_SHIELD_CONTENTS           BITFLAG(7)  // Protects contents from some global effects (Solar storms)
-#define ATOM_FLAG_ADJACENT_EXCEPTION        BITFLAG(8)  // Skips adjacent checks for atoms that should always be reachable in window tiles
-#define ATOM_FLAG_NO_DISSOLVE               BITFLAG(9)  // Bypasses solvent reactions in the container.
-#define ATOM_FLAG_NO_PHASE_CHANGE           BITFLAG(10) // Bypasses heating and cooling product reactions in the container.
-#define ATOM_FLAG_BLOCK_DIAGONAL_FACING     BITFLAG(11) // Atom cannot face non-cardinal directions.
-
-#define ATOM_FLAG_NO_CHEM_CHANGE            (ATOM_FLAG_NO_REACT | ATOM_FLAG_NO_DISSOLVE | ATOM_FLAG_NO_PHASE_CHANGE)
-
-#define ATOM_IS_OPEN_CONTAINER(A)           (A.atom_flags & ATOM_FLAG_OPEN_CONTAINER)
 
 // Movable-level flags (/atom/movable/movable_flags)
 #define MOVABLE_FLAG_PROXMOVE               BITFLAG(0)  // Does this object require proximity checking in Enter()?

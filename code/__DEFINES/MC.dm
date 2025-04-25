@@ -1,55 +1,23 @@
-#define MC_TICK_CHECK ( ( TICK_USAGE > Master.current_ticklimit || src.state != SS_RUNNING ) ? pause() : 0 )
-#define GAME_STATE 2 ** (Master.current_runlevel - 1)
+#define MC_TICK_CHECK ( ( world.tick_usage > Master.current_ticklimit || src.state != SS_RUNNING ) ? pause() : 0 )
 
+// Used for splitting up your remaining time into phases, if you want to evenly divide it.
 #define MC_SPLIT_TICK_INIT(phase_count) var/original_tick_limit = Master.current_ticklimit; var/split_tick_phases = ##phase_count
 #define MC_SPLIT_TICK \
-	if(split_tick_phases > 1){\
-		Master.current_ticklimit = ((original_tick_limit - TICK_USAGE) / split_tick_phases) + TICK_USAGE;\
-		--split_tick_phases;\
-	} else {\
-		Master.current_ticklimit = original_tick_limit;\
-	}
+    if(split_tick_phases > 1){\
+        Master.current_ticklimit = ((original_tick_limit - world.tick_usage) / split_tick_phases) + world.tick_usage;\
+        --split_tick_phases;\
+    } else {\
+        Master.current_ticklimit = original_tick_limit;\
+    }
 
 // Used to smooth out costs to try and avoid oscillation.
 #define MC_AVERAGE_FAST(average, current) (0.7 * (average) + 0.3 * (current))
 #define MC_AVERAGE(average, current) (0.8 * (average) + 0.2 * (current))
 #define MC_AVERAGE_SLOW(average, current) (0.9 * (average) + 0.1 * (current))
+#define NEW_SS_GLOBAL(varname) if(varname != src){if(istype(varname)){Recover();qdel(varname);}varname = src;}
 
-#define MC_AVG_FAST_UP_SLOW_DOWN(average, current) (average > current ? MC_AVERAGE_SLOW(average, current) : MC_AVERAGE_FAST(average, current))
-#define MC_AVG_SLOW_UP_FAST_DOWN(average, current) (average < current ? MC_AVERAGE_SLOW(average, current) : MC_AVERAGE_FAST(average, current))
-
-#define NEW_SS_GLOBAL(varname) if(varname != src){if(istype(varname)){Recover(varname);qdel(varname);}varname = src;}
-
-#define START_PROCESSING(Processor, Datum) \
-if (Datum.is_processing) {\
-	if(Datum.is_processing != #Processor)\
-	{\
-		PRINT_STACK_TRACE("Failed to start processing. [log_info_line(Datum)] is already being processed by [Datum.is_processing] but queue attempt occurred on [#Processor]."); \
-	}\
-} else {\
-	Datum.is_processing = Processor._internal_name;\
-	Processor.processing += Datum;\
-}
-
-#define STOP_PROCESSING(Processor, Datum) \
-if(Datum.is_processing) {\
-	if(Processor.processing.Remove(Datum)) {\
-		Datum.is_processing = null;\
-	} else {\
-		PRINT_STACK_TRACE("Failed to stop processing. [log_info_line(Datum)] is being processed by [Datum.is_processing] but de-queue attempt occurred on [#Processor]."); \
-	}\
-}
-
-// For SSmachines, use these instead
-
-#define START_PROCESSING_MACHINE(machine, flag)\
-	if(!istype(machine, /obj/machinery)) CRASH("A non-machine [log_info_line(machine)] was queued to process on the machinery subsystem.");\
-	machine.processing_flags |= flag;\
-	START_PROCESSING(SSmachines, machine)
-
-#define STOP_PROCESSING_MACHINE(machine, flag)\
-	machine.processing_flags &= ~flag;\
-	if(machine.processing_flags == 0) STOP_PROCESSING(SSmachines, machine)
+#define START_PROCESSING(Processor, Datum) if (!Datum.isprocessing) {Datum.isprocessing = 1;Processor.processing += Datum}
+#define STOP_PROCESSING(Processor, Datum) Datum.isprocessing = 0;Processor.processing -= Datum
 
 //SubSystem flags (Please design any new flags so that the default is off, to make adding flags to subsystems easier)
 
@@ -83,9 +51,6 @@ if(Datum.is_processing) {\
 //	(IE: if a 5ds wait SS takes 2ds to run, its next fire should be 5ds away, not 3ds like it normally would be)
 //	This flag overrides SS_KEEP_TIMING
 #define SS_POST_FIRE_TIMING 64
-
-// Run Shutdown() on server shutdown so the SS can finalize state.
-#define SS_NEEDS_SHUTDOWN 128
 
 // -- SStimer stuff --
 
@@ -124,30 +89,10 @@ if(Datum.is_processing) {\
 #define SS_SLEEPING 4	//fire() slept.
 #define SS_PAUSING 5 	//in the middle of pausing
 
-// Subsystem init-states, used for the initialization MC panel.
-#define SS_INITSTATE_NONE 0
-#define SS_INITSTATE_STARTED 1
-#define SS_INITSTATE_DONE 2
-
-#define SUBSYSTEM_DEF(X) var/global/datum/controller/subsystem/##X/SS##X;\
+// Standard way to define a global subsystem, keep boilerplate organized here!
+#define SUBSYSTEM_DEF(X) var/datum/controller/subsystem/##X/SS##X;\
 /datum/controller/subsystem/##X/New(){\
-	NEW_SS_GLOBAL(SS##X);\
-	PreInit();\
-}\
-/datum/controller/subsystem/##X{\
-	_internal_name = "SS" + #X;\
+    NEW_SS_GLOBAL(SS##X);\
+    PreInit();\
 }\
 /datum/controller/subsystem/##X
-
-#define PROCESSING_SUBSYSTEM_DEF(X) var/global/datum/controller/subsystem/processing/##X/SS##X;\
-/datum/controller/subsystem/processing/##X/New(){\
-	NEW_SS_GLOBAL(SS##X);\
-	PreInit();\
-}\
-/datum/controller/subsystem/processing/##X/Recover() {\
-	if(istype(SS##X.processing)) {\
-		processing = SS##X.processing; \
-	}\
-}\
-/datum/controller/subsystem/processing/##X/_internal_name = "SS" + #X;\
-/datum/controller/subsystem/processing/##X

@@ -99,8 +99,8 @@ var/global/max_players = 100
 
 
 	//Logs all hrefs
-	if(config && config.log_hrefs && world_href_log)
-		world_href_log << "<small>[time2text(world.timeofday,"hh:mm")] [src] (usr:[usr])</small> || [hsrc ? "[hsrc] " : ""][href]<br>"
+	if(config && config.log_hrefs && href_logfile)
+		href_logfile << "<small>[time2text(world.timeofday,"hh:mm")] [src] (usr:[usr])</small> || [hsrc ? "[hsrc] " : ""][href]<br>"
 
 	switch(href_list["_src_"])
 		if("holder")	hsrc = holder

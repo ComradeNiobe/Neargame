@@ -29,9 +29,6 @@ var/runtime_diary = null
 /proc/game_log(category, text)
 	to_file(diary, "\[[time_stamp()]] [story_id] [category]: [text][log_end]")
 
-/proc/log_qdel(text)
-	to_file(global.world_qdel_log, "\[[time_stamp()]]QDEL: [text]")
-
 //This replaces world.log so it displays both in DD and the file
 /proc/log_world(text)
 	to_world_log(text) //this comes before the config check because it can't possibly runtime
@@ -233,7 +230,3 @@ var/runtime_diary = null
 // call to generate a stack trace and print to runtime logs
 /proc/get_stack_trace(msg, file, line)
 	CRASH("%% [file],[line] %% [msg]")
-
-/proc/report_progress(var/progress_message)
-	admin_notice("<span class='boldannounce'>[progress_message]</span>", R_DEBUG)
-	log_world(progress_message)
