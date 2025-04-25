@@ -114,7 +114,7 @@ var/global/Inquisitor_Type = "Null"
 					H.clear_event("cursed", /datum/happiness_event/cursed)
 	else
 		to_chat(prayer_user, "<span class='churchexcomm'>[pick(fnord)] I can't. I must go to the church.</span>")
-	
+
 
 
 /mob/living/carbon/human/proc/excommunicate()
@@ -191,7 +191,7 @@ var/global/Inquisitor_Type = "Null"
 
 /mob/living/carbon/human/proc/free_sins()
 	clear_event("epitemia")
-	to_chat(src, "<span class='passive'>Finaly, I free from my sins!</span>")
+	to_chat(src, "<span class='passive'>Finally, I'm free from my sins!</span>")
 	gainWP(TRUE, 3)
 	return
 
@@ -266,7 +266,7 @@ var/global/Inquisitor_Type = "Null"
 			return
 	else
 		to_chat(H, "<span class='churchexcomm'>[pick(fnord)] I can't. I must go to the church.</span>")
-		
+
 var/rewarded = 0
 
 /mob/living/carbon/human/proc/reward()
@@ -421,7 +421,7 @@ var/rewarded = 0
 	set name = "Marriage"
 	set desc="Marriage!"
 	var/list/spouses = list()
-	
+
 
 	if(stat) return
 
@@ -760,12 +760,12 @@ var/rewarded = 0
 		/mob/living/carbon/human/proc/ChangeName))
 		//H << sound('sound/music/train_music.ogg', repeat = 0, wait = 0, volume = 20, channel = 3)
 		return 1
-		
+
 /mob/living/carbon/human/proc/ChangeJob()
 	set hidden = 0
 	set category = "cross"
 	set name = "ChangeJob"
-	set desc="Change Job"	
+	set desc="Change Job"
 
 	var/newjob = input(src, "Choose your new job:", "What?") in list("Triton", "Serpent", "Mortus", "Migrant", "Wright", "Sniffer", "Lord", "Blacksmith Assistant", "Esculap", "Nun", "Madam", "Sheriff", "Ganger", "Docker", "Merchant", "Misero", "Chemsister", "Church Interrogator", "Maid", "Tribunal Ordinator")
 	src.assignment = newjob
@@ -777,7 +777,7 @@ var/rewarded = 0
 	set hidden = 0
 	set category = "cross"
 	set name = "ChangeName"
-	set desc="Change Name"	
+	set desc="Change Name"
 
 	var/input = sanitize_name(input(usr, "Enter your new identity", "What?", "") as text|null)
 	src.real_name = input
