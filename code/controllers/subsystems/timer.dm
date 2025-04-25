@@ -21,7 +21,7 @@ SUBSYSTEM_DEF(timer)
 	wait = 1 //SS_TICKER subsystem, so wait is in ticks
 	priority = 20
 	flags = SS_NO_INIT | SS_TICKER
-	//runlevels = RUNLEVELS_ALL
+	runlevels = RUNLEVELS_ALL
 
 	/// Queue used for storing timers that do not fit into the current buckets
 	var/list/datum/timedevent/second_queue = list()

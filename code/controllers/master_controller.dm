@@ -37,14 +37,11 @@ var/global/pipe_processing_killed = 0
 	var/sleep_delta		= 1
 	var/events_cost		= 0
 	var/ticker_cost		= 0
-	var/garbageCollectorCost = 0
 	var/total_cost		= 0
 
 	var/last_thing_processed
 	var/rebuild_active_areas = 0
 	var/start_time = 0
-
-	var/global/datum/garbage_collector/garbageCollector
 
 /datum/controller/game_controller/New()
 	//There can be only one master_controller. Out with the old and in with the new.
@@ -58,7 +55,6 @@ var/global/pipe_processing_killed = 0
 		job_master = new /datum/controller/occupations()
 		job_master.SetupOccupations()
 		job_master.LoadJobs("config/jobs.txt")
-		set_donation_locks()
 		loadFateLocks()
 	if(!radio_controller)
 		radio_controller = new /datum/controller/radio()
