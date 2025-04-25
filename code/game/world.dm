@@ -9,8 +9,6 @@ var/rtlog_path
 
 #define RECOMMENDED_VERSION 516
 /world/New()
-	//logs]
-	set waitfor = FALSE
 	TgsNew(minimum_required_security_level = TGS_SECURITY_TRUSTED)
 	for(var/obj/effect/landmark/mapinfo/L in landmarks_list)
 		if (L.name == "mapinfo" && L.mapname != "Mini War")
@@ -22,8 +20,10 @@ var/rtlog_path
 		config.server_name += " #[(world.port % 1000) / 100]"
 
 	world_name()
+	// Init the debugger first so we can debug Master
+	init_debugger()
 	callHook("startup")
-	load_admins()
+	callHook("startup/loadAdmins")
 	LoadBansjob()
 	load_whitelist()
 	if(!fexists("data/game_version.sav"))//This should only have to be run once.
@@ -49,8 +49,6 @@ var/rtlog_path
 	src.update_status()
 	world.log << "--†SERVER LANGUAGE†--"
 	world.log << "[server_language] ON [src.port]"
-	// Init the debugger first so we can debug Master
-	init_debugger()
 	processScheduler = new
 	thanatiGlobal = new
 	master_controller = new /datum/controller/game_controller()
