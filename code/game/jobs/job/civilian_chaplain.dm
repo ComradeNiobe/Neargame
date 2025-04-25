@@ -114,7 +114,7 @@ var/global/Inquisitor_Type = "Null"
 					H.clear_event("cursed", /datum/happiness_event/cursed)
 	else
 		to_chat(prayer_user, "<span class='churchexcomm'>[pick(fnord)] I can't. I must go to the church.</span>")
-	
+
 
 
 /mob/living/carbon/human/proc/excommunicate()
@@ -266,7 +266,7 @@ var/global/Inquisitor_Type = "Null"
 			return
 	else
 		to_chat(H, "<span class='churchexcomm'>[pick(fnord)] I can't. I must go to the church.</span>")
-		
+
 var/rewarded = 0
 
 /mob/living/carbon/human/proc/reward()
@@ -421,7 +421,7 @@ var/rewarded = 0
 	set name = "Marriage"
 	set desc="Marriage!"
 	var/list/spouses = list()
-	
+
 
 	if(stat) return
 
@@ -515,7 +515,7 @@ var/rewarded = 0
 	minimal_access = list(church, access_morgue, access_chapel_office)
 	jobdesc = "A fanatical zealot of the Grey Church, he holds no true nor official position as part of the clergy or even the INKVD, but he cares little for such facts. The Praetor is the iron first of The Church and the enforcer of the local Vicar. While they are useful muscle, one should take care when dealing with them, for this zealot may yet turn on those that use him, if they consider certain behavior or acts unacceptable, or worse, sacrilege."
 	sex_lock = MALE
-	latejoin_locked = TRUE
+	latejoin_locked = FALSE
 	skill_mods = list(
 	list(SKILL_MELEE,6,6),
 	list(SKILL_UNARM,0,2),
@@ -722,7 +722,7 @@ var/rewarded = 0
 	access = list(church, access_morgue, access_chapel_office, access_maint_tunnels)
 	minimal_access = list(church, access_morgue, access_chapel_office)
 	sex_lock = MALE
-	latejoin_locked = TRUE
+	latejoin_locked = FALSE
 	skill_mods = list(
 	list(SKILL_MELEE,5,5),
 	list(SKILL_RANGE,8,8),
@@ -760,12 +760,12 @@ var/rewarded = 0
 		/mob/living/carbon/human/proc/ChangeName))
 		//H << sound('sound/music/train_music.ogg', repeat = 0, wait = 0, volume = 20, channel = 3)
 		return 1
-		
+
 /mob/living/carbon/human/proc/ChangeJob()
 	set hidden = 0
 	set category = "cross"
 	set name = "ChangeJob"
-	set desc="Change Job"	
+	set desc="Change Job"
 
 	var/newjob = input(src, "Choose your new job:", "What?") in list("Triton", "Serpent", "Mortus", "Migrant", "Wright", "Sniffer", "Lord", "Blacksmith Assistant", "Esculap", "Nun", "Madam", "Sheriff", "Ganger", "Docker", "Merchant", "Misero", "Chemsister", "Church Interrogator", "Maid", "Tribunal Ordinator")
 	src.assignment = newjob
@@ -777,7 +777,7 @@ var/rewarded = 0
 	set hidden = 0
 	set category = "cross"
 	set name = "ChangeName"
-	set desc="Change Name"	
+	set desc="Change Name"
 
 	var/input = sanitize_name(input(usr, "Enter your new identity", "What?", "") as text|null)
 	src.real_name = input
