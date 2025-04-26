@@ -96,7 +96,7 @@
 		user.set_machine(src)
 		var/list/dat = list()
 
-		var/dat += text("<TT><B>[]</B><BR>\n\nLock Status: []",src, (src.locked ? "LOCKED" : "UNLOCKED"))
+		dat += text("<TT><B>[]</B><BR>\n\nLock Status: []",src, (src.locked ? "LOCKED" : "UNLOCKED"))
 		var/message = "Code"
 		if ((src.l_set == 0) && (!src.emagged) && (!src.l_setshort))
 			dat += text("<p>\n<b>5-DIGIT PASSCODE NOT SET.<br>ENTER NEW PASSCODE.</b>")

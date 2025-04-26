@@ -160,7 +160,7 @@ datum/mind
 			dat += "<font face='Hando' color = #000000>I am of the [thanati_type] circle</font>"
 			dat += "<font face='Hando' color = #000000>The corrupt word is [thanati_corrupt], my circle word is [thanati_word_random], the circle of [thanati_type]!</font>"
 
-		var/datum/browser/popup = new(user, "memory", "MY MEMORIES", 400, 700)
+		var/datum/browser/popup = new(usr, "memory", "MY MEMORIES", 400, 700)
 		popup.set_content(JOINTEXT(dat))
 		popup.open()
 

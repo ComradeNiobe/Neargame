@@ -339,7 +339,7 @@
 		onclose(user, "")
 		return*/
 
-	var/dat = "<TT><center><b>[vendorname]</b></center><hr /><br>" //display the name, and added a horizontal rule
+	var/list/dat = list()
 	dat += "<b>Select an item: </b><br><br>" //the rest is just general spacing and bolding
 
 	if (premium.len > 0)
@@ -396,12 +396,15 @@
 		if (product_slogans != "")
 			dat += "The speaker switch is [src.shut_up ? "off" : "on"]. <a href='byond://?src=\ref[src];togglevoice=[1]'>Toggle</a>"
 
-	user << browse(dat, "window=vending")
-	onclose(user, "")
-	return
+	var/datum/browser/popup = new(user, "vending", "[vendorname]", 400, 600)
+	popup.set_content(JOINTEXT(dat))
+	popup.open()
 
 /obj/machinery/vending/Topic(href, href_list)
 	if(stat & (BROKEN|NOPOWER))
+		return
+	if(!CanPhysicallyInteractWith(usr, src))
+		to_chat(usr, SPAN_WARNING("You must stay close to \the [src]!"))
 		return
 	if(usr.stat || usr.restrained())
 		return
