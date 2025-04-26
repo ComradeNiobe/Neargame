@@ -367,18 +367,18 @@ var/global/TaxUponSells = 20
 
 
 /obj/machinery/computer/ordercomp/attack_ai(var/mob/user as mob)
-	return attack_hand(user)
+	return interact(user)
 
 /obj/machinery/computer/ordercomp/attack_paw(var/mob/user as mob)
-	return attack_hand(user)
+	return interact(user)
 
 /obj/machinery/computer/supplycomp/attack_ai(var/mob/user as mob)
-	return attack_hand(user)
+	return interact(user)
 
 /obj/machinery/computer/supplycomp/attack_paw(var/mob/user as mob)
-	return attack_hand(user)
+	return interact(user)
 
-/obj/machinery/computer/ordercomp/attack_hand(var/mob/user as mob)
+/obj/machinery/computer/ordercomp/interact(var/mob/user as mob)
 	if(..())
 		return
 	if(level_check()==0)	return
@@ -507,16 +507,17 @@ var/global/TaxUponSells = 20
 	updateUsrDialog()
 	return
 
-/obj/machinery/computer/supplycomp/attack_hand(var/mob/user as mob)
-	if(level_check()==0)	return
+/obj/machinery/computer/supplycomp/attack_hand(mob/user)
+	return interact(user)
+
+/obj/machinery/computer/supplycomp/interact(mob/user)
+	if(level_check() == 0)
+		return
 	if(locked)
 		to_chat(user, "<span class='combat'>Console is locked!</span>")
 		return
 	if(!allowed(user))
 		user << "\red Access Denied."
-		return
-
-	if(..())
 		return
 	if(!CanPhysicallyInteractWith(user, src))
 		to_chat(user, SPAN_WARNING("You must stay close to \the [src]!"))
@@ -566,47 +567,16 @@ var/global/TaxUponSells = 20
 		qdel(I)
 		playsound(src.loc, 'sound/effects/coininsert.ogg', 30, 0)
 		return
-/* fuck off
-	if(istype(I, /obj/item/screwdriver))
-		playsound(loc, 'sound/items/Screwdriver.ogg', 50, 1)
-		if(do_after(user, 20))
-			if (stat & BROKEN)
-				to_chat(user, "\blue The broken glass falls out.")
-				var/obj/structure/computerframe/A = new /obj/structure/computerframe( loc )
-				new /obj/item/shard( loc )
-				var/obj/item/circuitboard/supplycomp/M = new /obj/item/circuitboard/supplycomp( A )
-				for (var/obj/C in src)
-					C.loc = loc
-				A.circuit = M
-				A.state = 3
-				A.icon_state = "3"
-				A.anchored = 1
-				qdel(src)
-			else
-				to_chat(user, "\blue You disconnect the monitor.")
-				var/obj/structure/computerframe/A = new /obj/structure/computerframe( loc )
-				var/obj/item/circuitboard/supplycomp/M = new /obj/item/circuitboard/supplycomp( A )
-				if(can_order_contraband)
-					M.contraband_enabled = 1
-				for (var/obj/C in src)
-					C.loc = loc
-				A.circuit = M
-				A.state = 4
-				A.icon_state = "4"
-				A.anchored = 1
-				qdel(src)
-		*/
 	else
 		attack_hand(user)
 	return
 
-/obj/machinery/computer/supplycomp/Topic(href, href_list)
+/obj/machinery/computer/supplycomp/Topic(href, list/href_list)
+	. = ..()
 	var/sounds = pick('sound/webbers/console_input1.ogg', 'sound/webbers/console_input2.ogg', 'sound/webbers/console_input3.ogg')
 	playsound(src.loc, sounds, 25, 1)
 	if(!supply_shuttle)
 		world.log << "## ERROR: Eek. The supply_shuttle controller datum is missing somehow."
-		return
-	if(..())
 		return
 	if(!CanPhysicallyInteractWith(usr, src))
 		to_chat(usr, SPAN_WARNING("You must stay close to \the [src]!"))
@@ -620,13 +590,14 @@ var/global/TaxUponSells = 20
 		if(!supply_shuttle.can_move())
 			temp = "<html><head><title>Merchant Console</title> <body style='background-color:#0e0c0e; color: #43302f;'>"
 			temp += "For safety reasons the automated supply shuttle cannot transport live organisms, classified nuclear weaponry or homing beacons.<BR><BR><A href='byond://?src=\ref[src];mainmenu=1'>OK</A>"
-
+			updateUsrDialog()
 		else if(supply_shuttle.at_station)
 			supply_shuttle.moving = -1
 			supply_shuttle.sell()
 			supply_shuttle.send()
 			temp = "<html><head><title>Merchant Console</title> <body style='background-color:#0e0c0e; color: #43302f;'>"
 			temp += "The boat has left the port.<BR><BR><A href='byond://?src=\ref[src];mainmenu=1'>OK</A>"
+			updateUsrDialog()
 		else
 			supply_shuttle.moving = 1
 			supply_shuttle.buy()
@@ -634,7 +605,7 @@ var/global/TaxUponSells = 20
 			temp = "<html><head><title>Merchant Console</title> <body style='background-color:#0e0c0e; color: #43302f;'>"
 			temp += "The boat is returning to the port, it will arrive in [round(supply_shuttle.movetime/600,1)] minutes.<BR><BR><A href='byond://?src=\ref[src];mainmenu=1'>OK</A>"
 			post_signal("supply")
-
+			updateUsrDialog()
 	else if (href_list["order"])
 		if(supply_shuttle.moving) return
 		if(href_list["order"] == "categories")
@@ -647,6 +618,7 @@ var/global/TaxUponSells = 20
 			temp += "<b>Select a category:</b><BR><BR>"
 			for(var/supply_group_name in all_supply_groups )
 				temp += "<A href='byond://?src=\ref[src];order=[supply_group_name]'>[supply_group_name]</A><BR><BR>"
+			updateUsrDialog()
 		else
 			last_viewed_group = href_list["order"]
 			temp = "<html><head><style> a{color:white; font-size: 125%; text-decoration: none;}a:hover{text-decoration: underline} body{font-size: 135%}</style><title>Merchant Console</title> <body style='background-color:#0e0c0e; color: #43302f; text-align: center;'>"
@@ -657,7 +629,7 @@ var/global/TaxUponSells = 20
 				var/datum/supply_packs/N = supply_shuttle.supply_packs[supply_name]
 				if((N.hidden && !hacked) || (N.contraband && !can_order_contraband) || N.group != last_viewed_group || (N.is_weapon && gunban)) continue								//Have to send the type instead of a reference to
 				temp += "<A href='byond://?src=\ref[src];doorder=[supply_name]'>[supply_name]</A> Price: [cost_with_taxes(N)] obols<BR>"		//the obj because it would get caught by the garbage
-
+			updateUsrDialog()
 	else if (href_list["doorder"])
 		if(world.time < reqtime)
 			for(var/mob/V in hearers(src))
@@ -695,7 +667,7 @@ var/global/TaxUponSells = 20
 		temp = "<html><head><style> a{color:white; font-size: 125%; text-decoration: none;}a:hover{text-decoration: underline} body{font-size: 135%}</style><title>Merchant Console</title> <body style='background-color:#0e0c0e; color: #43302f; text-align: center;'>"
 		temp += "Order request placed.<BR>"
 		temp += "<BR><A href='byond://?src=\ref[src];order=[last_viewed_group]'>Back</A> | <A href='byond://?src=\ref[src];mainmenu=1'>Main Menu</A> | <A href='byond://?src=\ref[src];confirmorder=[O.ordernum]'>Confirm Order</A>"
-
+		updateUsrDialog()
 	else if(href_list["confirmorder"])
 		//Find the correct supply_order datum
 		var/ordernum = text2num(href_list["confirmorder"])
@@ -722,7 +694,7 @@ var/global/TaxUponSells = 20
 					temp += "Not enough supply obols.<BR>"
 					temp += "<BR><A href='byond://?src=\ref[src];viewrequests=1'>Back</A> <A href='byond://?src=\ref[src];mainmenu=1'>Main Menu</A>"
 				break
-
+		updateUsrDialog()
 	else if(href_list["withdraw"])
 		playsound(src.loc, pick('sound/effects/public1.ogg','sound/effects/public2.ogg','sound/effects/public3.ogg'), 30, 0)
 		if(supply_shuttle.points)
@@ -757,7 +729,7 @@ var/global/TaxUponSells = 20
 					if("Copper")
 						spawn_money(withdraw,usr.loc)
 				supply_shuttle.points -= withdraw * obols_div
-
+		updateUsrDialog()
 	else if (href_list["vieworders"])
 		temp = "<html><head><title>Merchant Console</title> <body style='background-color:#0e0c0e; color: #43302f;'>"
 		temp += "Current approved orders: <BR><BR>"
@@ -766,12 +738,13 @@ var/global/TaxUponSells = 20
 			temp += "<html><head><title>Merchant Console</title> <body style='background-color:#0e0c0e; color: #43302f;'>"
 			temp += "#[SO.ordernum] - [SO.object.name] approved by [SO.orderedby][SO.comment ? " ([SO.comment])":""]<BR>"// <A href='byond://?src=\ref[src];cancelorder=[S]'>(Cancel)</A><BR>"
 		temp += "<BR><A href='byond://?src=\ref[src];mainmenu=1'>OK</A>"
-
+		updateUsrDialog()
 	else if(href_list["changetaxes"])
 		playsound(src.loc, pick('sound/effects/public1.ogg','sound/effects/public2.ogg','sound/effects/public3.ogg'), 30, 0)
 		var/input = sanitize_num(input(usr, "Choose between 0 and 100 percent.", "Enoch's Gate Decree", "") as num, 0, 100)
 		TaxUponSells = input
 		playsound(src.loc, pick('sound/effects/public1.ogg','sound/effects/public2.ogg','sound/effects/public3.ogg'), 30, 0)
+		updateUsrDialog()
 /*
 	else if (href_list["cancelorder"])
 		var/datum/supply_order/remove_supply = href_list["cancelorder"]
@@ -794,6 +767,7 @@ var/global/TaxUponSells = 20
 		temp = "<html><head><title>Merchant Console</title> <body style='background-color:#0e0c0e; color: #43302f;'>"
 		temp += "<BR><A href='byond://?src=\ref[src];clearreq=1'>Clear list</A>"
 		temp += "<BR><A href='byond://?src=\ref[src];mainmenu=1'>OK</A>"
+		updateUsrDialog()
 
 	else if (href_list["rreq"])
 		var/ordernum = text2num(href_list["rreq"])
@@ -807,19 +781,22 @@ var/global/TaxUponSells = 20
 				temp += "Request removed.<BR>"
 				break
 		temp += "<BR><A href='byond://?src=\ref[src];viewrequests=1'>Back</A> <A href='byond://?src=\ref[src];mainmenu=1'>Main Menu</A>"
+		updateUsrDialog()
 
 	else if (href_list["clearreq"])
 		supply_shuttle.requestlist.Cut()
 		temp = "<html><head><title>Merchant Console</title> <body style='background-color:#0e0c0e; color: #43302f;'>"
 		temp += "List cleared.<BR>"
 		temp += "<BR><A href='byond://?src=\ref[src];mainmenu=1'>OK</A>"
+		updateUsrDialog()
 
 	else if (href_list["mainmenu"])
 		temp = null
+		updateUsrDialog()
 
 	add_fingerprint(usr)
 	updateUsrDialog()
-	return
+	return TOPIC_HANDLED
 
 /obj/machinery/computer/supplycomp/proc/post_signal(var/command)
 
