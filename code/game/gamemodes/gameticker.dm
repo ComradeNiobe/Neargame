@@ -153,6 +153,9 @@ var/turf/MiniSpawn
 
 
 /datum/controller/gameticker/proc/setup()
+	if(current_state == GAME_STATE_PLAYING || Master.current_runlevel == RUNLEVEL_GAME)
+		return
+
 	//Create and announce mode
 	if(master_mode=="secret")
 		src.hide_mode = 1
