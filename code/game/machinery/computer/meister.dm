@@ -4,9 +4,6 @@
 //	req_one_access = list(access_change_ids)
 
 /obj/machinery/computer/meister/attack_hand(var/mob/user as mob)
-	. = ..()
-	if(.)
-		return
 	user.set_machine(src)
 
 	var/list/dat = list()
@@ -20,7 +17,8 @@
 		<th>ACCOUNT</th>
 		<th>OPERATIONS</th>
 	"}
-	if(!ticker)	return
+	if(!ticker)
+		return
 	for(var/obj/item/card/id/ID as anything in rings_account)
 		if(ID.no_showing)
 			continue
@@ -80,7 +78,7 @@
 
 			return TOPIC_REFRESH
 
-/obj/machinery/computer/meister/Topic(href, href_list, state = global.physical_topic_state)
+/obj/machinery/computer/meister/Topic(href, href_list)
 	. = ..()
 	if(!CanPhysicallyInteractWith(usr, src))
 		to_chat(usr, SPAN_WARNING("You must stay close to \the [src]!"))

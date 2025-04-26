@@ -12,7 +12,7 @@ var/global/list/medal_nominated = list()
 	var/captured = FALSE
 
 /obj/structure/stool/bed/chair/ThroneMid/interact(mob/user)
-	if(!CanPhysicallyInteract(user))
+	if(!CanPhysicallyInteractWith(user, src))
 		return
 	user.set_machine(src)
 	var/list/dat = list()
@@ -49,13 +49,12 @@ var/global/isEmergency = 0
 var/global/isMeeting = 0
 var/global/list/riot_essential = list("Baron", "Court Bodyguard", "Charybdis", "Squire", "Kraken", "Triton", "Hand", "Heir", "Successor", "Baroness", "Guest", "Meister", "Treasurer", "Praetor", "Vicar", "Sniffer", "Sheriff")
 
-/obj/structure/stool/bed/chair/ThroneMid/Topic(mob/living/carbon/human/user, list/href_list, state = global.physical_topic_state)
+/obj/structure/stool/bed/chair/ThroneMid/Topic(href, list/href_list)
 	. = ..()
-	if(user != src.buckled_mob)
+	if(usr != src.buckled_mob)
 		return TOPIC_HANDLED
-	if(!CanPhysicallyInteractWith(user, src))
-		to_chat(user, SPAN_WARNING("You must stay close to \the [src]!"))
-		return
+
+	var/mob/living/carbon/human/user = usr
 
 	var/obj/item/clothing/head/caphat/crown = user.get_item_by_slot(slot_head)
 	var/list/allowedjobs = list("Baron","Hand","Count","Baroness","Heir","Successor")
@@ -65,7 +64,7 @@ var/global/list/riot_essential = list("Baron", "Court Bodyguard", "Charybdis", "
 				var/input = sanitize(input(usr, "Type your decree.", "Enoch's Gate Decree", "") as message|null)
 				if(!input)
 					return TOPIC_NOACTION
-				if(global.is_http_protocol.Find(input))
+				if(findtext(input, "https://"))
 					message_admins("[key_name(user)] attempted to send a decree with a URL in their decree.")
 					return TOPIC_NOACTION
 				if(get_dist(src, user) > 1)
@@ -203,7 +202,7 @@ var/global/list/riot_essential = list("Baron", "Court Bodyguard", "Charybdis", "
 				var/input = sanitize(input(user, "Type your decree.", "Enoch's Gate Decree", "") as message|null)
 				if(!input)
 					return
-				if(global.is_http_protocol.Find(input))
+				if(findtext(input, "https://"))
 					message_admins("[key_name(user)] attempted to send a decree with a URL in their decree.")
 					return TOPIC_NOACTION
 				if(get_dist(src, user) > 1)
@@ -225,7 +224,7 @@ var/global/list/riot_essential = list("Baron", "Court Bodyguard", "Charybdis", "
 				var/input = sanitize(input(usr, "Type your capture.", "Enoch's Gate Decree", "") as message|null)
 				if(!input)
 					return TOPIC_NOACTION
-				if(global.is_http_protocol.Find(input))
+				if(findtext(input, "https://"))
 					message_admins("[key_name(user)] attempted to send a decree with a URL in their decree.")
 					return TOPIC_NOACTION
 				to_chat(world, "<span class='ravenheartfortress'>Enoch's Gate Hold</span>")
@@ -239,7 +238,7 @@ var/global/list/riot_essential = list("Baron", "Court Bodyguard", "Charybdis", "
 				var/input = sanitize(input(usr, "Type your execution.", "Enoch's Gate Decree", "") as message|null)
 				if(!input)
 					return TOPIC_NOACTION
-				if(global.is_http_protocol.Find(input))
+				if(findtext(input, "https://"))
 					message_admins("[key_name(user)] attempted to send a decree with a URL in their decree.")
 					return TOPIC_NOACTION
 				to_chat(world, "<span class='ravenheartfortress'>Enoch's Gate Hold</span>")
@@ -669,7 +668,7 @@ var/roundendready = FALSE
 	var/input = sanitize(input(usr, "Type your decree.", "Enoch's Gate Decree", "") as message|null, list("\t"="#","ÿ"="&#255;"))
 	if(!input)
 		return
-	if(global.is_http_protocol.Find(input))
+	if(findtext(input, "https://"))
 		message_admins("[key_name(usr)] attempted to send a decree with a URL in their decree.")
 		return
 	to_chat(world, "<span class='ravenheartfortress'>Enoch's Gate Hold</span>")

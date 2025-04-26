@@ -9,6 +9,7 @@ var/rtlog_path
 
 #define RECOMMENDED_VERSION 516
 /world/New()
+	set waitfor = FALSE
 	TgsNew(minimum_required_security_level = TGS_SECURITY_TRUSTED)
 	for(var/obj/effect/landmark/mapinfo/L in landmarks_list)
 		if (L.name == "mapinfo" && L.mapname != "Mini War")
