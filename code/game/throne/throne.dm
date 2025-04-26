@@ -12,8 +12,6 @@ var/global/list/medal_nominated = list()
 	var/captured = FALSE
 
 /obj/structure/stool/bed/chair/ThroneMid/interact(mob/user)
-	if(!CanPhysicallyInteract(user))
-		return
 	user.set_machine(src)
 	var/list/dat = list()
 
@@ -49,13 +47,10 @@ var/global/isEmergency = 0
 var/global/isMeeting = 0
 var/global/list/riot_essential = list("Baron", "Court Bodyguard", "Charybdis", "Squire", "Kraken", "Triton", "Hand", "Heir", "Successor", "Baroness", "Guest", "Meister", "Treasurer", "Praetor", "Vicar", "Sniffer", "Sheriff")
 
-/obj/structure/stool/bed/chair/ThroneMid/Topic(mob/living/carbon/human/user, list/href_list, state = global.physical_topic_state)
+/obj/structure/stool/bed/chair/ThroneMid/Topic(mob/living/carbon/human/user, list/href_list)
 	. = ..()
 	if(user != src.buckled_mob)
 		return TOPIC_HANDLED
-	if(!CanPhysicallyInteractWith(user, src))
-		to_chat(user, SPAN_WARNING("You must stay close to \the [src]!"))
-		return
 
 	var/obj/item/clothing/head/caphat/crown = user.get_item_by_slot(slot_head)
 	var/list/allowedjobs = list("Baron","Hand","Count","Baroness","Heir","Successor")
