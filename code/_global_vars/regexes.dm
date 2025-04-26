@@ -11,8 +11,6 @@ GLOBAL_GETTER(is_alpha_color, /regex, regex("^#\[0-9a-fA-F]{8}$"))
 //finds text strings recognized as links on discord. Mainly used to stop embedding.
 GLOBAL_GETTER(has_discord_embeddable_links, /regex, regex("(https?://\[^\\s|<\]{2,})"))
 
-GLOBAL_GETTER(standard_year, /regex, regex(@"^(?<year>[0-9]{4})"))
-
 //All < and > characters
 GLOBAL_GETTER(angular_brackets, /regex, regex(@"[<>]", "g"))
 

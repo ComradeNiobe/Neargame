@@ -194,8 +194,9 @@ var/global/max_players = 100
 				notInvited()
 				return
 		if(FALSE)
-			global.standard_year.Find(account_join_date)
-			if(text2num(global.standard_year.group[1]) >= 2024)
+			var/static/regex/standard_year = regex(@"^(?<year>[0-9]{4})")
+			standard_year.Find(account_join_date)
+			if(text2num(standard_year.group[1]) >= 2024)
 				notInvited()
 				return
 
