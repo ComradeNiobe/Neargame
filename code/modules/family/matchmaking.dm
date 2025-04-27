@@ -139,7 +139,7 @@ var/list/client/set_spoused = list() //prevents set_spoused people from being sh
 
 //This is where the families are made.  This is basically the big driver of everything.
 /datum/matchmaker/proc/do_family_matchmaking()
-	var/total_familes = round(player_list.len * 0.2) + 1  // How many families we want Makes around 1 family per 4 people, and always at least one family
+	var/total_familes = round(player_list.len * 1)  // How many families we want Makes around 1 family per 4 people, and always at least one family
 	/*to_world("Trying to make families total_familes = [total_familes]")
 	for(var/mob/living/carbon/human/H in player_list)
 		to_world("player_list is [player_list]")
