@@ -778,37 +778,22 @@
 
 		else if (href_list["interaction"] == "anal")
 			if(get_dist(H,P) <= 1 && isnude_p && isnude && haspenis && hasanus_p)
-				if (H.erpcooldown == 0)
-					if (H.penis_size > 0)
-						H.fuck(H, P, "anal")
-				else
-					var/message = pick("it's not erect...")
-					to_chat(H, message)
+				if (H.penis_size > 0)
+					H.fuck(H, P, "anal")
+
 		else if (href_list["interaction"] == "vaginal")
 			if (get_dist(H,P) <= 1 && isnude_p && isnude && haspenis && hasanus_p)
-				if (H.erpcooldown == 0)
-					if (H.penis_size > 0)
-						H.fuck(H, P, "vaginal")
-				else
-					var/message = pick("It's not erect...")
-					to_chat(H, message)
+				if (H.penis_size > 0)
+					H.fuck(H, P, "vaginal")
 
 		else if (href_list["interaction"] == "oral")
 			if (get_dist(H,P) <= 1 && isnude && mouthfree_p && haspenis)
-				if (H.erpcooldown == 0)
-					if (H.penis_size > 0)
-						H.fuck(H, P, "oral")
-				else
-					var/message = pick("It's not erect...")
-					to_chat(H, message)
+				if (H.penis_size > 0)
+					H.fuck(H, P, "oral")
 
 		else if (href_list["interaction"] == "mount")
 			if (get_dist(H,P) <= 1 && isnude && isnude_p && haspenis_p && hasvagina)
-				if(P.erpcooldown == 0)
-					H.fuck(H, P, "mount")
-				else
-					var/message = pick("You have no lust now.")
-					to_chat(H, "<span class='erp'>[message]</span>")
+				H.fuck(H, P, "mount")
 
 
 

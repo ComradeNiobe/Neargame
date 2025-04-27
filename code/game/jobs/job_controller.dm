@@ -62,7 +62,7 @@ var/global/thanatiWords = list()
 			if(!job)	return 0
 			if(jobban_isbanned(player, rank))	return 0
 			if(player.client.chromie_holder.chromie_number < 0 && rank == "Kraken") return 0
-			if(!donation_trap.Find(ckey(player.key)) || job.no_trapoc)
+			if(job.no_trapoc)
 				if(job.sex_lock && player.client.prefs.gender != job.sex_lock)
 					return 0
 			if(!job.player_old_enough(player.client)) return 0
@@ -114,7 +114,7 @@ var/global/thanatiWords = list()
 			if(flag && (!player.client.prefs.be_special & flag))
 				Debug("FOC flag failed, Player: [player], Flag: [flag], ")
 				continue
-			if(!donation_trap.Find(ckey(player.key)) || job.no_trapoc)
+			if(job.no_trapoc)
 				if(job.sex_lock && player.client.prefs.gender != job.sex_lock)
 					Debug("FOC character wrong gender, Player: [player]")
 					continue
@@ -156,7 +156,7 @@ var/global/thanatiWords = list()
 				Debug("GRJ player not old enough, Player: [player]")
 				continue
 		
-			if(!tier_tiamat.Find(ckey(player.key)) || !donation_trap.Find(ckey(player.key)) || job.no_trapoc)
+			if(job.no_trapoc)
 				if(job.sex_lock && player.client.prefs.gender != job.sex_lock)
 					continue
 
@@ -374,8 +374,8 @@ var/global/thanatiWords = list()
 						Debug("DO isbanned failed, Player: [player], Job:[job.title]")
 						continue
 
-					if(!tier_tiamat.Find(ckey(player.key)) || !donation_trap.Find(ckey(player.key)))
-						if(job.sex_lock && job.sex_lock != player.client.prefs.gender)
+					if(job.no_trapoc)
+						if(job.sex_lock && player.client.prefs.gender != job.sex_lock)
 							Debug("DO player wrong gender, Player: [player], Job:[job.title]")
 							continue
 

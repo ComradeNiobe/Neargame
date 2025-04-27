@@ -319,7 +319,7 @@ var/global/list/special_roles = list( //keep synced with the defines BE_* in set
 		var/rank = job.title
 		rank = job.title
 		lastJob = job
-		if((job.sex_lock && job.sex_lock != user.client.prefs.gender && (!donation_trap.Find(ckey(user.client.key)) || job.no_trapoc)) || job.flag == MIGRANT || job.flag == SIEGER || (job.total_positions == 0 && job.spawn_positions == 0))
+		if((job.no_trapoc && job.sex_lock && job.sex_lock != user.client.prefs.gender) || job.flag == MIGRANT || job.flag == SIEGER || (job.total_positions == 0 && job.spawn_positions == 0))
 			. += "<del>[rank]</del></td><td><b> \[UNAVAILABLE]</b></td></tr>"
 			continue
 		if(job.job_whitelisted)
