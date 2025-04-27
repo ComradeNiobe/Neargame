@@ -422,7 +422,6 @@ var/list/cuckoldlist = list()
 		H.visible_message("<span class='erpbold'>[H]</span> <span class='cumzone'>[message].</span>")
 		if (istype(P.loc, /obj/structure/closet))
 			P.visible_message("<span class='erpbold'>[H]</span> <span class='cumzone'>[message].</span>")
-		var/delta = pick(20, 30, 40, 50)
 		switch(lust)
 			if(0 to 150)
 				sound_path = "honk/sound/new/ACTIONS/VAGINA/SQUIRT/SHORT/"
