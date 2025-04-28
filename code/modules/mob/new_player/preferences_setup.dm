@@ -156,6 +156,9 @@ datum/preferences
 		preview_icon.Blend(new /icon(icobase, "l_hand[g]_s"), ICON_OVERLAY)
 		preview_icon.Blend(new /icon(icobase, "r_hand[g]_s"), ICON_OVERLAY)
 
+		if(MigProvince == "Wei Ji Burrows")
+			preview_icon.MapColors(rgb(255, 0, 0),rgb(0, 255, 0),rgb(0, 0, 0))
+
 		for(var/name in list("l_arm","r_arm","l_leg","r_leg","l_foot","r_foot","l_hand","r_hand"))
 			// make sure the organ is added to the list so it's drawn
 			if(organ_data[name] == null)

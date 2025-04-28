@@ -520,7 +520,7 @@ proc/get_damage_icon_part(damage_state, body_part, var/icon/dam_icon = 'icons/mo
 	stand_icon = new(species && species.icon_template ? species.icon_template : 'icons/neargame/zion362/mob/human.dmi',"blank")
 	lying_icon = new(species && species.icon_template ? species.icon_template : 'icons/neargame/zion362/mob/human.dmi',"blank")
 
-	var/icon_key = "[species.race_key][g][s_tone]"
+	var/icon_key = "[species.race_key][g][s_tone][province]"
 	for(var/datum/organ/external/part in organs)
 		var/datum/organ/external/head/E = get_organ("head")
 		if(istype(part,/datum/organ/external/head) && !(part.status & ORGAN_DESTROYED))
@@ -548,7 +548,7 @@ proc/get_damage_icon_part(damage_state, body_part, var/icon/dam_icon = 'icons/mo
 			icon_key = "[icon_key]1"
 
 	var/datum/organ/external/M = get_organ("mouth")
-	icon_key = "[icon_key][husk ? 1 : 0][fat ? 1 : 0][hulk ? 1 : 0][skeleton ? 1 : 0][(gender == FEMALE && age >= 60) ? 1 : 0][(M.status & ORGAN_DESTROYED) ? 1 : 0][s_tone]"
+	icon_key = "[icon_key][husk ? 1 : 0][fat ? 1 : 0][hulk ? 1 : 0][skeleton ? 1 : 0][(gender == FEMALE && age >= 60) ? 1 : 0][(M.status & ORGAN_DESTROYED) ? 1 : 0][s_tone][province]"
 	bodyhair()
 	var/icon/base_icon
 	var/icon/lbase_icon
@@ -739,6 +739,8 @@ mob/living/carbon/human/proc/bodypart_blends(var/icon/base_icon, var/icon/lbase_
 		base_icon.Blend(husk_over, ICON_OVERLAY)
 		lbase_icon.Blend(husk_over, ICON_OVERLAY)
 
+	if(province == "Wei Ji Burrows")
+		base_icon.MapColors(rgb(255, 0, 0),rgb(0, 255, 0),rgb(0, 0, 0))
 
 	//Skin tone.
 	if(!husk && !hulk)
