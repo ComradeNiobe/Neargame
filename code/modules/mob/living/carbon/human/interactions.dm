@@ -405,7 +405,6 @@ var/list/cuckoldlist = list()
 		if (istype(P.loc, /obj/structure/closet))
 			P.visible_message("<span class='erpbold'>[H]</span> <span class='cumzone'>[message]</span>")
 		H.lust = 5
-		H.resistenza += 50
 		orgasms += 1
 		if(P.mind && H.mind && (!ismonster(H) && !H.bot && !istype(H, /mob/living/carbon/human/skinless) && P.stat != DEAD))
 			var/has_husband = FALSE
@@ -423,29 +422,19 @@ var/list/cuckoldlist = list()
 		H.visible_message("<span class='erpbold'>[H]</span> <span class='cumzone'>[message].</span>")
 		if (istype(P.loc, /obj/structure/closet))
 			P.visible_message("<span class='erpbold'>[H]</span> <span class='cumzone'>[message].</span>")
-		var/delta = pick(20, 30, 40, 50)
 		switch(lust)
 			if(0 to 150)
 				sound_path = "honk/sound/new/ACTIONS/VAGINA/SQUIRT/SHORT/"
 			if(150 to INFINITY)
 				sound_path = "honk/sound/new/ACTIONS/VAGINA/SQUIRT/LONG/"
 		sound = pick(flist("[sound_path]"))
-		src.lust -= delta
+		src.lust = 60
 		orgasms += 1
 
 	H.multiorgasms += 1
 	if (H.multiorgasms > H.penis_size / 3)
 		if (H.stamina_loss < P.penis_size * 4)
 			H.stamina_loss += H.penis_size * 0.5
-
-	if(!(H.reagents.has_reagent("hero_drops")))
-		if (H.stamina_loss > 100)
-			H.erpcooldown = 600
-		else
-			H.erpcooldown = rand(200, 450)
-
-	if(H.reagents.has_reagent("hero_drops"))
-		lust = 0
 
 	if(H.special == "dst")
 		H.dst_completed += 1
@@ -516,14 +505,6 @@ var/list/cuckoldlist = list()
 		src.add_event("adultmag", /datum/happiness_event/magazinepleasure)
 		if(src.has_vice("Voyeur"))
 			viceneed = 0
-	if(!(src.reagents.has_reagent("hero_drops")))
-		if (src.stamina_loss > 100)
-			src.erpcooldown = 600
-		else
-			src.erpcooldown = rand(200, 450)
-
-	if(src.reagents.has_reagent("hero_drops"))
-		lust = 0
 
 	if(sound && sound_path)
 		playsound(loc, "[sound_path][sound]", 90, 1, -5)
@@ -599,7 +580,6 @@ var/list/cuckoldlist = list()
 				sound = pick(flist("honk/sound/new/ACTIONS/MOUTH/SALIVA/"))
 				playsound(loc, ("honk/sound/new/ACTIONS/MOUTH/SALIVA/[sound]"), 90, 1, -5)
 
-			H.do_fucking_animation(P)
 
 		if("fingering")
 			if(chastity_check_P)
@@ -631,7 +611,6 @@ var/list/cuckoldlist = list()
 
 			sound = pick(flist("honk/sound/new/ACTIONS/VAGINA/TOUCH/"))
 			playsound(loc, ("honk/sound/new/ACTIONS/VAGINA/TOUCH/[sound]"), 90, 1, -5)
-			H.do_fucking_animation(P)
 
 		if("ballsuck")
 			message = pick("sucks [P]'s balls.", "licks [P]'s nuts.")
@@ -660,7 +639,6 @@ var/list/cuckoldlist = list()
 				else
 					P.moan()
 
-			H.do_fucking_animation(P)
 			playsound(loc, ("[sound_path][sound]"), 90, 1, -5)
 			if(prob(35))
 				sound = pick(flist("honk/sound/new/ACTIONS/MOUTH/SALIVA/"))
@@ -693,7 +671,6 @@ var/list/cuckoldlist = list()
 				else
 					P.moan()
 
-			H.do_fucking_animation(P)
 			playsound(loc, ("[sound_path][sound]"), 90, 1, -5)
 			if(prob(35))
 				sound = pick(flist("honk/sound/new/ACTIONS/MOUTH/SALIVA/"))
@@ -724,7 +701,6 @@ var/list/cuckoldlist = list()
 			if(prob(50))
 				sound = pick(flist("honk/sound/new/ACTIONS/PENIS/HANDJOB/"))
 				playsound(loc, "honk/sound/new/ACTIONS/PENIS/HANDJOB/[sound]", 90, 1, -5)
-			H.do_fucking_animation(P)
 			if (prob(P.penis_size))
 				H.visible_message("<span class='erpbold'>[H]</span> <span class='erp'>strokes</span> <B>[P]'s </span><span class='erp'> [pick("cock","dick","penis")] faster.</span>")
 
@@ -780,7 +756,6 @@ var/list/cuckoldlist = list()
 					P.cum(P, H)
 				else
 					P.moan(H.penis_size)
-			H.do_fucking_animation(P)
 			if(prob(75))
 				sound = pick(flist("honk/sound/new/ACTIONS/PENETRATION/"))
 				playsound(loc, "honk/sound/new/ACTIONS/PENETRATION/[sound]", 90, 1, -5)
@@ -824,7 +799,6 @@ var/list/cuckoldlist = list()
 					P.cum(P, H, "vagina")
 				else
 					P.moan(P.penis_size)
-			H.do_fucking_animation(P)
 			if(prob(75))
 				sound = pick(flist("honk/sound/new/ACTIONS/PENETRATION/"))
 				playsound(loc, "honk/sound/new/ACTIONS/PENETRATION/[sound]", 90, 1, -5)
@@ -860,7 +834,6 @@ var/list/cuckoldlist = list()
 					P.cum(P, H)
 				else
 					P.moan(H.penis_size)
-			H.do_fucking_animation(P)
 			sound = pick(flist("honk/sound/new/ACTIONS/BODY/COLLIDE/NAKED/"))
 			playsound(loc, "honk/sound/new/ACTIONS/BODY/COLLIDE/NAKED/[sound]", 90, 1, -5)
 
@@ -895,8 +868,7 @@ var/list/cuckoldlist = list()
 				sound_path = "honk/sound/new/ACTIONS/BLOWJOB/"
 			sound = pick(flist("[sound_path]"))
 			playsound(loc, "[sound_path][sound]", 90, 1, -5)
-			H.do_fucking_animation(P)
-	spawn(5)
+	spawn(2)
 		H.doing_fuck = FALSE
 
 
@@ -905,7 +877,7 @@ var/list/cuckoldlist = list()
 	if (species.name == "Human" || H.isFemboy())
 		if (prob(H.lust / H.resistenza * 65))
 			var/message = pick("moans", "moans in pleasure",)
-			H.visible_message("<span class='erpbold'>[H]</span> <span class='erp'>[message].</span:")
+			H.visible_message("<span class='erpbold'>[H]</span> <span class='erp'>[message].</span>")
 			var/g = H.gender == FEMALE ? "f" : "m"
 			var/moan = rand(1, 7)
 			if (moan == lastmoan)
@@ -940,10 +912,6 @@ var/list/cuckoldlist = list()
 		lastfucked = null
 		lfhole = ""
 		multiorgasms = 0
-	if (lust == 0)
-		erpcooldown -= 1
-	if (erpcooldown < 0)
-		erpcooldown = 0
 
 /mob/living/carbon/human/proc/do_fucking_animation(mob/living/carbon/human/P)
 	var/pixel_x_diff = 0
@@ -1100,7 +1068,6 @@ var/list/cuckoldlist = list()
 			else
 				M.moan()
 
-			user.do_fucking_animation(M)
 			playsound(loc, "honk/sound/interactions/bang[rand(4, 6)].ogg", 90, 0, -5)
 
 		else if (hole == "anus" && hasanus)
@@ -1121,8 +1088,6 @@ var/list/cuckoldlist = list()
 				M.cum(M, user, "floor")
 			else
 				M.moan()
-
-			user.do_fucking_animation(M)
 
 			var/sound = pick(flist("honk/sound/new/ACTIONS/PENETRATION/"))
 			playsound(loc, "honk/sound/new/ACTIONS/PENETRATION/[sound]", 90, 1, -5)
@@ -1170,7 +1135,7 @@ var/list/cuckoldlist = list()
 		user.rotate_plane()
 	else
 		to_chat(user, "<span class='passivebold'>[pick(src.thoughts)]</span>")
-		user.resistenza += 5
+		user.lust += 5
 
 
 #undef CONDOM_NONE

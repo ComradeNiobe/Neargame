@@ -24,7 +24,7 @@ var/global/knifeprayer = FALSE
 
 /datum/padla/New()
 	..()
-	timeForNextPadla = rand(20 MINUTES, 35 MINUTES)
+	timeForNextPadla = rand(35 MINUTES, 45 MINUTES)
 
 /datum/padla/proc/process()
 	timeForNextPadla = max(0, timeForNextPadla-1 SECONDS)
@@ -42,7 +42,7 @@ var/global/knifeprayer = FALSE
 	if (padlas)
 		var/datum/curses/padla/chosenPadla = new padlas
 		chosenPadla.Curse()
-		timeForNextPadla = rand(20 MINUTES, 35 MINUTES)
+		timeForNextPadla = rand(35 MINUTES, 45 MINUTES)
 
 // PADLAS TYPE
 
@@ -65,7 +65,7 @@ var/global/knifeprayer = FALSE
 				to_chat(H, "<span class='horriblestate' style='font-size: 150%;'><b><i>Your Lust Intensifies!</i></b></span>")
 
 
-/datum/curses/padla/teeth
+/*/datum/curses/padla/teeth
 	name = "teeth padla"
 
 /datum/curses/padla/teeth/Curse()
@@ -91,7 +91,7 @@ var/global/knifeprayer = FALSE
 /datum/curses/padla/piss/Curse()
 	for(var/mob/living/carbon/human/H in player_list)
 		if(!H.check_perk(/datum/perk/ref/warlock) && !H.stat && !H.sleeping)
-			H.bladder = rand(450, 500)
+			H.bladder = rand(450, 500)*/
 
 /datum/curses/padla/famine
 	name = "famine padla"

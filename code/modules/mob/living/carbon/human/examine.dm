@@ -1,5 +1,3 @@
-
-
 /mob/verb/ZEPRETACO()
 	winset( src.client, "mapwindow.map", "zoom-mode=normal" )
 
@@ -70,11 +68,6 @@
 					t_his = "her"
 					t_chis = "Her"
 					t_him = "her"
-
-			if(has_penis() && (!wear_suit && is_nude()))
-				t_He = "He"
-				t_his = "his"
-				t_him = "him"
 
 		var/mob/living/carbon/human/M = user
 		var/mob/living/carbon/human/P = src

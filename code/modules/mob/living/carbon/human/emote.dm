@@ -758,25 +758,26 @@
 				return
 			if(isChild(src))
 				return
+			if(src.doing_fuck)
+				return
 			if(src.mutilated_genitals)
 				return to_chat(src, "<span class='combatbold'>[pick(fnord)]</span><span class='combat'> I can't.</span>")
 			if(src.wear_suit)
 				return to_chat(src, "<span class='combatbold'>[pick(fnord)]</span><span class='combat'> I have clothes on.</span>")
 			if(src.w_uniform && !P.pants_down)
 				return to_chat(src, "<span class='combatbold'>[pick(fnord)]</span><span class='combat'> I have clothes on.</span>")
+			
+			src.doing_fuck = TRUE
+			
 			if(src.has_penis())
-				if(src.erpcooldown == 0)
-					if(src.penis_size > 0)
-						message = "<span class='examinebold'>[src]</span> <span class='examine'>[pick(nonolist)]</span>"
-						src.lust += 12
-						if (src.lust >= src.resistenza)
-							src.fakecum()
-							src.lust = 0
-						else
-							src.moan()
-						call_sound_emote("masturbate")
+				message = "<span class='examinebold'>[src]</span> <span class='examine'>[pick(nonolist)]</span>"
+				src.lust += 12
+				if (src.lust >= src.resistenza)
+					src.fakecum()
+					src.lust = 0
 				else
-					to_chat(src, "It's not erect...")
+					src.moan()
+				call_sound_emote("masturbate")
 			else
 				message = "<span class='examinebold'>[src]</span> <span class='examine'>[pick(femnonolist)]</span>"
 				src.lust += 12
@@ -785,6 +786,10 @@
 					src.lust = 0
 				else
 					src.moan()
+					
+			// Add cooldown reset with same timer (2 deciseconds)
+			spawn(2)
+				src.doing_fuck = FALSE
 
 //SHITTY EMOTES END
 
