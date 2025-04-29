@@ -847,6 +847,9 @@ var/global/list/special_roles = list( //keep synced with the defines BE_* in set
 				if("s_tone")
 					if(species != "Human")
 						return
+					if(MigProvince == "Wei Ji Burrows")
+						to_chat(user, "<span class='warning'>Ethnic Ginkese have an exotic skin tone that cannot be changed.</span>")
+						return
 					var/new_s_tone = input(user, "Choose your character's skin-tone:\n(Light 1 - 150 Dark)", "Character Preference")  as num|null
 					if(new_s_tone)
 						s_tone = 35 - max(min( round(new_s_tone), 150),1)
@@ -985,6 +988,8 @@ var/global/list/special_roles = list( //keep synced with the defines BE_* in set
 					var/provinces = input(user, "Choose a place where your character came from (Only affects Migrants)") as null|anything in list("Ravenheart","Wei Ji Burrows", "Salar","Savo","Wanderer")
 					if(provinces)
 						MigProvince = provinces
+						if(MigProvince == "Wei Ji Burrows")
+							s_tone = 34
 						to_chat(user, "<b>Province:</b> <i>[MigProvince]</i>")
 						var/dat = {"<HTML><META http-equiv="X-UA-Compatible" content="IE=edge" charset="UTF-8"><style type="text/css"> body {font-family: Times; cursor: url('https://lfwb.ru/Icons/pointer.cur'), auto;} a {text-decoration:none;outline: none;border: none;margin:-1px;} a:focus{outline:none;} a:hover {color:#0d0d0d;background:#505055;outline: none;border: none;} a.active { text-decoration:none; color:#533333;} a.inactive:hover {color:#0d0d0d;background:#bb0000} a.active:hover {color:#bb0000;background:#0f0f0f} a.inactive:hover { text-decoration:none; color:#0d0d0d; background:#bb0000}</style> <body background bgColor=#0d0d0d text=#862525 alink=#777777 vlink=#777777 link=#777777><HEAD><TITLE>[MigProvince]</TITLE></HEAD><BODY>"}
 						dat += "<h1>[MigProvince]</h1><br>"
@@ -1151,9 +1156,8 @@ var/global/list/special_roles = list( //keep synced with the defines BE_* in set
 	if(character.age > 21 && prob(85))
 		character.body_hair = TRUE
 	character.dom_hand = dom_hand
-	if(character.job == "Migrant")
-		character.province = MigProvince
-		character.applyProvince()
+	character.province = MigProvince
+	character.applyProvince()
 	if(vice == "Random")
 		if(prob(60))
 			vice = pick(global.vices)

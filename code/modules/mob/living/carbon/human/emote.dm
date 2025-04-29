@@ -1094,12 +1094,18 @@
 					playsound(src.loc, pick('sound/voice/oldbum_female_laugh1.ogg', 'sound/voice/oldbum_female_laugh2.ogg'), 90, 0)
 				else
 					if(isChild() && src.gender == "female")
-						playsound(src.loc, 'sound/voice/girl_laugh1.ogg', 90, 0)
+						if(src.province == "Wei Ji Burrows" || src.voicetype == "gink")
+							playsound(src.loc, 'sound/voice/laugh_ginkese.ogg', 90, 0)
+						else
+							playsound(src.loc, 'sound/voice/girl_laugh1.ogg', 90, 0)
 					else if(isChild() && src.gender == "male")
 						playsound(src.loc, pick('sound/voice/boy_laugh1.ogg', 'sound/voice/boy_laugh2.ogg', 'sound/voice/boy_laugh3.ogg'), 90, 0)
 					else
 						if(src.religion == "Thanati" && istype(src.wear_suit, /obj/item/clothing/suit/storage/thanati/thanati))
 							playsound(src.loc, pick('sound/voice/thanati/Cultiste rire 1.ogg','sound/voice/thanati/Cultiste rire 2.ogg','sound/voice/thanati/Cultiste rire 3.ogg','sound/voice/thanati/Cultiste rire 4.ogg','sound/voice/thanati/Cultiste rire 5.ogg','sound/voice/thanati/Cultiste rire 6.ogg'), 90, 0)
+							return
+						if(src.gender == "female" && (src.province == "Wei Ji Burrows" || src.voicetype == "gink"))
+							playsound(src.loc, 'sound/voice/laugh_ginkese.ogg', 90, 0)
 							return
 						playsound(src.loc, pick('sound/voice/laugh_female1.ogg', 'sound/voice/laugh_female2.ogg','sound/voice/laugh_female3.ogg'), 90, 0)
 

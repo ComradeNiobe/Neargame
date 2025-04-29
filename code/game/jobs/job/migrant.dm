@@ -1368,14 +1368,6 @@ var/mob/FortLordHand
 						if(src.my_skills.get_skill(SKILL_STEAL) < 4)
 							src.my_skills.add_skill(SKILL_STEAL, rand(1,2))
 		if("Wei Ji Burrows")
-			var/regex/R = regex("(^\\S+) (.*$)") //Get first name and last name
-			R.Find(real_name)
-			var/first_name = R.group[1]
-			var/last_name = R.group[2]
-			if(!gink_last_names.Find(last_name))
-				last_name = pick(gink_last_names)
-				real_name = "[first_name] [last_name]"
-				name = real_name
 			voicetype = "gink"
 			if(prob(100))
 				src.my_stats.change_stat(STAT_ST, -1)

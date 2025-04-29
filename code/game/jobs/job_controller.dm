@@ -456,12 +456,10 @@ var/global/thanatiWords = list()
 		if(job.title != "Bum")
 			var/regex/R = regex("(^\\S+) (.*$)") //Get first name and last name
 			R.Find(H.real_name)
-			var/last_name = R.group[2]
-			if(gink_last_names.Find(last_name))
+			if(H.province == "Wei Ji Burrows")
 				H.voicetype = "gink"
 				H.my_stats.change_stat(STAT_ST , -1)
 				H.my_stats.change_stat(STAT_DX , 1)
-
 
 		spawnId(H, rank, alt_title)
 		spawn(30 SECONDS)
