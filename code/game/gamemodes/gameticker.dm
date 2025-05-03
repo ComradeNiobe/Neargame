@@ -69,7 +69,7 @@ var/turf/MiniSpawn
 /datum/controller/gameticker/proc/pre_migwave()
 	var/list/mob/living/carbon/human/family_migrants = list()
 	if(migwave_timeleft <= 0)
-		if(LAZYLEN(migrants_inwave) >= migrant_req)
+		if(length(migrants_inwave) >= migrant_req)
 			var/turf/pickNewmigLocs
 			if(mode.config_tag == "siege")
 				pickNewmigLocs = pick(siegestart)
@@ -111,7 +111,6 @@ var/turf/MiniSpawn
 				return
 
 /datum/controller/gameticker/proc/pregame()
-	var/player_count
 	do
 		if(first_timer)
 			pregame_timeleft = 180
@@ -119,26 +118,6 @@ var/turf/MiniSpawn
 			pregame_timeleft = 60
 		to_chat(world, "<span class='lowpain'>[pregame_timeleft]s to go.</span>")
 		ooc_allowed = TRUE
-		player_count = 0
-		for(var/mob/new_player/player in player_list)
-			if(player.client)
-				player_count++
-
-		if(forcemod)
-			master_mode = forcemod
-		else
-			if(master_mode != "extended")
-				if(master_mode != "holywar")
-					if((player_count >= HARD_MODE_PLAYER_CAP) && prob (50))
-						master_mode = list("kingwill", "siege")
-					else if(prob(85))
-						var/list/gamemodes = list("changeling", "dreamer", "succubus")
-						if(prob(20))
-							gamemodes.Add("inspector") // this is so boring... im sorry
-						master_mode = pick(gamemodes)
-					else
-						master_mode = "quietday"
-
 
 		while(current_state == GAME_STATE_PREGAME)
 			for(var/i=0, i<10, i++)
@@ -147,59 +126,43 @@ var/turf/MiniSpawn
 			if(going)
 				pregame_timeleft--
 			if(pregame_timeleft <= 0)
-				current_state = GAME_STATE_SETTING_UP
-				Master.SetRunLevel(RUNLEVEL_SETUP)
+				if (Master.current_runlevel >= RUNLEVEL_LOBBY)
+					current_state = GAME_STATE_SETTING_UP
+					Master.SetRunLevel(RUNLEVEL_SETUP)
 	while (!setup())
 
 
 /datum/controller/gameticker/proc/setup()
-	if(current_state == GAME_STATE_PLAYING || Master.current_runlevel == RUNLEVEL_GAME)
-		return TRUE
-
-	//Create and announce mode
-	if(master_mode=="secret")
-		src.hide_mode = 1
-
-	var/list/datum/game_mode/runnable_modes
-
-	if((master_mode=="random") || (master_mode=="secret"))
-		runnable_modes = config.get_runnable_modes()
-
-		if (length(runnable_modes) == 0)
-			current_state = GAME_STATE_PREGAME
-			Master.SetRunLevel(RUNLEVEL_LOBBY)
-			world << "<B>Unable to choose playable game mode.</B> Reverting to pre-game lobby."
-			return 0
-
-		if(secret_force_mode != "secret")
-			var/datum/game_mode/M = config.pick_mode(secret_force_mode)
-			if(M.can_start())
-				src.mode = config.pick_mode(secret_force_mode)
-
-		job_master.ResetOccupations()
-
-		if(!src.mode)
-			src.mode = pickweight(runnable_modes)
-
-		if(src.mode)
-			var/mtype = src.mode.type
-			src.mode = new mtype
+	if(forcemod)
+		global.master_mode = forcemod
 	else
-		if(master_mode == "holywar")
-			src.mode = config.pick_mode("holywar")
-			login_music = 'sound/holywar/holywarlobby.ogg'
-			global.login_music = 'sound/holywar/holywarlobby.ogg'
-			for(var/mob/new_player/N in player_list)
-				N.client.playtitlemusic()
-		else
-			src.mode = config.pick_mode(master_mode)
+		var/list/gamemodes = list("changeling", "dreamer", "succubus")
+		var/list/gamemodes_hardmode = list("kingwill", "siege")
+
+		if((length(clients) >= HARD_MODE_PLAYER_CAP) && prob (50))
+			gamemodes |= gamemodes_hardmode
+		else if(prob(20))
+			gamemodes |= "inspector" // this is so boring... im sorry
+		else if(prob(20))
+			gamemodes |= "quietday"
+
+		global.master_mode = pick(gamemodes)
+
+	src.hide_mode = TRUE
+
+	src.mode = config.pick_mode(global.master_mode)
 
 	if(!src.mode)
 		current_state = GAME_STATE_PREGAME
 		Master.SetRunLevel(RUNLEVEL_LOBBY)
-		to_chat(world, "<span class='danger'>Serious error in mode setup!</span> Reverting to pre-game lobby.")
+		to_world("<span class='danger'>Serious error in mode setup!</span> Reverting to pre-game lobby.")
+
 		return FALSE
 
+	if(mode.config_tag == "holywar")
+		global.login_music = 'sound/holywar/holywarlobby.ogg'
+		for(var/mob/new_player/N in player_list)
+			N.client.playtitlemusic()
 
 	job_master.ResetOccupations()
 	src.mode.pre_setup()
@@ -220,26 +183,28 @@ var/turf/MiniSpawn
 			first_timer = FALSE
 			current_state = GAME_STATE_PREGAME
 			Master.SetRunLevel(RUNLEVEL_LOBBY)
-			mode = null
+			//mode = null
 			job_master.ResetOccupations()
 			return FALSE
 
 	createnuke()
 	createHellDoor()
-	create_characters() //Create player characters and transfer them
 	set_treasury()
 	if(!eof)
 		eof = pick_round_event()
 
 	migwave_going = TRUE
 	pre_migwave()
+
+	current_state = GAME_STATE_PLAYING
+	Master.SetRunLevel(RUNLEVEL_GAME)
+	create_characters() //Create player characters and transfer them
 	collect_minds()
 	equip_characters()
-	matchmaker.do_family_matchmaking()
-	matchmaker.setup_special_marriage()
 	give_keys()
 	do_postequip()
-	current_state = GAME_STATE_PLAYING
+	matchmaker.do_family_matchmaking()
+	matchmaker.setup_special_marriage()
 	for(var/client/C in player_list)
 		C << browse(null, "window=playerlist")
 
@@ -248,38 +213,10 @@ var/turf/MiniSpawn
 	//here to initialize the random events nicely at round start
 	//setup_economy()
 
-	// TODO - Leshana - Dear God Fix This.  Fix all of this. Not just this line, this entire proc. This entire file!
-	spawn(0)//Forking here so we dont have to wait for this to finish
-		mode.post_setup()
-		//Cleanup some stuff
-		for(var/obj/effect/landmark/start/S in landmarks_list)
-			//Deleting Startpoints but we need the ai point to AI-ize people later
-			if (S.name != "AI")
-				landmarks_list -= S
-				qdel(S)
-		if(master_mode == "holywar")
-			to_chat(world,"<h2><B><FONT color='#8f535d'>Holy War!</font></B></h2>")
-			var/quote = pick("War is neither glamorous nor attractive. It is monstrous. Its very nature is one of tragedy and suffering.","Dwell in peace in the home of your own being, and the Messenger of Death will not be able to touch you.","The real and lasting victories are those of peace and not of war.")
-			to_chat(world,"<h4><B><i> \"[quote]\" </i></B></h4>")
-			world << 'sound/effects/war_banner.ogg'
-			world << sound('sound/holywar/holywarintroduction.ogg', volume = 50, channel = 6)
-		else
-			TIME_SINCE_START = world.time
-
-		for(var/client/C in clients)
-			C << browse(null, "window=playerlist")
-			C.prefs.roundsplayed += 1
-			C.prefs.save_preferences()
-			C.prefs.savefile_update()
-		announce_events()
-		apply_events()
-		world << sound('sound/AI/welcome.ogg') // Skie
-		ooc_allowed = FALSE
-	//new random event system is handled from the MC.
+	addtimer(CALLBACK(src, PROC_REF(mode_post_setup)), 0, TIMER_UNIQUE)
 
 	supply_shuttle.process() 		//Start the supply shuttle regenerating points -- TLE
 	processScheduler.start()
-	Master.SetRunLevel(RUNLEVEL_GAME)
 	createnpcs()
 	lightlumosoviks()
 	//update_the_treasury()
@@ -333,349 +270,379 @@ var/turf/MiniSpawn
 	for(var/obj/multiz/ladder/L as anything in ladder_list)
 		L.connect() //Lazy hackfix for ladders. TODO: move this to an actual controller. ~ Z
 
-	return TRUE
+	return 1
+
+/datum/controller/gameticker/proc/mode_post_setup()
+	mode.post_setup()
+	//Cleanup some stuff
+	for(var/obj/effect/landmark/start/S in landmarks_list)
+		//Deleting Startpoints but we need the ai point to AI-ize people later
+		if (S.name != "AI")
+			landmarks_list -= S
+			qdel(S)
+	if(master_mode == "holywar")
+		to_chat(world,"<h2><B><FONT color='#8f535d'>Holy War!</font></B></h2>")
+		var/quote = pick("War is neither glamorous nor attractive. It is monstrous. Its very nature is one of tragedy and suffering.","Dwell in peace in the home of your own being, and the Messenger of Death will not be able to touch you.","The real and lasting victories are those of peace and not of war.")
+		to_chat(world,"<h4><B><i> \"[quote]\" </i></B></h4>")
+		world << 'sound/effects/war_banner.ogg'
+		world << sound('sound/holywar/holywarintroduction.ogg', volume = 50, channel = 6)
+	else
+		TIME_SINCE_START = world.time
+
+	for(var/client/C in clients)
+		C << browse(null, "window=playerlist")
+		C.prefs.roundsplayed += 1
+		C.prefs.save_preferences()
+		C.prefs.savefile_update()
+	announce_events()
+	apply_events()
+	world << sound('sound/AI/welcome.ogg') // Skie
+	ooc_allowed = FALSE
 
 /datum/controller/gameticker
 	//station_explosion used to be a variable for every mob's hud. Which was a waste!
 	//Now we have a general cinematic centrally held within the gameticker....far more efficient!
 	var/obj/screen/cinematic = null
 
-	//Plus it provides an easy way to make cinematics for other events. Just use this as a template :)
-	proc/station_explosion_cinematic(var/station_missed=0, var/override = null)
-		if( cinematic )	return	//already a cinematic in progress!
+//Plus it provides an easy way to make cinematics for other events. Just use this as a template :)
+/datum/controller/gameticker/proc/station_explosion_cinematic(var/station_missed=0, var/override = null)
+	if( cinematic )	return	//already a cinematic in progress!
 
-		//initialise our cinematic screen object
-		cinematic = new(src)
-		cinematic.icon = 'icons/effects/station_explosion.dmi'
-		cinematic.icon_state = "start"
-		cinematic.layer = 21
-		cinematic.mouse_opacity = 0
-		//cinematic.screen_loc = "1,0"
-		cinematic.screen_loc = "CENTER-7,CENTER-7"
+	//initialise our cinematic screen object
+	cinematic = new(src)
+	cinematic.icon = 'icons/effects/station_explosion.dmi'
+	cinematic.icon_state = "start"
+	cinematic.layer = 21
+	cinematic.mouse_opacity = 0
+	//cinematic.screen_loc = "1,0"
+	cinematic.screen_loc = "CENTER-7,CENTER-7"
 
-		var/obj/structure/stool/bed/temp_buckle = new(src)
-		//Incredibly hackish. It creates a bed within the gameticker (lol) to stop mobs running around
-		if(station_missed)
-			for(var/mob/living/M in living_mob_list)
-				M.buckled = temp_buckle				//buckles the mob so it can't do anything
-				if(M.client)
-					M.client.screen += cinematic	//show every client the cinematic
-		else	//nuke kills everyone on z-level of a ship to prevent "hurr-durr I survived"
-			for(var/mob/living/M in living_mob_list)
-				M.buckled = temp_buckle
-				if(M.client)
-					M.client.screen += cinematic
+	var/obj/structure/stool/bed/temp_buckle = new(src)
+	//Incredibly hackish. It creates a bed within the gameticker (lol) to stop mobs running around
+	if(station_missed)
+		for(var/mob/living/M in living_mob_list)
+			M.buckled = temp_buckle				//buckles the mob so it can't do anything
+			if(M.client)
+				M.client.screen += cinematic	//show every client the cinematic
+	else	//nuke kills everyone on z-level of a ship to prevent "hurr-durr I survived"
+		for(var/mob/living/M in living_mob_list)
+			M.buckled = temp_buckle
+			if(M.client)
+				M.client.screen += cinematic
 
-				if(M.z == 0)	//inside a crate or something
-					var/turf/T = get_turf(M)
-					if(T && !(T.z in vessel_z))				//we don't use M.death(0) because it calls a for(/mob) loop and
-						M.health = 0
-						M.stat = DEAD
-				else if(M.z in vessel_z)	//on a ship's turf.
+			if(M.z == 0)	//inside a crate or something
+				var/turf/T = get_turf(M)
+				if(T && !(T.z in vessel_z))				//we don't use M.death(0) because it calls a for(/mob) loop and
 					M.health = 0
 					M.stat = DEAD
+			else if(M.z in vessel_z)	//on a ship's turf.
+				M.health = 0
+				M.stat = DEAD
 
-		//Now animate the cinematic
-		switch(station_missed)
-			if(1)	//nuke was nearby but (mostly) missed
-				if( mode && !override )
-					override = mode.name
-				switch( override )
-					if("nuclear emergency") //Nuke wasn't on station when it blew up
-						flick("start_nuke",cinematic)
-						sleep(35)
-						world << sound('sound/effects/nukee.ogg')
-						flick("explode",cinematic)
-						cinematic.icon_state = "loss_nuke"
-					else
-						flick("start_nuke",cinematic)
-						sleep(35)
-						world << sound('sound/effects/nukee.ogg')
-						flick("explode",cinematic)
-						cinematic.icon_state = "loss_nuke"
-
-
-			if(2)	//nuke was nowhere nearby	//TODO: a really distant explosion animation
-				sleep(50)
-				world << sound('sound/effects/nukee.ogg')
+	//Now animate the cinematic
+	switch(station_missed)
+		if(1)	//nuke was nearby but (mostly) missed
+			if( mode && !override )
+				override = mode.name
+			switch( override )
+				if("nuclear emergency") //Nuke wasn't on station when it blew up
+					flick("start_nuke",cinematic)
+					sleep(35)
+					world << sound('sound/effects/nukee.ogg')
+					flick("explode",cinematic)
+					cinematic.icon_state = "loss_nuke"
+				else
+					flick("start_nuke",cinematic)
+					sleep(35)
+					world << sound('sound/effects/nukee.ogg')
+					flick("explode",cinematic)
+					cinematic.icon_state = "loss_nuke"
 
 
-			else	//station was destroyed
-				if( mode && !override )
-					override = mode.name
-				switch( override )
-					if("nuclear emergency") //Nuke Ops successfully bombed the station
-						flick("intro_nuke",cinematic)
-						sleep(35)
-						flick("station_intact",cinematic)
-						world << sound('sound/effects/explosionfar.ogg')
-						cinematic.icon_state = "station_intact"
-					else //Station nuked (nuke,explosion,summary)
-						flick("start_nuke",cinematic)
-						sleep(35)
-						world << sound('sound/effects/nukee.ogg')
-						flick("explode",cinematic)
-						cinematic.icon_state = "loss_nuke"
-				for(var/mob/living/M in living_mob_list)
-					var/area/A = get_area(M)
-					if(!A.nukesafe)
-						M.death()
-						M.client.ChromieWinorLoose(-1)
-		//No mercy
-		//If its actually the end of the round, wait for it to end.
-		//Otherwise if its a verb it will continue on afterwards.
-		sleep(300)
+		if(2)	//nuke was nowhere nearby	//TODO: a really distant explosion animation
+			sleep(50)
+			world << sound('sound/effects/nukee.ogg')
 
-		if(cinematic)	qdel(cinematic)		//end the cinematic
-		if(temp_buckle)	qdel(temp_buckle)	//release everybody
+
+		else	//station was destroyed
+			if( mode && !override )
+				override = mode.name
+			switch( override )
+				if("nuclear emergency") //Nuke Ops successfully bombed the station
+					flick("intro_nuke",cinematic)
+					sleep(35)
+					flick("station_intact",cinematic)
+					world << sound('sound/effects/explosionfar.ogg')
+					cinematic.icon_state = "station_intact"
+				else //Station nuked (nuke,explosion,summary)
+					flick("start_nuke",cinematic)
+					sleep(35)
+					world << sound('sound/effects/nukee.ogg')
+					flick("explode",cinematic)
+					cinematic.icon_state = "loss_nuke"
+			for(var/mob/living/M in living_mob_list)
+				var/area/A = get_area(M)
+				if(!A.nukesafe)
+					M.death()
+					M.client.ChromieWinorLoose(-1)
+	//No mercy
+	//If its actually the end of the round, wait for it to end.
+	//Otherwise if its a verb it will continue on afterwards.
+	sleep(300)
+
+	if(cinematic)	qdel(cinematic)		//end the cinematic
+	if(temp_buckle)	qdel(temp_buckle)	//release everybody
+	return
+
+
+/datum/controller/gameticker/proc/create_characters()
+	for(var/mob/new_player/player in player_list)
+		if(player.ready && player.mind)
+			if(player.mind.assigned_role=="AI")
+				player.close_spawn_windows()
+				player.AIize()
+			else if(player.mind.assigned_role == "Baron" && length(player.aspects_list) && !length(eof))
+				eof = pick(player.aspects_list)
+				player.create_character()
+				qdel(player)
+			else if(!player.mind.assigned_role)
+				continue
+			else
+				player.create_character()
+				//player.preferences.save_preferences()
+				//player.client.prefs.save_preferences()
+				qdel(player)
+
+
+/datum/controller/gameticker/proc/collect_minds()
+	for(var/mob/living/player in player_list)
+		if(player.mind)
+			ticker.minds += player.mind
+
+/datum/controller/gameticker/proc/createnpcs()
+	for(var/obj/effect/landmark/L in landmarks_list)
+		if (L.name == "NPCBum")
+			if(prob(50))
+				new /mob/living/carbon/human/bumbot(L.loc)
+	for(var/obj/effect/landmark/L in landmarks_list)
+		if (L.name == "BigRat")
+			if(prob(45))
+				new /mob/living/carbon/human/monster/rat(L.loc)
+	for(var/obj/effect/landmark/L in landmarks_list)
+		if (L.name == "Strygh")
+			if(prob(65))
+				new /mob/living/carbon/human/monster/strygh(L.loc)
+	for(var/obj/effect/landmark/L in landmarks_list)
+		if (L.name == "Arellit")
+			new /mob/living/carbon/human/monster/arellit/adult(L.loc)
+	for(var/obj/effect/landmark/L in landmarks_list)
+		if (L.name == "Skinless")
+			new /mob/living/carbon/human/skinless(L.loc)
+	for(var/obj/effect/landmark/L in landmarks_list)
+		if (L.name == "NPCSkeleton")
+			new /mob/living/carbon/human/monster/skeleton(L.loc)
+	for(var/obj/effect/landmark/L in landmarks_list)
+		if (L.name == "AncestorSkeleton")
+			new /mob/living/carbon/human/monster/skeleton/ancestor(L.loc)
+	for(var/obj/effect/landmark/L in landmarks_list)
+		if (L.name == "Eelo")
+			new /mob/living/carbon/human/monster/eelo(L.loc)
+	for(var/obj/effect/landmark/L in landmarks_list)
+		if (L.name == "Tzanch")
+			if(prob(80))
+				new /mob/living/carbon/human/monster/tzanch(L.loc)
+	for(var/obj/effect/landmark/L in landmarks_list)
+		if (L.name == "Zombie")
+			if(prob(80))
+				new /mob/living/carbon/human/zombiebot(L.loc)
+	for(var/obj/effect/landmark/L in landmarks_list)
+		if (L.name == "Graga")
+			if(prob(90))
+				new /mob/living/carbon/human/monster/graga(L.loc)
+	for(var/obj/effect/landmark/L in landmarks_list)
+		if (L.name == "Loge")
+			if(prob(80))
+				new /mob/living/carbon/human/monster/loge(L.loc)
+	for(var/obj/effect/landmark/L in landmarks_list)
+		if (L.name == "NewMonkey")
+			if(prob(70))
+				new /mob/living/carbon/human/monster/newmonkey(L.loc)
+	var/list/puppeList = list()
+	for(var/obj/effect/landmark/L in landmarks_list)
+		if (L.name == "Puppeteer")
+			puppeList.Add(L.loc)
+
+	if(!LAZYLEN(puppeList))
 		return
+	var/turf/newLoc = pick(puppeList)
+	new /mob/living/puppeteer(newLoc)
+
+/datum/controller/gameticker/proc/createnuke()
+	if(!LAZYLEN(nukeSpawn))
+		return
+	var/turf/newLoc = pick(nukeSpawn)
+	var/area/A = get_area(newLoc)
+	new /obj/machinery/nuclearbomb(newLoc)
+	if(A)
+		round_nuke_loc = A.name
+
+/datum/controller/gameticker/proc/createHellDoor()
+	if(!LAZYLEN(HellDoor))
+		return
+	var/turf/newLoc = pick(HellDoor)
+	new /obj/structure/helldoor(newLoc)
+
+/datum/controller/gameticker/proc/lightlumosoviks()
+	for(var/obj/structure/lifeweb/mushroom/glorbmushroom/G in lumosoviks_list)
+		G.set_light(4, 4,"#5e90a6")
+	for(var/obj/machinery/glowshroom/G in lumosoviks_list)
+		G.set_light(3, 3,"#d5fa84")
+		G.icon_state = pick("1","2","3","4")
+	for(var/obj/structure/lifeweb/grass/glow/G in lumosoviks_list)
+		G.set_light(2, 2,"#edc87e")
 
 
-	proc/create_characters()
-		for(var/mob/new_player/player in player_list)
-			if(player.ready && player.mind)
-				if(player.mind.assigned_role=="AI")
-					player.close_spawn_windows()
-					player.AIize()
-				else if(player.mind.assigned_role == "Baron" && length(player.aspects_list) && !length(eof))
-					eof = pick(player.aspects_list)
-					player.create_character()
-					qdel(player)
-				else if(!player.mind.assigned_role)
-					continue
-				else
-					player.create_character()
-					//player.preferences.save_preferences()
-					//player.client.prefs.save_preferences()
-					qdel(player)
+/datum/controller/gameticker/proc/update_the_graceperiods()
+	if(master_mode == "minimig")
+		for(var/obj/effect/blockedminimig/M in minimiglist)
+			M.icon_state = "dark23"
+	else
+		QDEL_LIST(minimiglist)
 
-
-	proc/collect_minds()
-		for(var/mob/living/player in player_list)
-			if(player.mind)
-				ticker.minds += player.mind
-
-	proc/createnpcs()
-		for(var/obj/effect/landmark/L in landmarks_list)
-			if (L.name == "NPCBum")
-				if(prob(50))
-					new /mob/living/carbon/human/bumbot(L.loc)
-		for(var/obj/effect/landmark/L in landmarks_list)
-			if (L.name == "BigRat")
-				if(prob(45))
-					new /mob/living/carbon/human/monster/rat(L.loc)
-		for(var/obj/effect/landmark/L in landmarks_list)
-			if (L.name == "Strygh")
-				if(prob(65))
-					new /mob/living/carbon/human/monster/strygh(L.loc)
-		for(var/obj/effect/landmark/L in landmarks_list)
-			if (L.name == "Arellit")
-				new /mob/living/carbon/human/monster/arellit/adult(L.loc)
-		for(var/obj/effect/landmark/L in landmarks_list)
-			if (L.name == "Skinless")
-				new /mob/living/carbon/human/skinless(L.loc)
-		for(var/obj/effect/landmark/L in landmarks_list)
-			if (L.name == "NPCSkeleton")
-				new /mob/living/carbon/human/monster/skeleton(L.loc)
-		for(var/obj/effect/landmark/L in landmarks_list)
-			if (L.name == "AncestorSkeleton")
-				new /mob/living/carbon/human/monster/skeleton/ancestor(L.loc)
-		for(var/obj/effect/landmark/L in landmarks_list)
-			if (L.name == "Eelo")
-				new /mob/living/carbon/human/monster/eelo(L.loc)
-		for(var/obj/effect/landmark/L in landmarks_list)
-			if (L.name == "Tzanch")
-				if(prob(80))
-					new /mob/living/carbon/human/monster/tzanch(L.loc)
-		for(var/obj/effect/landmark/L in landmarks_list)
-			if (L.name == "Zombie")
-				if(prob(80))
-					new /mob/living/carbon/human/zombiebot(L.loc)
-		for(var/obj/effect/landmark/L in landmarks_list)
-			if (L.name == "Graga")
-				if(prob(90))
-					new /mob/living/carbon/human/monster/graga(L.loc)
-		for(var/obj/effect/landmark/L in landmarks_list)
-			if (L.name == "Loge")
-				if(prob(80))
-					new /mob/living/carbon/human/monster/loge(L.loc)
-		for(var/obj/effect/landmark/L in landmarks_list)
-			if (L.name == "NewMonkey")
-				if(prob(70))
-					new /mob/living/carbon/human/monster/newmonkey(L.loc)
-		var/list/puppeList = list()
-		for(var/obj/effect/landmark/L in landmarks_list)
-			if (L.name == "Puppeteer")
-				puppeList.Add(L.loc)
-
-		if(!LAZYLEN(puppeList))
-			return
-		var/turf/newLoc = pick(puppeList)
-		new /mob/living/puppeteer(newLoc)
-	proc/createnuke()
-		if(!LAZYLEN(nukeSpawn))
-			return
-		var/turf/newLoc = pick(nukeSpawn)
-		var/area/A = get_area(newLoc)
-		new /obj/machinery/nuclearbomb(newLoc)
-		if(A)
-			round_nuke_loc = A.name
-	proc/createHellDoor()
-		if(!LAZYLEN(HellDoor))
-			return
-		var/turf/newLoc = pick(HellDoor)
-		new /obj/structure/helldoor(newLoc)
-
-	proc/lightlumosoviks()
-		for(var/obj/structure/lifeweb/mushroom/glorbmushroom/G in lumosoviks_list)
-			G.set_light(4, 4,"#5e90a6")
-		for(var/obj/machinery/glowshroom/G in lumosoviks_list)
-			G.set_light(3, 3,"#d5fa84")
-			G.icon_state = pick("1","2","3","4")
-		for(var/obj/structure/lifeweb/grass/glow/G in lumosoviks_list)
-			G.set_light(2, 2,"#edc87e")
-
-
-	proc/update_the_graceperiods()
-		if(master_mode == "minimig")
-			for(var/obj/effect/blockedminimig/M in minimiglist)
-				M.icon_state = "dark23"
-		else
-			QDEL_LIST(minimiglist)
-
-	proc/equip_characters()
-		if(master_mode == "minimig" || master_mode == "holywar")
-			for(var/mob/living/carbon/human/player in player_list)
-				if(player && player.mind)
-					job_master.EquipRank(player, "Migrant")
-					player.special_load()
-					EquipCustomItems(player)
-					return
+/datum/controller/gameticker/proc/equip_characters()
+	if(master_mode == "minimig" || master_mode == "holywar")
 		for(var/mob/living/carbon/human/player in player_list)
-			if(player.mind.assigned_role != "MODE")
-				job_master.EquipRank(player, player.mind.assigned_role, 0)
+			if(player && player.mind)
+				job_master.EquipRank(player, "Migrant")
+				player.special_load()
 				EquipCustomItems(player)
+				return
+	for(var/mob/living/carbon/human/player in player_list)
+		if(player.mind.assigned_role != "MODE")
+			job_master.EquipRank(player, player.mind.assigned_role, 0)
+			EquipCustomItems(player)
 
-	proc/do_postequip()
-		if(master_mode == "minimig" || master_mode == "holywar")
-			for(var/mob/living/carbon/human/player in player_list)
-				if(player && player.mind)
-					job_master.PostEquip(player, 0)
-					return
+/datum/controller/gameticker/proc/do_postequip()
+	if(master_mode == "minimig" || master_mode == "holywar")
 		for(var/mob/living/carbon/human/player in player_list)
-			if(player.mind.assigned_role != "MODE")
+			if(player && player.mind)
 				job_master.PostEquip(player, 0)
+				return
+	for(var/mob/living/carbon/human/player in player_list)
+		if(player.mind.assigned_role != "MODE")
+			job_master.PostEquip(player, 0)
 
-	proc/give_keys()
-		var/list/slots = list (
-		"left pocket" = slot_l_store,
-		"right pocket" = slot_r_store,
-		"left hand" = slot_l_hand,
-		"right hand" = slot_r_hand,
-		)
-		var/datum/family/biggest
-		var/datum/family/second
-		for(var/datum/family/F in matchmaker.families)
-			if(F == baron_family)
-				continue
-			if(!biggest)
-				biggest = F
-				continue
-			if(!second)
-				second = F
-				continue
-			if(LAZYLEN(F.members) <= 1)
-				continue
-			if(LAZYLEN(F.members) > LAZYLEN(biggest.members))
-				biggest = F
-				continue
-			if(LAZYLEN(F.members) > LAZYLEN(second.members))
-				second = F
-		if(biggest)
-			var/list/mob/living/carbon/human/biggest_members = (biggest.members + biggest.family_head)
-			for(var/mob/living/carbon/human/H in biggest_members)
-				var/obj/item/key/residencesONE/K = new()
-				var/where = H.equip_in_one_of_slots(K, slots)
-				if (!where)
-					K.loc = get_turf(H)
-					to_chat(H,"My family has a house inside the fortress. It's the first house in the residences alley. My key is at my feet")
-				else
-					to_chat(H,"My family has a house inside the fortress. It's the first house in the residences alley. My key is in my [where]")
-					H.update_icons()
-		if(second)
-			var/list/mob/living/carbon/human/second_members = (second.members + second.family_head)
-			for(var/mob/living/carbon/human/H in second_members)
-				var/obj/item/key/residencesTWO/K = new()
-				var/where = H.equip_in_one_of_slots(K, slots)
-				if (!where)
-					K.loc = get_turf(H)
-					to_chat(H,"My family has a house inside the fortress. It's the second house in the residences alley. My key is at my feet")
-				else
-					to_chat(H,"My family has a house inside the fortress. It's the second house in the residences alley. My key is in my [where]")
-					H.update_icons()
+/datum/controller/gameticker/proc/give_keys()
+	var/list/slots = list (
+	"left pocket" = slot_l_store,
+	"right pocket" = slot_r_store,
+	"left hand" = slot_l_hand,
+	"right hand" = slot_r_hand,
+	)
+	var/datum/family/biggest
+	var/datum/family/second
+	for(var/datum/family/F in matchmaker.families)
+		if(F == baron_family)
+			continue
+		if(!biggest)
+			biggest = F
+			continue
+		if(!second)
+			second = F
+			continue
+		if(LAZYLEN(F.members) <= 1)
+			continue
+		if(LAZYLEN(F.members) > LAZYLEN(biggest.members))
+			biggest = F
+			continue
+		if(LAZYLEN(F.members) > LAZYLEN(second.members))
+			second = F
+	if(biggest)
+		var/list/mob/living/carbon/human/biggest_members = (biggest.members + biggest.family_head)
+		for(var/mob/living/carbon/human/H in biggest_members)
+			var/obj/item/key/residencesONE/K = new()
+			var/where = H.equip_in_one_of_slots(K, slots)
+			if (!where)
+				K.loc = get_turf(H)
+				to_chat(H,"My family has a house inside the fortress. It's the first house in the residences alley. My key is at my feet")
+			else
+				to_chat(H,"My family has a house inside the fortress. It's the first house in the residences alley. My key is in my [where]")
+				H.update_icons()
+	if(second)
+		var/list/mob/living/carbon/human/second_members = (second.members + second.family_head)
+		for(var/mob/living/carbon/human/H in second_members)
+			var/obj/item/key/residencesTWO/K = new()
+			var/where = H.equip_in_one_of_slots(K, slots)
+			if (!where)
+				K.loc = get_turf(H)
+				to_chat(H,"My family has a house inside the fortress. It's the second house in the residences alley. My key is at my feet")
+			else
+				to_chat(H,"My family has a house inside the fortress. It's the second house in the residences alley. My key is in my [where]")
+				H.update_icons()
 
-	proc/process()
-		if(current_state != GAME_STATE_PLAYING)
-			return 0
+/datum/controller/gameticker/proc/process()
+	if(current_state != GAME_STATE_PLAYING)
+		return 0
 
-		mode.process()
+	mode.process()
 
-		emergency_shuttle.process()
+	emergency_shuttle.process()
 
-		if(migwave_timeleft <= 0)
-			pre_migwave()
+	if(migwave_timeleft <= 0)
+		pre_migwave()
+	else
+		if(migwave_timeleft > 0)
+			migwave_timeleft--
+
+	if(energyInvestimento == 1)
+		treasuryworth.add_money(-3)
+
+	var/datum/shuttle/S = global.shuttleMain
+
+	var/mode_finished = (mode.check_finished() || (emergency_shuttle.location == 2 && emergency_shuttle.alert == 1 || S.location_flag & FLAG_LEVIATHAN)) // 3 == LEVIATHAN
+	if((!mode.explosion_in_progress && mode_finished)|| quietend)
+		current_state = GAME_STATE_FINISHED
+		Master.SetRunLevel(RUNLEVEL_POSTGAME)
+
+		declare_completion()
+
+		addtimer(CALLBACK(src, PROC_REF(roundend_hook)), 50, TIMER_UNIQUE)
+
+	return 1
+
+/datum/controller/gameticker/proc/roundend_hook()
+	callHook("roundend")
+
+	if (mode.station_was_nuked)
+		if(!delay_end)
+			to_chat(world,"<span class='passivebold'>This is how the day has passed.</span> <span class='passive'>One minute until story end.</span>")
+	else
+		if(!delay_end)
+			to_chat(world,"<span class='passivebold'>This is how the day has passed.</span> <span class='passive'>One minute until story end.</span>")
+
+	if(!delay_end)
+		sleep(restart_timeout)
+		if(!delay_end)
+			to_chat(world, "<span class='bname'>Your fortress has been abandoned.</span>")
+			world.Reboot()
 		else
-			if(migwave_timeleft > 0)
-				migwave_timeleft--
+			to_chat(world,"<span class='passivebold'>[pick(fnord)]</span> <span class='passive'>The comatic hasn't allowed the story to end yet!</span>")
+	else
+		to_chat(world,"<span class='passivebold'>[pick(fnord)]</span> <span class='passive'>The comatic hasn't allowed the story to end yet!</span>")
 
-		if(energyInvestimento == 1)
-			treasuryworth.add_money(-3)
+/datum/controller/gameticker/proc/getfactionbyname(var/name)
+	for(var/datum/faction/F in factions)
+		if(F.name == name)
+			return F
 
-		var/datum/shuttle/S = global.shuttleMain
+/datum/controller/gameticker/proc/announce_events()
+	if(!message_events)
+		message_events += "[eof.event_message] "
+	if(eof.roundstartdisplay)
+		to_chat(world, "<span class ='passivebold'>Praise the Lord!</span> <span class ='passive'>[message_events]</span>")
 
-		var/mode_finished = (mode.check_finished() || (emergency_shuttle.location == 2 && emergency_shuttle.alert == 1 || S.location_flag & FLAG_LEVIATHAN)) // 3 == LEVIATHAN
-		if((!mode.explosion_in_progress && mode_finished)|| quietend)
-			current_state = GAME_STATE_FINISHED
-			Master.SetRunLevel(RUNLEVEL_POSTGAME)
-
-			declare_completion()
-
-			spawn(50)
-				callHook("roundend")
-
-				if (mode.station_was_nuked)
-					if(!delay_end)
-						to_chat(world,"<span class='passivebold'>This is how the day has passed.</span> <span class='passive'>One minute until story end.</span>")
-				else
-					if(!delay_end)
-						to_chat(world,"<span class='passivebold'>This is how the day has passed.</span> <span class='passive'>One minute until story end.</span>")
-
-				if(!delay_end)
-					sleep(restart_timeout)
-					if(!delay_end)
-						to_chat(world, "<span class='bname'>Your fortress has been abandoned.</span>")
-						world.Reboot()
-					else
-						to_chat(world,"<span class='passivebold'>[pick(fnord)]</span> <span class='passive'>The comatic hasn't allowed the story to end yet!</span>")
-				else
-					to_chat(world,"<span class='passivebold'>[pick(fnord)]</span> <span class='passive'>The comatic hasn't allowed the story to end yet!</span>")
-
-
-		return 1
-
-	proc/getfactionbyname(var/name)
-		for(var/datum/faction/F in factions)
-			if(F.name == name)
-				return F
-
-	proc/announce_events()
-		if(!message_events)
-			message_events += "[eof.event_message] "
-		if(eof.roundstartdisplay)
-			to_chat(world, "<span class ='passivebold'>Praise the Lord!</span> <span class ='passive'>[message_events]</span>")
-
-	proc/apply_events()
-		eof.apply_event()
+/datum/controller/gameticker/proc/apply_events()
+	eof.apply_event()
 
 /mob/living/carbon/human/var/dst_completed = 0
 
@@ -838,6 +805,3 @@ var/turf/MiniSpawn
 						ludruk?.client?.ChromieWinorLoose(3)
 						to_chat(ludruk, "<span class='baronboldoutlined'>Lord Ludruk will be pleased.</span>")
 				break
-
-/world/proc/has_round_started()
-	return (ticker && ticker.current_state >= GAME_STATE_PLAYING)
