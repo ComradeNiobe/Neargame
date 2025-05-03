@@ -173,7 +173,7 @@
 	M.adjustStaminaLoss(rand(0,2))
 	M.overlays += /obj/effect/water/waterlay
 	var/obj/item/flame/torch/F
-	M.bodytemperature = 200
+	M.bodytemperature = 300
 	if(ishuman(M))
 		if(M?.special == "sailor")
 			M.rotate_plane()
@@ -319,7 +319,7 @@
 		return
 	var/mob/living/carbon/human/M = AM
 	var/obj/item/flame/torch/F
-	M.bodytemperature = 200
+	M.bodytemperature = 300
 	for(F in M.contents)
 		if(F.lit)
 			F.turn_off()

@@ -959,6 +959,11 @@ Note that amputating the affected organ does in fact remove the infection from t
 							organ = new/obj/item/organ/jaw(owner.loc)
 					owner.drop_from_inventory(owner.wear_mask)
 				if(FACE)
+					if(!no_organ_item)
+						if(skellybones)
+							organ = new/obj/item/bone(owner.loc, owner)
+						else
+							organ = new/obj/item/organ/face(owner.loc, owner)
 					owner.drop_from_inventory(owner.glasses)
 
 			if(!amputated)

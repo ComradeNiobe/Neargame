@@ -215,6 +215,18 @@
 /obj/item/kitchen/utensil/knife/flaying/attack(mob/living/carbon/human/H as mob, mob/user as mob)
 	if (dedick(H, user))
 		return
+	if(ishuman(H) && user.zone_sel.selecting == "face")
+		var/datum/organ/external/affecting = H.get_organ(ran_zone(user.zone_sel.selecting))
+		H.visible_message("<span class='danger'>[user] starts to flay [H]'s face off with [src]!</span>")
+		H.custom_pain("[pick("OH [uppertext(H.god_text())] MY FACE!!", "OH [uppertext(H.god_text())] WHY!")]", 100)
+		H.emote("agonyscream")
+		if(do_after(user, 66))
+			H.visible_message("<span class='danger'>[user] flays [H]'s face off with [src]!</span>")
+			H.custom_pain("[pick("OH IT HURTS SO MUCH!!", "WHAT HAVE I DONE!")]", 100)
+			H.apply_damage(rand(10, 15), BRUTE, affecting)
+			H.emote("agonyscream")
+			affecting.droplimb()
+			return
 
 	if(ishuman(H) && user.zone_sel.selecting != "groin")
 		var/datum/organ/external/affecting = H.get_organ(ran_zone(user.zone_sel.selecting))
@@ -465,7 +477,7 @@
 		user.bloody_hands()
 		user.apply_damage(5, BRUTE, "r_hand")
 		user.apply_damage(5, BRUTE, "l_hand")
-		
+
 
 /obj/item/kitchenknife/tanning
 	name = "tanning knife"

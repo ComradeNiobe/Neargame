@@ -191,7 +191,7 @@ var/global/Inquisitor_Type = "Null"
 
 /mob/living/carbon/human/proc/free_sins()
 	clear_event("epitemia")
-	to_chat(src, "<span class='passive'>Finaly, I free from my sins!</span>")
+	to_chat(src, "<span class='passive'>Finally, I'm free from my sins!</span>")
 	gainWP(TRUE, 3)
 	return
 
